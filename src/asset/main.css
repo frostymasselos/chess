@@ -1,0 +1,25 @@
+* {
+  margin-top: 0;
+  margin-right: 0;
+}
+
+:not(head, span, a, section) {
+  display: flow-root;
+}
+
+body {
+  margin: 0;
+}
+
+.board-grid-container {
+  height: 400px;
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[8];
+      grid-template-columns: repeat(8, 1fr);
+  -ms-grid-rows: (1fr)[8];
+      grid-template-rows: repeat(8, 1fr);
+}
+/*# sourceMappingURL=main.css.map */

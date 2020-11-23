@@ -1,0 +1,28 @@
+* {
+    margin-top: 0;
+    margin-right: 0;
+}
+
+// CONSIDRER PUTTING ALL BAR HEAD & INLINE (INLINE-BLOCK?) DISPLAY: FLOW-ROOT  */
+    // EL WITH DISPLAY INLINE-BLOCK SET DISPLAY: REVERT
+:not(head, span, a, section) {
+    display: flow-root;
+}
+
+body {
+    margin: 0;
+}
+
+div {
+    // font-family: 'Ranchers';
+    // color: green;
+}
+
+//`SECTION` WILL BE FOR GRID-CONTAINER
+.board-grid-container {
+    height: 400px;
+    transform: rotate(180deg);
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+}
