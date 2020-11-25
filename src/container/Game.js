@@ -33,7 +33,7 @@ function Game(params) {
             if (true) { //signed into FB - could be user1 first time or user1|2 returning.
                 if (true) { //correct 5DC - could be user1 first time or user1|2 returning.
                     if (true) { //are you user1? 
-                        if (true) { //user1 DBsignIn true - user1 returning. 🐉
+                        if (true) { //user1 DBsignIn true - user1 returning. 
                             setPlaying(true);
                             if (false) { //user2 DBsignIn true
                                 setUser2SignedIn(true);

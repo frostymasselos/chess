@@ -3,12 +3,13 @@ import Instructions from '../element/instructions.js';
 import NewGame from '../component/home/NewGame.js';
 // import Reenter from '../component/home/Reenter.js';
 // import RetrieveCode from '../component/home/RetrieveCode.js';
+import firebase from '../helper/firebase.js';
 import {Link} from 'react-router-dom';
 import {useState} from 'react';
 import {useEffect} from 'react';
 
 function Home(params) {
-
+    
     let [matchUrl, setMatchUrl] = useState('');
 
     useEffect(() => {
