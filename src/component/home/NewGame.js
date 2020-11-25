@@ -1,22 +1,25 @@
+import {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
+
 function NewGame(params) {
 
-    function navigateToMatch(params) {
-        function generateCode(params) {
-            return 12345;
-        }
-        function createDb(params) {
-            
-        }
-        function updateFbUser(params) {
-            
-        }
-        // console.log(5);
-        window.location = `/${generateCode()}`
+    let [fiveDC, setFiveDC] = useState('/');
+    
+    function fBSignIn(params) {
+        console.log(5);
     }
+
+    useEffect(() => {
+        setFiveDC("12345");
+    }, []);
     
 
     return (
-        <button onClick={navigateToMatch}>Start new game</button>
+        <>
+            <span onClick={fBSignIn}>
+            <Link to={fiveDC}>Start new game (link).</Link>
+            </span>
+        </>
     )
 }
 

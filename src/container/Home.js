@@ -1,29 +1,32 @@
-import Instructions from '../element/instructions.js';
-import Footer from '../element/footer.js';
 import Test from '../component/Test.js';
+import Instructions from '../element/instructions.js';
 import NewGame from '../component/home/NewGame.js';
-import Reenter from '../component/home/Reenter.js';
+// import Reenter from '../component/home/Reenter.js';
+// import RetrieveCode from '../component/home/RetrieveCode.js';
+import {Link} from 'react-router-dom';
 import {useState} from 'react';
 import {useEffect} from 'react';
 
 function Home(params) {
 
-    let [displayName, changeDisplayName] = useState(false);
+    let [matchUrl, setMatchUrl] = useState('');
 
     useEffect(() => {
-        //if not FBsigned in, sign in.
-        if (true) { //if FB displayName truthy, render Reenter. Else render NewGame
-            changeDisplayName(false)
-        } 
+        if (false) { //if FB displayName truthy - user1|2 have existing game.
+            //retrieve matchURL & render Reenter
+            setMatchUrl("12343");
+        } else {
+            //render NewGame
+        }
     }, []);
     
     return ( 
         <>
-            {"I am HomeContainer"}
+            <h4>HomeContainer</h4>
             {Instructions()}
-            {displayName ? <Reenter></Reenter> : <NewGame></NewGame>}
-            {Footer()}
-        </>
+            {matchUrl && <div>Match url: {window.location.origin}/{matchUrl}</div>} 
+            {matchUrl ? <Link to={matchUrl}>Resume Game</Link> : <NewGame></NewGame>}
+        </> 
     )
   
 }
