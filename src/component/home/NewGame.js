@@ -9,48 +9,42 @@ function NewGame(params) {
 
     // let [code, setcode] = useState('/');
     
-    function startNewGame(params) { 
-        //generate code
-        let code = '/';
+    async function startNewGame(params) { //MAYBE THIS SHOULD BELONG IN GAME
+        //GENERATE CODE
+        let code = '';
         for (let num = 0; num < 6; num++) {
             code += Math.round(Math.random() * 9);
         }
         
+        // CREATE NEW GAME IN DB 
         let auth = firebase.auth(); //works
         let db = firebase.database(); //works
+
+        let game = db.ref(`/matches/${code}`)
+        game.set(secondBigObj); 
+        // db.ref('matches/template2').on('value', e => { //FROM TEMPLATE2 IN DB
+        //     game.set(e.val());
+        // })
         
-        // FBsignIn - 🐉3 maybe this whole thing should be put in game!
-        // auth.createUserWithEmailAndPassword(`${code}@user1.com`, `${code}`).then(cred => {
-            //     console.log(cred);
-            // })
-            
-            // let game = db.ref(`/matches/${code}`);
-            // create match in DB 
-            // db.ref('matches/template').on('value', e => {
-            //     game.set(e.val());
-            //     //decide who's white
-            //     async function makeUserWhiteThenNavToGame(user) { 
+        // DECIDE WHO'S WHITE
+        if (Math.random() > 0.5) { //if true, authUser1 is black & starts on 2nd position in board. 
+            await game.child('user1').set(secondBigObj.user2); //works
+            await game.child('user2').set(secondBigObj.user1); //works
+            //SIGN USER1 IN
+            await auth.createUserWithEmailAndPassword(`${code}@user1Position2.com`, `${code}`);
+        } else { //authUser1 is white & starts on 1st position in board.
+            //SIGN USER1 IN
+            await auth.createUserWithEmailAndPassword(`${code}@user1Position1.com`, `${code}`);
+        }
 
-            //         //nav to game
-            //         // window.location = `${code}`// nav to url
-            //     }
-            //     if (Math.random() > 0.5) { //if true, user1 is white.
-            //         makeWhite("user1");
-            //     } else { //user2 is white
-            //         makeWhite("user2");
-            //     }    
-            // })
-        // game.set(bigObj); //creates match db with bigObj.
-
-
-
+        //NAV TO GAME
+        window.location = `/${code}`// nav to url
         // console.log(5);
     }
 
     // useEffect(() => {
     //     setcode(generateCode()); //set code
     // }, []);
-    
 
     return ( 
         <>
