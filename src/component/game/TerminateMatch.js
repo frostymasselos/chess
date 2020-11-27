@@ -4,7 +4,7 @@ function TerminateMatch(params) {
 
     function terminateMatch(params) {
         // window.location = '/';
-        console.log("red");
+        // console.log("red");
     }
 
     return (

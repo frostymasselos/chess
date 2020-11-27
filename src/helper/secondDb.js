@@ -1,4 +1,4 @@
-let secondBigObj = { //have a demo like this ready in db (that can't be deleted) that we build from
+let bigObj = { //have a demo like this ready in db (that can't be deleted) that we build from
     "user1": {
         signedIn: false,
         moved: 0,
@@ -225,6 +225,6 @@ let secondBigObj = { //have a demo like this ready in db (that can't be deleted)
     },
 }
 
-export default secondBigObj;
+export default bigObj;
 
 // db.ref('matches/template2').set(secondBigObj);
