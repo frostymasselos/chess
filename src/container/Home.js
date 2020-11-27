@@ -1,14 +1,14 @@
-import Test from '../component/Test.js';
+// import Test from '../component/Test.js';
 import bigObj from '../helper/secondDb';
 import Instructions from '../element/instructions.js';
-import NewGame from '../component/home/NewGame.js';
+// import NewGame from '../component/home/NewGame.js';
 // import Reenter from '../component/home/Reenter.js';
 // import RetrieveCode from '../component/home/RetrieveCode.js';
 import firebase from '../helper/firebase.js'; 
 import "firebase/auth";
 import {Link} from 'react-router-dom';
 import {useState} from 'react';
-import {useEffect} from 'react';
+// import {useEffect} from 'react';
 
 function Home(params) {
 
@@ -17,7 +17,7 @@ function Home(params) {
 
     let [notSignedIn, setNotSignedIn] = useState(false);
     let [matchUrl, setMatchUrl] = useState('');
-    let [user, setUser] = useState('');
+    // let [user, setUser] = useState('');
 
     async function startNewGame(params) { //MAYBE THIS SHOULD BELONG IN GAME
         //GENERATE CODE
@@ -52,13 +52,11 @@ function Home(params) {
         await game.child('user1').update({
             signedIn: true
         })
-
-        //CHANGE STATE TO MAKE MORE FLUID UI?
         
         //NAV TO GAME
-        window.location = `/${code}`;
+        window.location.replace(`/${code}`);
     }
-
+    
     async function terminateGame(params) {
         //SIGNAL TO OPPONENT QUITTING?
         // await db.ref(`matches/${matchUrl}/${user}`).update({
@@ -71,14 +69,14 @@ function Home(params) {
         // CHANGE STATE
         setNotSignedIn('');
         setMatchUrl('');
-        setUser('');
+        // setUser('');
     }
 
     //RENDER MATCHURL IF USER1|2 FBSIGNEDIN - ELSE RENDER NewGame
     let eventListener = auth.onAuthStateChanged(() => {
         if (auth.currentUser) { 
             setMatchUrl(auth.currentUser.email.slice(0, 6));
-            auth.currentUser.email.includes('user1') ? setUser('user1') : setMatchUrl('user2')
+            // auth.currentUser.email.includes('user1') ? setUser('user1') : setMatchUrl('user2');
             setNotSignedIn(false);
             eventListener(); //stops callback executing (which changes state which changes UI) when change in sign-in (i.e. creation or deletion)
         } else {
@@ -87,14 +85,14 @@ function Home(params) {
         }
     })
     
-    useEffect(() => {
-    }, []);
+    // useEffect(() => {
+    // }, []);
     
     return ( 
         <>
             <h4>HomeContainer</h4>
             {Instructions()}
-            {notSignedIn && <NewGame startNewGame={startNewGame}></NewGame>}
+            {notSignedIn && <div onClick={startNewGame}>Start new game</div>}
             {matchUrl && <div>Match url: {window.location.origin}/{matchUrl}</div>} 
             {matchUrl && <Link to={`/${matchUrl}`}>Resume Game</Link>}
             {matchUrl && <button onClick={terminateGame}>Terminate Game</button>}
@@ -103,4 +101,4 @@ function Home(params) {
   
 }
 
-export default Home
+export default Home;
