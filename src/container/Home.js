@@ -33,7 +33,6 @@ function Home(params) {
         //     game.set(e.val());
         // })
         
-        
         // DECIDE WHO'S WHITE
         if (Math.random() > 0.5) { //if true, authUser1 should be black & start on 2nd position in board. 
             await game.child('user1').set(bigObj.user2); //works
@@ -53,6 +52,8 @@ function Home(params) {
         await game.child('user1').update({
             signedIn: true
         })
+
+        //CHANGE STATE TO MAKE MORE FLUID UI?
         
         //NAV TO GAME
         window.location = `/${code}`;
@@ -74,16 +75,18 @@ function Home(params) {
     }
 
     //RENDER MATCHURL IF USER1|2 FBSIGNEDIN - ELSE RENDER NewGame
-    auth.onAuthStateChanged(() => {
+    let eventListener = auth.onAuthStateChanged(() => {
         if (auth.currentUser) { 
             setMatchUrl(auth.currentUser.email.slice(0, 6));
             auth.currentUser.email.includes('user1') ? setUser('user1') : setMatchUrl('user2')
             setNotSignedIn(false);
+            eventListener(); //stops callback executing (which changes state which changes UI) when change in sign-in (i.e. creation or deletion)
         } else {
             setNotSignedIn(true);
+            eventListener();
         }
     })
-
+    
     useEffect(() => {
     }, []);
     
