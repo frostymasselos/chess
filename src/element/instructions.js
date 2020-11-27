@@ -1,5 +1,5 @@
 function Instructions(params) {
-    return <div>Instructions.</div>
+    return <div>Instructions</div>
 }
 
 export default Instructions;

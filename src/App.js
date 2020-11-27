@@ -10,7 +10,7 @@ function App(params) {
             <> 
                 <Switch>
                     <Route exact path="/" render={(arg) => <Home/>} />
-                    <Route path="/:code" render={(url) => <Game title={url.match}/>}/> 
+                    <Route path="/:code" render={(url) => <Game params={url.match.url}/>}/> 
                 </Switch>
                 {Footer()}
             </>
@@ -20,4 +20,6 @@ function App(params) {
 }
 
 export default App
+
+// would vanilla JS've captured params?
 
