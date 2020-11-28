@@ -40,12 +40,12 @@ function Home(params) {
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             await auth.createUserWithEmailAndPassword(`${code}@user1Position2.com`, `${code}`);
-            await auth.signInWithEmailAndPassword(`${code}@user1Position2.com`, `${code}`);
+            // await auth.signInWithEmailAndPassword(`${code}@user1Position2.com`, `${code}`);
         } else { //authUser1 is white & starts on 1st position in board.
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             await auth.createUserWithEmailAndPassword(`${code}@user1Position1.com`, `${code}`);
-            await auth.signInWithEmailAndPassword(`${code}@user1Position1.com`, `${code}`);
+            // await auth.signInWithEmailAndPassword(`${code}@user1Position1.com`, `${code}`);
         }
         
         //DBuser1SignIn TRUE?
