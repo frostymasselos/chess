@@ -1,9 +1,14 @@
 import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
+import firebase from '../../helper/firebase.js'; 
+import "firebase/auth";
 
-function TerminateMatchForNewGame() {
+function TerminateMatchForNewGame({url, setArbritrary}) {
 
-    let [matchUrl, setMatchUrl] = useState('/');
+    let [matchUrl, setMatchUrl] = useState('');
+
+    let db = firebase.database(); 
+    let auth = firebase.auth();
 
     // function greyInOut(params) {
         //     //execute prop with false arg
@@ -11,15 +16,25 @@ function TerminateMatchForNewGame() {
         // //mount executes prop with true arg
 
         
-        function terminateMatchForNewGame(params) {
-            //same as terminateMatch
-            window.location.reload();
+        async function terminateMatchForNewGame(params) {
+            //SAME AS TERMINATE MATCH
+            //SIGNAL TO OPPONENT QUITTING?
+            // await db.ref(`matches/${matchUrl}/${user}`).update({
+            //     quit: true
+            // })
+            // DELETE DB (SHOULD TIME ELAPSE BEFORE?)
+            await db.ref(`matches/${matchUrl}`).remove();
+            // await auth.signInWithEmailAndPassword("691080@user1position1.com", `${matchUrl}`);
+            await auth.currentUser.delete();
+            // ARBRITRARILY TRIGGER STATE IN GAME
+            setArbritrary(Math.random().toFixed(1));
         }
         
     useEffect(() => {
         //get user1's original game url.
-        setMatchUrl("/12344");
-    });
+        console.log(url);
+        setMatchUrl(url);
+    }, []);
 
     return (
         <>

@@ -39,19 +39,14 @@ function Home(params) {
             await game.child('user2').set(bigObj.user1); //works
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-            await auth.createUserWithEmailAndPassword(`${code}@user1Position2.com`, `${code}`);
+            await auth.createUserWithEmailAndPassword(`${code}@user1.com`, `${code}`);
             // await auth.signInWithEmailAndPassword(`${code}@user1Position2.com`, `${code}`);
         } else { //authUser1 is white & starts on 1st position in board.
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-            await auth.createUserWithEmailAndPassword(`${code}@user1Position1.com`, `${code}`);
+            await auth.createUserWithEmailAndPassword(`${code}@user1.com`, `${code}`);
             // await auth.signInWithEmailAndPassword(`${code}@user1Position1.com`, `${code}`);
         }
-        
-        //DBuser1SignIn TRUE?
-        await game.child('user1').update({
-            signedIn: true
-        })
         
         //NAV TO GAME
         window.location.replace(`/${code}`);
