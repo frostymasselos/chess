@@ -8,7 +8,7 @@ function ErrorPage(params) {
     return (
         <>
             <div>ErrorPage</div>
-            <Link to="/">Return Home</Link>
+            <Link to="/">Return to Homepage</Link>
         </>
     ) 
 }

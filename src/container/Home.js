@@ -62,7 +62,7 @@ function Home(params) {
         // await auth.signInWithEmailAndPassword("691080@user1position1.com", `${matchUrl}`);
         await auth.currentUser.delete();
         // CHANGE STATE
-        setNotSignedIn('');
+        setNotSignedIn(false);
         setMatchUrl('');
         // setUser('');
     }

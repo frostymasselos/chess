@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import firebase from '../../helper/firebase.js'; 
 import "firebase/auth";
 
-function TerminateMatchForNewGame({url, setArbritrary}) {
+function TerminateMatchForNewGame({url, setArbitrary}) {
 
     let [matchUrl, setMatchUrl] = useState('');
 
@@ -15,24 +15,23 @@ function TerminateMatchForNewGame({url, setArbritrary}) {
         // }
         // //mount executes prop with true arg
 
-        
-        async function terminateMatchForNewGame(params) {
-            //SAME AS TERMINATE MATCH
-            //SIGNAL TO OPPONENT QUITTING?
-            // await db.ref(`matches/${matchUrl}/${user}`).update({
-            //     quit: true
-            // })
-            // DELETE DB (SHOULD TIME ELAPSE BEFORE?)
-            await db.ref(`matches/${matchUrl}`).remove();
-            // await auth.signInWithEmailAndPassword("691080@user1position1.com", `${matchUrl}`);
-            await auth.currentUser.delete();
-            // ARBRITRARILY TRIGGER STATE IN GAME
-            setArbritrary(Math.random().toFixed(1));
-        }
+    async function terminateMatchForNewGame(params) {
+        //SAME AS TERMINATE MATCH
+        //SIGNAL TO OPPONENT QUITTING?
+        // await db.ref(`matches/${matchUrl}/${user}`).update({
+        //     quit: true
+        // })
+        // DELETE DB (SHOULD TIME ELAPSE BEFORE?)
+        await db.ref(`matches/${matchUrl}`).remove();
+        // await auth.signInWithEmailAndPassword("691080@user1position1.com", `${matchUrl}`);
+        await auth.currentUser.delete();
+        // ARBRITRARILY TRIGGER STATE IN GAME
+        setArbitrary(Math.random().toFixed(3));
+    }
         
     useEffect(() => {
         //get user1's original game url.
-        console.log(url);
+        console.log("terminate match for new game", url);
         setMatchUrl(url);
     }, []);
 
