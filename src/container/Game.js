@@ -21,9 +21,9 @@ function Game({params}) {
     let [user2SignedIn, setUser2SignedIn] = useState(false);
     let [waiting, setWaiting] = useState(false);
     let [onForeignMatch, setOnForeignMatch] = useState(false);
-    let [intruderInfo, setIntruderInfo] = useState({});
     let [opponentQuits, setOpponentQuits] = useState(false);
     let [matchUrl, setMatchUrl] = useState("");
+    let [authInfo, setAuthInfo] = useState({});
 
     let db = firebase.database(); 
     let auth = firebase.auth();
@@ -82,7 +82,11 @@ function Game({params}) {
                     authListener(); //remove listener
                     if (auth.currentUser) { 
                         // USER1 1ST TIME OR USER1|2 RETURNING OR INTRUDING
+                        //PASS PROPS FOR TerminateMatch & TerminateMatchForNewGame
                         console.log("authSignedIn"); 
+                        let user = "";
+                        auth.currentUser.email.includes("user1") ? user = "user1" : user = "user2";
+                        setAuthInfo({authCode: auth.currentUser.email.slice(0, 6), authUser: user});
                         if (auth.currentUser.email.includes(`${code}`)) { 
                             //USER1 1ST TIME OR USER1|2 RETURNING  
                             if (auth.currentUser.email.includes('user1')) { 
@@ -141,10 +145,6 @@ function Game({params}) {
                                     setinvalidRoute(true); console.log("game full"); 
                                 } else {
                                     //GAME NOT FULL
-                                    //PASS PROPS TO TerminateMatchForNewGame
-                                    let user = "";
-                                    auth.currentUser.email.includes("user1") ? user = "user1" : user = "user2";
-                                    setIntruderInfo({intruderCode: auth.currentUser.email.slice(0, 6), intruderUser: user});
                                     //RENDER TerminateMatchForNewGame
                                     setOnForeignMatch(true); console.log('on foreign match'); 
                                 }
@@ -199,8 +199,8 @@ function Game({params}) {
             {waiting && <Waiting/>}
             {user2SignedIn && <TurnNotifier/>}
             {playing && <Board/>}
-            {playing && < TerminateMatch url={matchUrl}/>}
-            {onForeignMatch && <TerminateMatchForNewGame nativeUrl={matchUrl} intruderInfo={intruderInfo} setArbitrary={setArbitrary}/>}
+            {playing && <TerminateMatch authInfo={authInfo}/>}
+            {onForeignMatch && <TerminateMatchForNewGame nativeUrl={matchUrl} intruderInfo={authInfo} setArbitrary={setArbitrary}/>}
             <button onClick={user2QuitsAndDbDeletes}>Click to make user2 quit and db delete</button>
             <button onClick={user1QuitsAndDbDeletes}>Click to make user1 quit and db delete</button>
             <button onClick={user2Moves}>Click to make user2 'move'</button>

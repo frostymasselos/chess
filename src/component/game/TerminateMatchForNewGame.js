@@ -3,23 +3,23 @@ import {useState, useEffect} from 'react';
 import firebase from '../../helper/firebase.js'; 
 import "firebase/auth";
 
-function TerminateMatchForNewGame({nativeUrl, intruderInfo, setArbitrary}) {
+function TerminateMatchForNewGame({nativeUrl, intruderInfo, setArbitrary}) { 
 
     let db = firebase.database(); 
     let auth = firebase.auth();
 
     async function backToIntruderGame(params) {
-        window.location.replace(`/${intruderInfo.intruderCode}`); //Using `Link` to nav to new url doesn't 'update' Game.
+        window.location.replace(`/${intruderInfo.authCode}`); //Using `Link` to nav to new url doesn't 'update' Game.
     }
 
     async function terminateMatchForNewGame(params) {
         //SAME AS TERMINATE MATCH EXCEPT DONT NAV HOME: UPDATE PAGE.
         //SIGNAL TO OPPONENT QUITTING? WILL OPPONENT'S LISTNER BE ABLE TO DELETE OPPONENTAUTH? IF NOT, PERHAPS THEN THE HONOUS IS ON THE OPPONENT TO QUICKLY DELETE DB
-        await db.ref(`matches/${intruderInfo.intruderCode}/${intruderInfo.intruderUser}`).update({
+        await db.ref(`matches/${intruderInfo.authCode}/${intruderInfo.authUser}`).update({
             quit: true
         })
         //DELETE INTRUDER DB
-        await db.ref(`matches/${intruderInfo.intruderCode}`).remove();
+        await db.ref(`matches/${intruderInfo.authCode}`).remove();
         //DELETE INTRUDER AUTH
         await auth.currentUser.delete();
         //ARBRITRARILY TRIGGER STATE IN GAME
