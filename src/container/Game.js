@@ -79,8 +79,8 @@ function Game({params}) {
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', next);
         // auth.onAuthStateChanged(() => {}); don't need this as already have it in mount
     }
-
-    function mount() {
+    
+    useEffect(() => { 
         let code = params.slice(1); console.log(code); setMatchUrl(code);
         let game = db.ref(`matches/${code}`);
         db.ref('matches').orderByKey().equalTo(`${code}`).on('value', (e) => { 
@@ -197,9 +197,7 @@ function Game({params}) {
                 setOnForeignMatch(false);
             } 
         }) //no code should execute after this dBListener
-    }
-    
-    useEffect(mount, [arbitrary]);
+    }, [arbitrary]);
     
     return ( 
         <>
