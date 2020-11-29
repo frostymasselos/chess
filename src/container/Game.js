@@ -58,6 +58,15 @@ function Game({params}) {
         await db.ref(`matches/${matchUrl}`).remove();
     }
 
+    function listenerForUser2SigningIn(game) {
+        console.log(`listening for user2 signing in`);
+        async function next(e) {
+            console.log(`callback fired for user2 signing in`);
+            setWaiting(false);
+        }
+        game.child(`user2`).orderByKey().equalTo(`signedIn`).on('child_changed', next);
+    }
+
     function listenerForOpponentQuitting(game, you, opponent) {
         console.log(`${you} listening for ${opponent} quitting`);
         async function next(e) {
@@ -70,8 +79,8 @@ function Game({params}) {
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', next);
         // auth.onAuthStateChanged(() => {}); don't need this as already have it in mount
     }
-    
-    useEffect(() => { 
+
+    function mount() {
         let code = params.slice(1); console.log(code); setMatchUrl(code);
         let game = db.ref(`matches/${code}`);
         db.ref('matches').orderByKey().equalTo(`${code}`).on('value', (e) => { 
@@ -107,14 +116,14 @@ function Game({params}) {
                                                 setWaiting(true); console.log("user2 not signed in");
                                             }
                                         })
-                                    } else { //🐉
+                                    } else { //
                                         //USER1 1ST TIME
                                         console.log("user1 own game first-time");
-                                        // setPlaying(true);
+                                        // listenerForUser2SigningIn(game);
+                                        listenerForOpponentQuitting(game, "user1", "user2");
                                         async function next(params) {
                                             //i-v
                                             //LISTENER FOR OPPONENT QUITTING
-                                            listenerForOpponentQuitting(game, "user1", "user2");
                                             //DBuser1SignIn TRUE
                                             await game.child('user1').update({
                                                 signedIn: true
@@ -188,7 +197,9 @@ function Game({params}) {
                 setOnForeignMatch(false);
             } 
         }) //no code should execute after this dBListener
-    }, [arbitrary]);
+    }
+    
+    useEffect(mount, [arbitrary]);
     
     return ( 
         <>
