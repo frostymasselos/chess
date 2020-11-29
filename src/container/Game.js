@@ -15,7 +15,7 @@ import "firebase/auth";
 
 function Game({params}) {
 
-    let [arbitrary, setArbitrary] = useState(0);
+    let [arbitrary, setArbitrary] = useState(false);
     let [invalidRoute, setinvalidRoute] = useState(false);
     let [playing, setPlaying] = useState(false);
     let [user2SignedIn, setUser2SignedIn] = useState(false);
@@ -44,7 +44,7 @@ function Game({params}) {
 
     async function user2QuitsAndDbDeletes(params) {
         console.log("button to make user2 quit's been clicked");
-        db.ref(`matches/${matchUrl}/user2`).update({
+        await db.ref(`matches/${matchUrl}/user2`).update({
             quit: true
         });
         await db.ref(`matches/${matchUrl}`).remove();
@@ -52,7 +52,7 @@ function Game({params}) {
 
     async function user1QuitsAndDbDeletes(params) {
         console.log("button to make user1 quit's been clicked");
-        db.ref(`matches/${matchUrl}/user1`).update({
+        await db.ref(`matches/${matchUrl}/user1`).update({
             quit: true
         });
         await db.ref(`matches/${matchUrl}`).remove();
@@ -60,23 +60,25 @@ function Game({params}) {
 
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
-        async function next(e) {
+        async function user2SignInHasChanged(e) {
+            console.log(e.val());
             console.log(`callback fired for user2 signing in`);
             setWaiting(false);
+            setUser2SignedIn(true);
         }
-        game.child(`user2`).orderByKey().equalTo(`signedIn`).on('child_changed', next);
+        game.child(`user2`).orderByKey().equalTo(`signedIn`).on('child_changed', user2SignInHasChanged);
     }
 
     function listenerForOpponentQuitting(game, you, opponent) {
         console.log(`${you} listening for ${opponent} quitting`);
-        async function next(e) {
-            console.log(`registered ${opponent}'s quit`);
+        async function opponentHasQuit(e) {
+            console.log(`${you} has registered ${opponent}'s quit`);
             await auth.currentUser.delete();
             setOpponentQuits(true);
-            // ARBITRARILY UPDATE STATE
-            setArbitrary(Math.random().toFixed(3));
+            // ARBITRARILY UPDATE STATE SO THAT IT EXECUTES useEffect CALLBACK
+            setArbitrary(true); //Math.random().toFixed(3)
         }
-        game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', next);
+        game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', opponentHasQuit);
         // auth.onAuthStateChanged(() => {}); don't need this as already have it in mount
     }
     
@@ -119,7 +121,7 @@ function Game({params}) {
                                     } else { //
                                         //USER1 1ST TIME
                                         console.log("user1 own game first-time");
-                                        // listenerForUser2SigningIn(game);
+                                        listenerForUser2SigningIn(game);
                                         listenerForOpponentQuitting(game, "user1", "user2");
                                         async function next(params) {
                                             //i-v
@@ -128,7 +130,7 @@ function Game({params}) {
                                             await game.child('user1').update({
                                                 signedIn: true
                                             })
-                                            // ARBRITRARILY TRIGGER STATE IN GAME
+                                            // ARBRITRARILY UPDATE SET THAT'S DESIGNED TO EXECUTE UseEffect CALLBACK
                                             setArbitrary(Math.random().toFixed(1));
                                         }
                                         next();
@@ -190,11 +192,16 @@ function Game({params}) {
                 }); //no code should execute after this authListener.
             } else { 
                 //THE GAME DOES NOT EXIST
-                setinvalidRoute(true); console.log("invalidRoute");
                 setPlaying(false);
                 setUser2SignedIn(false);
                 setWaiting(false);
-                setOnForeignMatch(false);
+                setOnForeignMatch(false); 
+                if (opponentQuits) {
+                //BECAUSE OPPONENT QUIT
+                } else {
+                //NOT BECAUSE OPPONENT QUIT
+                    setinvalidRoute(true); console.log("invalidRoute");
+                }
             } 
         }) //no code should execute after this dBListener
     }, [arbitrary]);
