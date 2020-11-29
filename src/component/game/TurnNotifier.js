@@ -1,6 +1,6 @@
-function TurnNotifier(params) {
+function TurnNotifier({turn}) {
     return (
-        <div>It is someone's turn</div>
+        <div>It is {turn? "your" : "your opponent's"} turn</div>
     )
 }
 

@@ -18,6 +18,7 @@ function Game({params}) {
     let [arbitrary, setArbitrary] = useState(false);
     let [invalidRoute, setinvalidRoute] = useState(false);
     let [playing, setPlaying] = useState(false);
+    let [canMove, setCanMove] = useState(false);
     let [user2SignedIn, setUser2SignedIn] = useState(false);
     let [waiting, setWaiting] = useState(false);
     let [onForeignMatch, setOnForeignMatch] = useState(false);
@@ -61,8 +62,8 @@ function Game({params}) {
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
-            console.log(e.val());
             console.log(`callback fired for user2 signing in`);
+            console.log(e.val());
             setWaiting(false);
             setUser2SignedIn(true);
         }
@@ -76,10 +77,23 @@ function Game({params}) {
             await auth.currentUser.delete();
             setOpponentQuits(true);
             // ARBITRARILY UPDATE STATE SO THAT IT EXECUTES useEffect CALLBACK
-            setArbitrary(true); //Math.random().toFixed(3)
+            setArbitrary(Math.random().toFixed(3)); 
         }
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', opponentHasQuit);
         // auth.onAuthStateChanged(() => {}); don't need this as already have it in mount
+    }
+
+    function listenerForOpponentMoving(game, you, opponent) {
+        console.log(`listening for ${opponent} moving`);
+        async function opponentHasMoved(e) {
+            console.log(`callback fired for ${opponent} moving`);
+            console.log(e.val());
+            //CHANGE canMove IN DB
+            await game.child(`${you}`).update({canMove: true});
+            //CHANGE canMove IN STATE
+            setCanMove(true);
+        }
+        game.child(`${opponent}`).orderByKey().equalTo(`moved`).on('child_changed', opponentHasMoved);
     }
     
     useEffect(() => { 
@@ -112,6 +126,11 @@ function Game({params}) {
                                             console.log(e.val());
                                             if (e.val()) { 
                                                 //USER2 SIGNED IN
+                                                //CAN USER1 MOVE?
+                                                game.child(`user1/canMove`).orderByKey().on('value', (e) => { //put same in USER2 RETURNING
+                                                    game.child(`user1/canMove`).off(); console.log("can user1 move?:", e.val()); //remove listener
+                                                    setCanMove(e.val());
+                                                })
                                                 setUser2SignedIn(true); console.log("user2 is signed in");
                                             } else { 
                                                 //USER2 NOT SIGNED IN YET✅
@@ -121,8 +140,9 @@ function Game({params}) {
                                     } else { //
                                         //USER1 1ST TIME
                                         console.log("user1 own game first-time");
-                                        listenerForUser2SigningIn(game);
-                                        listenerForOpponentQuitting(game, "user1", "user2");
+                                        listenerForUser2SigningIn(game);//✅
+                                        listenerForOpponentQuitting(game, "user1", "user2");//✅
+                                        listenerForOpponentMoving(game, "user1", "user2");//✅
                                         async function next(params) {
                                             //i-v
                                             //LISTENER FOR OPPONENT QUITTING
@@ -130,7 +150,7 @@ function Game({params}) {
                                             await game.child('user1').update({
                                                 signedIn: true
                                             })
-                                            // ARBRITRARILY UPDATE SET THAT'S DESIGNED TO EXECUTE UseEffect CALLBACK
+                                            // ARBRITRARILY UPDATE STATE THAT RETRIGGERS UseEffect CALLBACK
                                             setArbitrary(Math.random().toFixed(1));
                                         }
                                         next();
@@ -138,7 +158,12 @@ function Game({params}) {
                                 })
                             } else { 
                                 //USER2 RETURNING✅
+                                //CAN USER2 MOVE?
                                 console.log("user2 returning");
+                                game.child(`user2/canMove`).orderByKey().on('value', (e) => { //tested this returns
+                                    game.child(`user2/canMove`).off(); console.log("can user2 move?:", e.val()); //remove listener
+                                    setCanMove(e.val());
+                                })
                                 setPlaying(true); 
                                 setUser2SignedIn(true);
                                 setWaiting(false);
@@ -153,7 +178,7 @@ function Game({params}) {
                                 console.log(e.val());
                                 if (e.val()) { 
                                     //GAME FULL
-                                    setinvalidRoute(true); console.log("game full"); 
+                                    setinvalidRoute(true); console.log("game full");//✅
                                 } else {
                                     //GAME NOT FULL
                                     //RENDER TerminateMatchForNewGame
@@ -176,12 +201,13 @@ function Game({params}) {
                                     //AUTH SIGN IN
                                     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); //might not need it.
                                     await auth.createUserWithEmailAndPassword(`${code}@user2.com`, `${code}`);
+                                    listenerForOpponentQuitting(game, "user2", "user1");//✅
+                                    listenerForOpponentMoving(game, "user2", "user1");//✅
                                     //DB SIGN IN
                                     await game.child('user2').update({
                                         signedIn: true
                                     })
                                     //LISTEN FOR OPPONENT QUITTING
-                                    listenerForOpponentQuitting(game, "user2", "user1");
                                     //CHANGE STATE
                                     setArbitrary(Math.random().toFixed(3));
                                 }
@@ -213,7 +239,7 @@ function Game({params}) {
             {invalidRoute && <ErrorPage/>}
             {playing && <Exit/>}
             {waiting && <Waiting/>}
-            {user2SignedIn && <TurnNotifier/>}
+            {user2SignedIn && <TurnNotifier turn={canMove}/>}
             {playing && <Board/>}
             {playing && <TerminateMatch authInfo={authInfo}/>}
             {onForeignMatch && <TerminateMatchForNewGame nativeUrl={matchUrl} intruderInfo={authInfo} setArbitrary={setArbitrary}/>}
