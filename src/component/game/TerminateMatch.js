@@ -17,7 +17,7 @@ function TerminateMatch({url}) {
     async function terminateMatch() {
         async function next(params) {
             authListener();
-            //SIGNAL TO OPPONENT QUITTING? WILL OPPONENT'S LISTNER BE ABLE TO DELETE OPPONENTAUTH? IF NOT, PERHAPS THEN THE HONOUS IS ON THE OPPONENT TO QUICKLY DELETE DB
+            //SIGNAL TO OPPONENT QUITTING? WILL OPPONENT'S LISTENER BE ABLE TO DELETE OPPONENTAUTH? IF NOT, PERHAPS THEN THE HONOUS IS ON THE OPPONENT TO QUICKLY DELETE DB
             let user = ""
             auth.currentUser.email.includes("user1") ? user = "user1" : user = "user2";
             await db.ref(`matches/${matchUrl}/${user}`).update({

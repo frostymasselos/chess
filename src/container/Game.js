@@ -1,3 +1,4 @@
+import bigObj from '../helper/secondDb';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import Test from '../component/Test.js';
@@ -11,7 +12,6 @@ import TerminateMatchForNewGame from '../component/game/TerminateMatchForNewGame
 import OpponentQuits from '../component/game/OpponentQuits.js';
 import firebase from '../helper/firebase.js'; 
 import "firebase/auth";
-import { queryAllByDisplayValue } from '@testing-library/react';
 
 function Game({params}) {
 
@@ -21,22 +21,22 @@ function Game({params}) {
     let [user2SignedIn, setUser2SignedIn] = useState(false);
     let [waiting, setWaiting] = useState(false);
     let [onForeignMatch, setOnForeignMatch] = useState(false);
+    let [intruderInfo, setIntruderInfo] = useState({});
     let [opponentQuits, setOpponentQuits] = useState(false);
     let [matchUrl, setMatchUrl] = useState("");
 
     let db = firebase.database(); 
     let auth = firebase.auth();
 
-    function fadeTags(boolean) {
-        if (true) { 
-            //assign all el (on this page)   into class which makes them unclickable & opacity greyed-out
-        } else {
-            
-        }
+    function test(color, animal) {
+        console.log(this);
+        console.log(color);
+        console.log(animal);
+        // db.ref(`matches/template2`).set(bigObj);
     }
 
     function user2Moves(params) {
-        console.log("button to make user2 rejoin's been clicked");
+        console.log("button to make user2 move's been clicked");
         db.ref(`matches/${matchUrl}/user2`).update({
             moved: Math.random().toFixed(3)
         })
@@ -50,19 +50,25 @@ function Game({params}) {
         await db.ref(`matches/${matchUrl}`).remove();
     }
 
-    function listenerForOpponentQuitting(code, game, you, opponent) {
-        console.log(`${you} listening for opponent quitting`);
+    async function user1QuitsAndDbDeletes(params) {
+        console.log("button to make user1 quit's been clicked");
+        db.ref(`matches/${matchUrl}/user1`).update({
+            quit: true
+        });
+        await db.ref(`matches/${matchUrl}`).remove();
+    }
+
+    function listenerForOpponentQuitting(game, you, opponent) {
+        console.log(`${you} listening for ${opponent} quitting`);
         async function next(e) {
-            // point.off();
             console.log(`registered ${opponent}'s quit`);
             await auth.currentUser.delete();
             setOpponentQuits(true);
             // ARBITRARILY UPDATE STATE
             setArbitrary(Math.random().toFixed(3));
         }
-        let point = game.child(`${opponent}`).orderByKey().equalTo('quit');
-        point.on('child_changed', next);
-        // auth.onAuthStateChanged(() => {}); should be able to get away without using this.
+        game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', next);
+        // auth.onAuthStateChanged(() => {}); don't need this as already have it in mount
     }
     
     useEffect(() => { 
@@ -91,20 +97,20 @@ function Game({params}) {
                                             console.log(e.val());
                                             if (e.val()) { 
                                                 //USER2 SIGNED IN
-                                                setUser2SignedIn(true); console.log("user2 signed in");
+                                                setUser2SignedIn(true); console.log("user2 is signed in");
                                             } else { 
                                                 //USER2 NOT SIGNED IN YET✅
                                                 setWaiting(true); console.log("user2 not signed in");
                                             }
                                         })
-                                    } else { 
+                                    } else { //🐉
                                         //USER1 1ST TIME
                                         console.log("user1 own game first-time");
                                         // setPlaying(true);
                                         async function next(params) {
                                             //i-v
                                             //LISTENER FOR OPPONENT QUITTING
-                                            listenerForOpponentQuitting(code, game, "user1", "user2")
+                                            listenerForOpponentQuitting(game, "user1", "user2");
                                             //DBuser1SignIn TRUE
                                             await game.child('user1').update({
                                                 signedIn: true
@@ -125,32 +131,36 @@ function Game({params}) {
                         } else { 
                             //SIGNED IN USER1|2 INTRUDING
                             //IS GAME FULL?
+                            console.log("signed in user1|2 intruding");
                             let dBUser2SignedIn = game.child('user2/signedIn');
                             dBUser2SignedIn.orderByKey().on('value', (e) => {
                                 dBUser2SignedIn.off();
                                 console.log(e.val());
                                 if (e.val()) { 
                                     //GAME FULL
-                                    setinvalidRoute(true); console.log("invalidRoute"); 
+                                    setinvalidRoute(true); console.log("game full"); 
                                 } else {
                                     //GAME NOT FULL
-                                    //render TerminateMatchForNewGame
+                                    //PASS PROPS TO TerminateMatchForNewGame
+                                    let user = "";
+                                    auth.currentUser.email.includes("user1") ? user = "user1" : user = "user2";
+                                    setIntruderInfo({intruderCode: auth.currentUser.email.slice(0, 6), intruderUser: user});
+                                    //RENDER TerminateMatchForNewGame
                                     setOnForeignMatch(true); console.log('on foreign match'); 
                                 }
                             })
                         }
                     } else { 
-                        //USER2 FIRST TIME
+                        //USER2 1ST TIME
                         console.log("user2 first time"); //remove listener
                         game.child('user2').orderByKey().equalTo('signedIn').on('value', (e) => {
-                            game.child('user2').off(); //remove listener
-                            console.log(e.val().signedIn);
+                            game.child('user2').off(); console.log(e.val().signedIn); //remove listener
                             if (e.val().signedIn) { 
-                                //USER2 ALREADY dB SIGNED IN🐉
+                                //USER2 ALREADY dB SIGNED IN
                                 setinvalidRoute(true); console.log("invalidRoute");
                             } else { 
                                 //WE CAN SIGN-IN USER2
-                                console.log("we can sign in user2"); //remove listener
+                                console.log("we can sign in user2");
                                 async function next() {
                                     //AUTH SIGN IN
                                     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); //might not need it.
@@ -159,6 +169,8 @@ function Game({params}) {
                                     await game.child('user2').update({
                                         signedIn: true
                                     })
+                                    //LISTEN FOR OPPONENT QUITTING
+                                    listenerForOpponentQuitting(game, "user2", "user1");
                                     //CHANGE STATE
                                     setArbitrary(Math.random().toFixed(3));
                                 }
@@ -188,9 +200,11 @@ function Game({params}) {
             {user2SignedIn && <TurnNotifier/>}
             {playing && <Board/>}
             {playing && < TerminateMatch url={matchUrl}/>}
-            {onForeignMatch && <TerminateMatchForNewGame url={matchUrl} setArbitrary={setArbitrary}/>}
+            {onForeignMatch && <TerminateMatchForNewGame nativeUrl={matchUrl} intruderInfo={intruderInfo} setArbitrary={setArbitrary}/>}
             <button onClick={user2QuitsAndDbDeletes}>Click to make user2 quit and db delete</button>
+            <button onClick={user1QuitsAndDbDeletes}>Click to make user1 quit and db delete</button>
             <button onClick={user2Moves}>Click to make user2 'move'</button>
+            <button onClick={test.bind("this", "blue", "fish")}>Click to execute 'test'</button>
         </>
     )
   

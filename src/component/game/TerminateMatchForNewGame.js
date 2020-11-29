@@ -3,43 +3,38 @@ import {useState, useEffect} from 'react';
 import firebase from '../../helper/firebase.js'; 
 import "firebase/auth";
 
-function TerminateMatchForNewGame({url, setArbitrary}) {
-
-    let [matchUrl, setMatchUrl] = useState('');
+function TerminateMatchForNewGame({nativeUrl, intruderInfo, setArbitrary}) {
 
     let db = firebase.database(); 
     let auth = firebase.auth();
 
-    // function greyInOut(params) {
-        //     //execute prop with false arg
-        // }
-        // //mount executes prop with true arg
+    async function backToIntruderGame(params) {
+        window.location.replace(`/${intruderInfo.intruderCode}`); //Using `Link` to nav to new url doesn't 'update' Game.
+    }
 
     async function terminateMatchForNewGame(params) {
-        //SAME AS TERMINATE MATCH
-        //SIGNAL TO OPPONENT QUITTING?
-        // await db.ref(`matches/${matchUrl}/${user}`).update({
-        //     quit: true
-        // })
-        // DELETE DB (SHOULD TIME ELAPSE BEFORE?)
-        await db.ref(`matches/${matchUrl}`).remove();
-        // await auth.signInWithEmailAndPassword("691080@user1position1.com", `${matchUrl}`);
+        //SAME AS TERMINATE MATCH EXCEPT DONT NAV HOME: UPDATE PAGE.
+        //SIGNAL TO OPPONENT QUITTING? WILL OPPONENT'S LISTNER BE ABLE TO DELETE OPPONENTAUTH? IF NOT, PERHAPS THEN THE HONOUS IS ON THE OPPONENT TO QUICKLY DELETE DB
+        await db.ref(`matches/${intruderInfo.intruderCode}/${intruderInfo.intruderUser}`).update({
+            quit: true
+        })
+        //DELETE INTRUDER DB
+        await db.ref(`matches/${intruderInfo.intruderCode}`).remove();
+        //DELETE INTRUDER AUTH
         await auth.currentUser.delete();
-        // ARBRITRARILY TRIGGER STATE IN GAME
+        //ARBRITRARILY TRIGGER STATE IN GAME
         setArbitrary(Math.random().toFixed(3));
     }
         
     useEffect(() => {
-        //get user1's original game url.
-        console.log("terminate match for new game", url);
-        setMatchUrl(url);
+        console.log("terminate match for new game:", nativeUrl);
     }, []);
 
     return (
         <>
             <div>You are currently signed in...A user can only...Would you like to?...</div>
+            <button onClick={backToIntruderGame}>Go back to your game</button>
             <button onClick={terminateMatchForNewGame}>Join this game</button>
-            <Link to={matchUrl}>Go back to your game</Link>
         </>
     )
 }
