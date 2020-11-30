@@ -260,7 +260,7 @@ function Game({params}) {
             {playing && <Exit/>}
             {waiting && <Waiting/>}
             {user2SignedIn && <TurnNotifier turn={canMove}/>}
-            {playing && <Board position={position}/>}
+            {playing && <Board db={db} authInfo={authInfo} position={position}/>}
             {playing && <TerminateMatch authInfo={authInfo}/>}
             {onForeignMatch && <TerminateMatchForNewGame nativeUrl={matchUrl} intruderInfo={authInfo} setArbitrary={setArbitrary}/>}
             <button onClick={user2QuitsAndDbDeletes}>Click to make user2 quit and db delete</button>
