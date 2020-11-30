@@ -13,6 +13,10 @@ body {
     margin: 0;
 }
 
+#root {
+    height: 100vh;
+}
+
 div {
     // font-family: 'Ranchers';
     // color: green;
@@ -20,9 +24,12 @@ div {
 
 //`SECTION` WILL BE FOR GRID-CONTAINER
 .board-grid-container {
-    height: 400px;
-    transform: rotate(180deg);
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+    @media screen and (max-width: 600px) {
+        width: 100vw;
+        height: 100vw;
+        // transform: rotate(180deg);
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr); 
+    }
 }

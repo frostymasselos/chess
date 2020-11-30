@@ -24,6 +24,7 @@ function Game({params}) {
     let [onForeignMatch, setOnForeignMatch] = useState(false);
     let [opponentQuits, setOpponentQuits] = useState(false);
     let [matchUrl, setMatchUrl] = useState("");
+    let [position, setPosition] = useState(1);
     let [authInfo, setAuthInfo] = useState({});
 
     let db = firebase.database(); 
@@ -120,23 +121,30 @@ function Game({params}) {
                                     game.child(`user1/signedIn`).off(); console.log(e.val()); //remove listener
                                     if (e.val()) {
                                         //USER1 RETURNING
-                                        setPlaying(true); console.log("user1 returning");
-                                        game.child(`user2/signedIn`).orderByKey().on('value', (e) => {
-                                            game.child(`user2/signedIn`).off(); //remove listener
-                                            console.log(e.val());
-                                            if (e.val()) { 
-                                                //USER2 SIGNED IN
-                                                //CAN USER1 MOVE?
-                                                game.child(`user1/canMove`).orderByKey().on('value', (e) => { //put same in USER2 RETURNING
-                                                    game.child(`user1/canMove`).off(); console.log("can user1 move?:", e.val()); //remove listener
-                                                    setCanMove(e.val());
-                                                })
-                                                setUser2SignedIn(true); console.log("user2 is signed in");
-                                            } else { 
-                                                //USER2 NOT SIGNED IN YET✅
-                                                setWaiting(true); console.log("user2 not signed in");
+                                        //determine what position player starts on via whiteness
+                                        game.child(`user1/white`).on('value', (e) => {
+                                            console.log(`is user1 white?`, e.val());
+                                            if (!e.val()) {
+                                                setPosition(2); 
                                             }
-                                        })
+                                            setPlaying(true); console.log("user1 returning"); //BOARD IS RENDERED HERE
+                                            game.child(`user2/signedIn`).orderByKey().on('value', (e) => {
+                                                game.child(`user2/signedIn`).off(); //remove listener
+                                                console.log(e.val());
+                                                if (e.val()) { 
+                                                    //USER2 SIGNED IN
+                                                    //CAN USER1 MOVE?
+                                                    game.child(`user1/canMove`).orderByKey().on('value', (e) => { //put same in USER2 RETURNING
+                                                        game.child(`user1/canMove`).off(); console.log("can user1 move?:", e.val()); //remove listener
+                                                        setCanMove(e.val());
+                                                    })
+                                                    setUser2SignedIn(true); console.log("user2 is signed in");
+                                                } else { 
+                                                    //USER2 NOT SIGNED IN YET✅
+                                                    setWaiting(true); console.log("user2 not signed in");
+                                                }
+                                            })
+                                        });
                                     } else { //
                                         //USER1 1ST TIME
                                         console.log("user1 own game first-time");
@@ -157,16 +165,23 @@ function Game({params}) {
                                     }
                                 })
                             } else { 
-                                //USER2 RETURNING✅
-                                //CAN USER2 MOVE?
-                                console.log("user2 returning");
-                                game.child(`user2/canMove`).orderByKey().on('value', (e) => { //tested this returns
-                                    game.child(`user2/canMove`).off(); console.log("can user2 move?:", e.val()); //remove listener
-                                    setCanMove(e.val());
-                                })
-                                setPlaying(true); 
-                                setUser2SignedIn(true);
-                                setWaiting(false);
+                                //USER2 RETURNING
+                                //determine what position player starts on via whiteness🐉
+                                game.child(`user2/white`).on('value', (e) => {
+                                    console.log(`is user2 white?`, e.val());
+                                    if (!e.val()) {
+                                        setPosition(2);
+                                    }
+                                    //CAN USER2 MOVE?
+                                    console.log("user2 returning");
+                                    game.child(`user2/canMove`).orderByKey().on('value', (e) => { 
+                                        game.child(`user2/canMove`).off(); console.log("can user2 move?:", e.val()); //remove listener
+                                        setCanMove(e.val());
+                                        setPlaying(true); //BOARD IS RENDERED HERE
+                                        setUser2SignedIn(true);
+                                        setWaiting(false);
+                                    })
+                                });
                             }  
                         } else { 
                             //SIGNED IN USER1|2 INTRUDING
@@ -209,7 +224,7 @@ function Game({params}) {
                                         let userBlack = '';
                                         e.val() ? userBlack = "user2" : userBlack = "user1";
                                         await game.child(`${userBlack}`).update({moved: 1});
-                                        //DB SIGN IN
+                                        //DB SIGN IN (makes sense: we should only render TurnNotifier when we know who's turn it is)
                                         await game.child('user2').update({signedIn: true});
                                         //CHANGE STATE
                                         setArbitrary(Math.random().toFixed(3));
@@ -245,7 +260,7 @@ function Game({params}) {
             {playing && <Exit/>}
             {waiting && <Waiting/>}
             {user2SignedIn && <TurnNotifier turn={canMove}/>}
-            {playing && <Board/>}
+            {playing && <Board position={position}/>}
             {playing && <TerminateMatch authInfo={authInfo}/>}
             {onForeignMatch && <TerminateMatchForNewGame nativeUrl={matchUrl} intruderInfo={authInfo} setArbitrary={setArbitrary}/>}
             <button onClick={user2QuitsAndDbDeletes}>Click to make user2 quit and db delete</button>
