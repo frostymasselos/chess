@@ -203,13 +203,18 @@ function Game({params}) {
                                     await auth.createUserWithEmailAndPassword(`${code}@user2.com`, `${code}`);
                                     listenerForOpponentQuitting(game, "user2", "user1");//✅
                                     listenerForOpponentMoving(game, "user2", "user1");//✅
-                                    //DB SIGN IN
-                                    await game.child('user2').update({
-                                        signedIn: true
-                                    })
-                                    //LISTEN FOR OPPONENT QUITTING
-                                    //CHANGE STATE
-                                    setArbitrary(Math.random().toFixed(3));
+                                    //BLACK ARTIFICIALLY MOVES (& FREEZES)
+                                    async function next(e) {
+                                        console.log(`is user1 white?`, e.val());
+                                        let userBlack = '';
+                                        e.val() ? userBlack = "user2" : userBlack = "user1";
+                                        await game.child(`${userBlack}`).update({moved: 1});
+                                        //DB SIGN IN
+                                        await game.child('user2').update({signedIn: true});
+                                        //CHANGE STATE
+                                        setArbitrary(Math.random().toFixed(3));
+                                    }
+                                    game.child(`user1/white`).on('value', next);
                                 }
                                 next();
                             }
