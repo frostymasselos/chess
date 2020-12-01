@@ -2,6 +2,7 @@ import {useState, useEffect, useRef} from 'react';
 
 function Board({db, authInfo, position}) {
 
+    let initialExecution = useRef(true);
     let [boardArray, setBoardArray] = useState([]);
     let boardArray2 = useRef([]);
     
@@ -17,6 +18,7 @@ function Board({db, authInfo, position}) {
         }
     }
     
+    //1.POPULATE boardArray
     useEffect(() => {
         if (position === 2) {
             //ROTATE BOARD🐉
@@ -59,10 +61,19 @@ function Board({db, authInfo, position}) {
             opponentDb.child(`pieces`).on('value', (e) => {
                 fillBoardWithPieces(e.val(), opponentDb);
                 setBoardArray(boardArray2.current);
-                //MAKE PIECES
             })
         });
     }, []);
+
+    //2.RENDER PIECES ON BOARD
+    useEffect(() => {
+        //PREVENT BELOW CODE FROM EXECUTING ON INITIAL EXECUTION
+        if (initialExecution) {
+            initialExecution.current = false;
+            return;
+        }
+
+    }, [boardArray]);
 
     return (
         <>
