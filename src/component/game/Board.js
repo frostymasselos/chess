@@ -3,24 +3,14 @@ import {useState, useEffect, useRef} from 'react';
 function Board({db, authInfo, position}) {
 
     let [boardArray, setBoardArray] = useState([]);
-    let boardArray2 = [];
-    let [test, setTest] = useState(false);
-
-    let number = useRef(1)
-    console.log(number.current);
-
-    function changeTestState(params) {
-        setTest(true);
-        number.current = 2;
-    }
+    let boardArray2 = useRef([]);
 
     function makePieces(params) { //return array of divs
-        
     }
 
     function fillBoardWithSquares(params) {
         for (let num = 0; num < 64; num++) { //works
-            boardArray2.push({
+            boardArray2.current.push({
                 index: num,
                 piece: null,
             })
@@ -37,29 +27,36 @@ function Board({db, authInfo, position}) {
             console.log("not rotating board");
         }
         //FILL BOARD WITH SQUARES
-        // let boardArray2 = [];
         fillBoardWithSquares();
-        console.log(boardArray2);
         // //FILL BOARD WITH PIECES
-        // let game = db.ref(`matches/${authInfo.authCode}`);
-        // let user = db.ref(`matches/${authInfo.authCode}/${authInfo.authUser}`);
-        // user.child(`pieces`).on('value', (e) => {
-        //     user.child(`pieces`).off();
-        //     let objOfPieces = e.val(); console.log(objOfPieces);
-        //     for (let key in objOfPieces) {
-        //         //IF PIECE IS ALIVE?
-        //         let rowPosition = objOfPieces[key].rowPosition.slice(0, 1); //"1/2"
-        //         let columnPosition = objOfPieces[key].columnPosition.slice(0, 1); //"6/7"
-        //         let index = (8 - rowPosition) * 8 + (columnPosition - 1);
-        //         for (let square of boardArray2) {
-        //             if (index === square.index) { 
-        //                 square.piece = objOfPieces[key];
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     setBoardArray(boardArray2);
-        // });
+        let game = db.ref(`matches/${authInfo.authCode}`);
+        let userDb = db.ref(`matches/${authInfo.authCode}/${authInfo.authUser}`);
+        let opponent = '';
+        authInfo.authUser === "user1" ? opponent = "user2" : opponent = "user1";
+        let opponentDb = db.ref(`matches/${authInfo.authCode}/${opponent}`);
+        userDb.child(`pieces`).on('value', (e) => {
+            function fillBoardWithPieces(objOfPieces, dB) {
+                dB.child(`pieces`).off(); //remove listener
+                // let objOfPieces = e.val();
+                for (let key in objOfPieces) {
+                    //IF PIECE IS ALIVE?
+                    let rowPosition = objOfPieces[key].rowPosition.slice(0, 1); //"1/2"
+                    let columnPosition = objOfPieces[key].columnPosition.slice(0, 1); //"6/7"
+                    let index = (8 - rowPosition) * 8 + (columnPosition - 1);
+                    for (let square of boardArray2.current) {
+                        if (index === square.index) { 
+                            square.piece = objOfPieces[key];
+                            break;
+                        }
+                    }
+                }
+            }
+            fillBoardWithPieces(e.val(), userDb);
+            opponentDb.child(`pieces`).on('value', (e) => {
+                fillBoardWithPieces(e.val(), opponentDb);
+                setBoardArray(boardArray2.current);
+            })
+        });
     }, []);
 
     return (
@@ -67,8 +64,6 @@ function Board({db, authInfo, position}) {
             <div>Board</div>
             <div className="board-grid-container">
             </div>
-            <button onClick={changeTestState}>Click button to change state</button>
-            {/* {test && <div>I am test</div>} */}
         </>
     )
 
