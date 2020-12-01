@@ -40,7 +40,7 @@ function Game({params}) {
     function user2Moves(params) {
         console.log("button to make user2 move's been clicked");
         db.ref(`matches/${matchUrl}/user2`).update({
-            moved: Math.random().toFixed(3)
+            moved: Math.random().toFixed(5)
         })
     }
 
@@ -78,7 +78,7 @@ function Game({params}) {
             await auth.currentUser.delete();
             setOpponentQuits(true);
             // ARBITRARILY UPDATE STATE SO THAT IT EXECUTES useEffect CALLBACK
-            setArbitrary(Math.random().toFixed(3)); 
+            setArbitrary(Math.random().toFixed(5)); 
         }
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', opponentHasQuit);
         // auth.onAuthStateChanged(() => {}); don't need this as already have it in mount
@@ -159,7 +159,7 @@ function Game({params}) {
                                                 signedIn: true
                                             })
                                             // ARBRITRARILY UPDATE STATE THAT RETRIGGERS UseEffect CALLBACK
-                                            setArbitrary(Math.random().toFixed(1));
+                                            setArbitrary(Math.random().toFixed(5));
                                         }
                                         next();
                                     }
@@ -227,7 +227,7 @@ function Game({params}) {
                                         //DB SIGN IN (makes sense: we should only render TurnNotifier when we know who's turn it is)
                                         await game.child('user2').update({signedIn: true});
                                         //CHANGE STATE
-                                        setArbitrary(Math.random().toFixed(3));
+                                        setArbitrary(Math.random().toFixed(5));
                                     }
                                     game.child(`user1/white`).on('value', next);
                                 }
