@@ -5,10 +5,11 @@ function Board({db, authInfo, position}) {
 
     let userColor = useRef(position === 1 ? "white" : "black");
     let boardArray = useRef([]);
-    let clickedOnPiece = useRef(false);
     let [gridItems, setGridItems] = useState([]);
+    let initialExecutionGridItemsUseEffect = useRef(true);
+    let clickedOnPiece = useRef(false);
     // let [clickedOnPiece, setClickedOnPiece] = useState(false);
-    let [testyTag, setTestyTag] = useState(false);
+    // let [testyTag, setTestyTag] = useState(false);
     
     function fillBoardArrayWithSquares(params) {
         for (let num = 0; num < 64; num++) { //works
@@ -79,26 +80,34 @@ function Board({db, authInfo, position}) {
                     gridRow: `${item.piece.rowPosition}`,
                     gridColumn:`${item.piece.columnPosition}`,
                     backgroundColor: item.piece.white ? "white" : "red",
+                    // height: `inherit`,
                 }
                 let gridItem = (
-                    <div onClick={onClickHandler} id={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random()}>
+                    <div data-piece={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random()}>
                     {item.piece.name}</div>
                     ); //data-name={item.piece.name}
                 arrayOfJSXPieces.push(gridItem);
             }
         }
-        console.log(arrayOfJSXPieces[0]);
-        console.log(arrayOfJSXPieces[12].props.style.gridColumn.slice(0, 1));
         let arrayOfJSXSquares = [];
         //MAKES SQUARES & NEST PIECES IN SQUARES
         for (let index = 0, row = 8, col = 1; index < 64; index++, col++) {
+            let potentialPiece = null;
+            //loop through pieces to see if co-ordinates match with square
+            for (const piece of arrayOfJSXPieces) {
+                if (Number.parseInt(piece.props.style.gridColumn.slice(0, 1)) === col && Number.parseInt(piece.props.style.gridRow.slice(0, 1)) === row) {
+                    potentialPiece = piece;
+                    break;
+                }
+            }
             let styleVal = {
                 gridRow: `${row}`,
                 gridColumn:`${col}`,
+                // height: `40px`,
             }
             let square = (
-            <div id={index} style={styleVal} onClick={onClickHandler} key={Math.random()}>
-                {index}
+            <div id={index} data-square style={styleVal} onClick={onClickHandler} key={Math.random()}>
+                {potentialPiece}
             </div>
             );
             arrayOfJSXSquares.push(square);
@@ -108,28 +117,32 @@ function Board({db, authInfo, position}) {
                 row--;
             }
         }
-        console.log(arrayOfJSXSquares);
+        // console.log(arrayOfJSXSquares);
         setGridItems(arrayOfJSXSquares);
-        //return arrayOfGridItems;
     }
 
+    //2.5 CODE TO EXECUTE WHEN THINGS"RE RENDERED ON BOARD
     useEffect(() => {
-        // console.log("waited for gridItems state to change");
-        // let testSquare = window.document.querySelector(`[id="0"]`);
-        // let testy = React.createElement('div', {onClick: '{onClickHandler}'}, `testy content`, <div>child</div>);
-        let testy1 = <p></p>
-        let testy2 = (
-            <div>
-                {testy1}
-            </div>
-        )
-        setTestyTag(testy2);
+        //doesn't fire on initial execution
+        if (initialExecutionGridItemsUseEffect.current) {
+            initialExecutionGridItemsUseEffect.current = false;
+            return;
+        }
+        console.log("waited for gridItems state to change", gridItems);
+        //set square's CSS height to be explicit value so piece will inherit this value and become same height as square
+        let board = document.querySelector('.board-grid-container');
+
     }, [gridItems])
 
-    //3. NICE ONCLICKHANDLER
+    //3.ONCLICKHANDLER
     function onClickHandler(e) {
         // console.log("onClick handler executed"); console.log(e.currentTarget); //returns GI
-        //check if we've already clicked on piece
+        // if (true) {
+        //     // console.log("currentTarget", e.currentTarget);
+        //     console.log("target", e.target);
+        //     return;
+        // }
+        //ALREADY CLICKED ON PIECE?
         console.log("clickedOnPiece:", clickedOnPiece.current);
         if (clickedOnPiece.current) { //clickedOnPiece
             //IS SAME PIECE?
@@ -177,7 +190,7 @@ function Board({db, authInfo, position}) {
             {/* {testRender()} */}
             {/* {testRender} */}
             {/* {testy.current} */}
-            {testyTag}
+            {/* {testyTag} */}
         </>
     )
 

@@ -33,3 +33,8 @@ div {
         grid-template-rows: repeat(8, 1fr); 
     }
 }
+
+.board-grid-container > div > div {
+    color: pink;
+    height: 100%;
+}
