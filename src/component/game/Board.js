@@ -8,7 +8,7 @@ function Board({db, authInfo, position}) {
     let clickedOnPiece = useRef(false);
     let [gridItems, setGridItems] = useState([]);
     // let [clickedOnPiece, setClickedOnPiece] = useState(false);
-    // let [testRender, setTestRender] = useState(false);
+    let [testyTag, setTestyTag] = useState(false);
     
     function fillBoardArrayWithSquares(params) {
         for (let num = 0; num < 64; num++) { //works
@@ -41,7 +41,6 @@ function Board({db, authInfo, position}) {
         userDb.child(`pieces`).on('value', (e) => {
             function fillBoardWithPieces(objOfPieces, dB) {
                 dB.child(`pieces`).off(); //remove listener
-                // let objOfPieces = e.val();
                 for (let key in objOfPieces) {
                     //if piece is alive
                     if (!objOfPieces[key].alive) {
@@ -71,8 +70,27 @@ function Board({db, authInfo, position}) {
 
     // //2.RENDER PIECES ON BOARD
     function renderPieces(params) { 
-        let arrayOfGridSquares = [];
-        //MAKES PIECES
+        //MAKE PIECES
+        let arrayOfJSXPieces = [];
+        for (const item of boardArray.current) {
+            // if square has piece 
+            if (item.piece) {
+                let styleVal = {
+                    gridRow: `${item.piece.rowPosition}`,
+                    gridColumn:`${item.piece.columnPosition}`,
+                    backgroundColor: item.piece.white ? "white" : "red",
+                }
+                let gridItem = (
+                    <div onClick={onClickHandler} id={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random()}>
+                    {item.piece.name}</div>
+                    ); //data-name={item.piece.name}
+                arrayOfJSXPieces.push(gridItem);
+            }
+        }
+        console.log(arrayOfJSXPieces[0]);
+        console.log(arrayOfJSXPieces[12].props.style.gridColumn.slice(0, 1));
+        let arrayOfJSXSquares = [];
+        //MAKES SQUARES & NEST PIECES IN SQUARES
         for (let index = 0, row = 8, col = 1; index < 64; index++, col++) {
             let styleVal = {
                 gridRow: `${row}`,
@@ -83,40 +101,29 @@ function Board({db, authInfo, position}) {
                 {index}
             </div>
             );
-            arrayOfGridSquares.push(square);
+            arrayOfJSXSquares.push(square);
             //should we reset
             if (col === 8) {
                 col = 0;
                 row--;
             }
         }
-        // console.log(arrayOfGridSquares[0]);
-        //INSERT PIECES INTO SQUARES #1
-        // for (const item of boardArray.current) {
-        //     // if square has piece 
-        //     if (item.piece) {
-        //         let styleVal = {
-        //             gridRow: `${item.piece.rowPosition}`,
-        //             gridColumn:`${item.piece.columnPosition}`,
-        //             backgroundColor: item.piece.white ? "white" : "red",
-        //         }
-        //         let gridItem = (
-        //             <div onClick={onClickHandler} id={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random()}>
-        //             {item.piece.name}</div>
-        //             ); //data-name={item.piece.name}
-        //         arrayOfGridSquares.push(gridItem);
-        //     }
-        // }
-        console.log(arrayOfGridSquares);
-        setGridItems(arrayOfGridSquares);
+        console.log(arrayOfJSXSquares);
+        setGridItems(arrayOfJSXSquares);
         //return arrayOfGridItems;
     }
 
     useEffect(() => {
         // console.log("waited for gridItems state to change");
-        let testSquare = window.document.querySelector(`[id="0"]`);
-        console.log(testSquare);
-        testSquare.append(<p>p</p>);
+        // let testSquare = window.document.querySelector(`[id="0"]`);
+        // let testy = React.createElement('div', {onClick: '{onClickHandler}'}, `testy content`, <div>child</div>);
+        let testy1 = <p></p>
+        let testy2 = (
+            <div>
+                {testy1}
+            </div>
+        )
+        setTestyTag(testy2);
     }, [gridItems])
 
     //3. NICE ONCLICKHANDLER
@@ -170,6 +177,7 @@ function Board({db, authInfo, position}) {
             {/* {testRender()} */}
             {/* {testRender} */}
             {/* {testy.current} */}
+            {testyTag}
         </>
     )
 
