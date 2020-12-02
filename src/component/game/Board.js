@@ -70,23 +70,19 @@ function Board({db, authInfo, position}) {
     }, []);
 
     // //2.RENDER PIECES ON BOARD
-    // useEffect(() => {
-    //     //PREVENT BELOW CODE FROM EXECUTING ON INITIAL EXECUTION
-    //     if (initialExecution) {
-    //         initialExecution.current = false;
-    //         return;
-    //     }
-
-    // }, [boardArray]);
-
-    function renderPieces(params) { //return array of divs
+    function renderPieces(params) { 
         let arrayOfGridSquares = [];
-        for (let index = 0, row = 8, col = 1; index < 64; index++, col++, rowCounter++, colCounter++ ) {
+        //MAKES PIECES
+        for (let index = 0, row = 8, col = 1; index < 64; index++, col++) {
             let styleVal = {
                 gridRow: `${row}`,
                 gridColumn:`${col}`,
             }
-            let square = <div data-index={index} style={styleVal} onClick={onClickHandler} key={Math.random()}>{index}</div>;
+            let square = (
+            <div id={index} style={styleVal} onClick={onClickHandler} key={Math.random()}>
+                {index}
+            </div>
+            );
             arrayOfGridSquares.push(square);
             //should we reset
             if (col === 8) {
@@ -94,6 +90,8 @@ function Board({db, authInfo, position}) {
                 row--;
             }
         }
+        // console.log(arrayOfGridSquares[0]);
+        //INSERT PIECES INTO SQUARES #1
         // for (const item of boardArray.current) {
         //     // if square has piece 
         //     if (item.piece) {
@@ -114,6 +112,14 @@ function Board({db, authInfo, position}) {
         //return arrayOfGridItems;
     }
 
+    useEffect(() => {
+        // console.log("waited for gridItems state to change");
+        let testSquare = window.document.querySelector(`[id="0"]`);
+        console.log(testSquare);
+        testSquare.append(<p>p</p>);
+    }, [gridItems])
+
+    //3. NICE ONCLICKHANDLER
     function onClickHandler(e) {
         // console.log("onClick handler executed"); console.log(e.currentTarget); //returns GI
         //check if we've already clicked on piece
@@ -152,6 +158,8 @@ function Board({db, authInfo, position}) {
         console.log(clickedOnPiece.current);
         //HIGHLIGHT SQUARE/PIECE
     }
+
+    //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS
 
     return (
         <>
