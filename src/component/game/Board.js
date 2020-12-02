@@ -1,36 +1,16 @@
 import {useState, useEffect, useRef} from 'react';
+import React from 'react';  
 
 function Board({db, authInfo, position}) {
 
     let userColor = useRef(position === 1 ? "white" : "black");
-    // let initialExecution = useRef(true);
     let boardArray2 = useRef([]);
-    let test = useRef(false);
+    let clickedOnPieceRef = useRef(false);
     let [gridItems, setGridItems] = useState([]);
-    let [boardArray, setBoardArray] = useState([]);
     let [clickedOnPiece, setClickedOnPiece] = useState(false);
-    // let clickedOnPiece = useRef(false);
     // let [testRender, setTestRender] = useState(false);
-
-    function renderPieces(params) { //return array of divs
-        let arrayOfGridItems = [];
-        for (const item of boardArray2.current) {
-            // if square has piece 
-            if (item.piece) {
-                let styleVal = {
-                    gridRow: `${item.piece.rowPosition}`,
-                    gridColumn:`${item.piece.columnPosition}`,
-                    backgroundColor: item.piece.white ? "white" : "red",
-                }
-                let gridItem = <div onClick={onClickHandler} id={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random().toFixed(5)}>{item.piece.name}</div>; //data-name={item.piece.name}
-                arrayOfGridItems.push(gridItem);
-            }
-        }
-        console.log(arrayOfGridItems);
-        setGridItems(arrayOfGridItems);
-    }
     
-    function fillBoardWithSquares(params) {
+    function fillBoardArrayWithSquares(params) {
         for (let num = 0; num < 64; num++) { //works
             boardArray2.current.push({
                 index: num,
@@ -50,7 +30,7 @@ function Board({db, authInfo, position}) {
             console.log("not rotating board");
         }
         //FILL boardArray2 WITH SQUARES
-        fillBoardWithSquares();
+        fillBoardArrayWithSquares();
         //FILL boardArray2 WITH PIECES
         let game = db.ref(`matches/${authInfo.authCode}`);
         let userDb = db.ref(`matches/${authInfo.authCode}/${authInfo.authUser}`);
@@ -63,7 +43,7 @@ function Board({db, authInfo, position}) {
                 dB.child(`pieces`).off(); //remove listener
                 // let objOfPieces = e.val();
                 for (let key in objOfPieces) {
-                    //IF PIECE IS ALIVE
+                    //if piece is alive
                     if (!objOfPieces[key].alive) {
                         continue;
                     }
@@ -85,7 +65,7 @@ function Board({db, authInfo, position}) {
                 //RENDER PIECES ON BOARD
                 renderPieces();
                 //TEST
-                testRender();
+                // testRenderFunction();
             })
         });
     }, []);
@@ -100,11 +80,30 @@ function Board({db, authInfo, position}) {
 
     // }, [boardArray]);
 
+    function renderPieces(params) { //return array of divs
+        let arrayOfGridItems = [];
+        for (const item of boardArray2.current) {
+            // if square has piece 
+            if (item.piece) {
+                let styleVal = {
+                    gridRow: `${item.piece.rowPosition}`,
+                    gridColumn:`${item.piece.columnPosition}`,
+                    backgroundColor: item.piece.white ? "white" : "red",
+                }
+                let gridItem = <div onClick={onClickHandler} id={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random().toFixed(5)}>{item.piece.name}</div>; //data-name={item.piece.name}
+                arrayOfGridItems.push(gridItem);
+            }
+        }
+        console.log(arrayOfGridItems);
+        setGridItems(arrayOfGridItems);
+        // return arrayOfGridItems;
+    }
+
     function onClickHandler(e) {
         // console.log("onClick handler executed"); console.log(e.currentTarget); //returns GI
         //check if we've already clicked on piece
         console.log("clickedOnPiece:", clickedOnPiece);
-        if (clickedOnPiece) { //clickedOnPiece
+        if (clickedOnPieceRef.current) { //clickedOnPiece
             console.log(clickedOnPiece);
             console.log("2nd stage");
             //DETERMINE LEGAL MOVE
@@ -128,13 +127,10 @@ function Board({db, authInfo, position}) {
         // }
         //register, in state, info on piece clicked on
         console.log("1st stage");
-        setClickedOnPiece("red");// setClickedOnPiece({color: e.currentTarget.dataset.color, id: e.currentTarget.id});
-        // clickedOnPiece.current = "red"; //{color: e.currentTarget.dataset.color, id: e.currentTarget.id}
+        // setClickedOnPiece("red");// setClickedOnPiece({color: e.currentTarget.dataset.color, id: e.currentTarget.id});
+        clickedOnPieceRef.current = "red"; //{color: e.currentTarget.dataset.color, id: e.currentTarget.id}
+        console.log(clickedOnPieceRef.current);
         //HIGHLIGHT SQUARE/PIECE
-    }
-
-    function testRender(params) {
-        return <div onClick={onClickHandler}>Click me2</div>
     }
 
     return (
@@ -143,10 +139,26 @@ function Board({db, authInfo, position}) {
                 {gridItems}
             </div>
             {/* <div onClick={onClickHandler}>Click me1</div> */}
-            {testRender()}
+            {/* {testRender()} */}
+            {/* {testRender} */}
+            {/* {testy.current} */}
         </>
     )
 
 }
 
 export default Board;
+
+    // useEffect(() => {
+    // }, []);
+
+    // function testRenderFunction() {
+    //     let a = <div onClick={onClickHandler}>Click me2</div>;
+    //     setTestRender(a);
+    //     // let board = window.document.querySelector('.board-grid-container');//works
+    //     // let fresh = React.createElement('section', null, 'fresh');
+    //     // let fresh = window.document.createElement('section');
+    //     // board.after(fresh);
+    // }
+
+    // // let testy = useRef(React.create('section', null, 'fresh'));
