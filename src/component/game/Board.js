@@ -4,7 +4,7 @@ import React from 'react';
 function Board({db, authInfo, position}) {
 
     let userColor = useRef(position === 1 ? "white" : "black");
-    let boardArray2 = useRef([]);
+    let boardArray = useRef([]);
     let clickedOnPiece = useRef(false);
     let [gridItems, setGridItems] = useState([]);
     // let [clickedOnPiece, setClickedOnPiece] = useState(false);
@@ -12,7 +12,7 @@ function Board({db, authInfo, position}) {
     
     function fillBoardArrayWithSquares(params) {
         for (let num = 0; num < 64; num++) { //works
-            boardArray2.current.push({
+            boardArray.current.push({
                 index: num,
                 piece: null,
             })
@@ -29,15 +29,15 @@ function Board({db, authInfo, position}) {
         } else {
             console.log("not rotating board");
         }
-        //FILL boardArray2 WITH SQUARES
+        //FILL boardArray WITH SQUARES
         fillBoardArrayWithSquares();
-        //FILL boardArray2 WITH PIECES
+        //FILL boardArray WITH PIECES
         let game = db.ref(`matches/${authInfo.authCode}`);
         let userDb = db.ref(`matches/${authInfo.authCode}/${authInfo.authUser}`);
         let opponent = '';
         authInfo.authUser === "user1" ? opponent = "user2" : opponent = "user1";
         let opponentDb = db.ref(`matches/${authInfo.authCode}/${opponent}`);
-        //FILL boardArray2 WITH OWN PIECES
+        //FILL boardArray WITH OWN PIECES
         userDb.child(`pieces`).on('value', (e) => {
             function fillBoardWithPieces(objOfPieces, dB) {
                 dB.child(`pieces`).off(); //remove listener
@@ -50,7 +50,7 @@ function Board({db, authInfo, position}) {
                     let rowPosition = objOfPieces[key].rowPosition.slice(0, 1); //"1/2"
                     let columnPosition = objOfPieces[key].columnPosition.slice(0, 1); //"6/7"
                     let index = (8 - rowPosition) * 8 + (columnPosition - 1);
-                    for (let square of boardArray2.current) {
+                    for (let square of boardArray.current) {
                         if (index === square.index) { 
                             square.piece = objOfPieces[key];
                             break;
@@ -61,7 +61,6 @@ function Board({db, authInfo, position}) {
             fillBoardWithPieces(e.val(), userDb);
             opponentDb.child(`pieces`).on('value', (e) => {
                 fillBoardWithPieces(e.val(), opponentDb);
-                // setBoardArray(boardArray2.current);
                 //RENDER PIECES ON BOARD
                 renderPieces();
                 //TEST
@@ -81,21 +80,37 @@ function Board({db, authInfo, position}) {
     // }, [boardArray]);
 
     function renderPieces(params) { //return array of divs
-        let arrayOfGridItems = [];
-        for (const item of boardArray2.current) {
-            // if square has piece 
-            if (item.piece) {
-                let styleVal = {
-                    gridRow: `${item.piece.rowPosition}`,
-                    gridColumn:`${item.piece.columnPosition}`,
-                    backgroundColor: item.piece.white ? "white" : "red",
-                }
-                let gridItem = <div onClick={onClickHandler} id={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random().toFixed(5)}>{item.piece.name}</div>; //data-name={item.piece.name}
-                arrayOfGridItems.push(gridItem);
+        let arrayOfGridSquares = [];
+        for (let index = 0, row = 8, col = 1; index < 64; index++, col++, rowCounter++, colCounter++ ) {
+            let styleVal = {
+                gridRow: `${row}`,
+                gridColumn:`${col}`,
+            }
+            let square = <div data-index={index} style={styleVal} onClick={onClickHandler} key={Math.random()}>{index}</div>;
+            arrayOfGridSquares.push(square);
+            //should we reset
+            if (col === 8) {
+                col = 0;
+                row--;
             }
         }
-        console.log(arrayOfGridItems);
-        setGridItems(arrayOfGridItems);
+        // for (const item of boardArray.current) {
+        //     // if square has piece 
+        //     if (item.piece) {
+        //         let styleVal = {
+        //             gridRow: `${item.piece.rowPosition}`,
+        //             gridColumn:`${item.piece.columnPosition}`,
+        //             backgroundColor: item.piece.white ? "white" : "red",
+        //         }
+        //         let gridItem = (
+        //             <div onClick={onClickHandler} id={item.piece.name} data-color={item.piece.white ? "white" : "red"} style={styleVal} key={Math.random()}>
+        //             {item.piece.name}</div>
+        //             ); //data-name={item.piece.name}
+        //         arrayOfGridSquares.push(gridItem);
+        //     }
+        // }
+        console.log(arrayOfGridSquares);
+        setGridItems(arrayOfGridSquares);
         //return arrayOfGridItems;
     }
 
@@ -105,7 +120,7 @@ function Board({db, authInfo, position}) {
         console.log("clickedOnPiece:", clickedOnPiece.current);
         if (clickedOnPiece.current) { //clickedOnPiece
             //IS SAME PIECE?
-            if (e.currentTarget.id === clickedOnPiece.current.id) {
+            if (e.currentTarget.id === clickedOnPiece.current.id && e.currentTarget.dataset.color === clickedOnPiece.current.color) {
                 clickedOnPiece.current = false;
                 console.log("piece deselected", clickedOnPiece.current);
                 return;
@@ -127,10 +142,10 @@ function Board({db, authInfo, position}) {
         }
         console.log("1st stage");
         //CHECK ITS OUR PIECE
-        if (e.currentTarget.dataset.color !== userColor.current) {
-            e.preventDefault();
-            return
-        }
+        // if (e.currentTarget.dataset.color !== userColor.current) {
+        //     e.preventDefault();
+        //     return
+        // }
         //REGISTER, IN STATE, INFO ON PIECE CLICKED ON
         // setClickedOnPiece("red");//setClickedOnPiece({color: e.currentTarget.dataset.color, id: e.currentTarget.id});
         clickedOnPiece.current = {color: e.currentTarget.dataset.color, id: e.currentTarget.id};
