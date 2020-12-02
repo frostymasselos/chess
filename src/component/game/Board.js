@@ -5,9 +5,9 @@ function Board({db, authInfo, position}) {
 
     let userColor = useRef(position === 1 ? "white" : "black");
     let boardArray2 = useRef([]);
-    let clickedOnPieceRef = useRef(false);
+    let clickedOnPiece = useRef(false);
     let [gridItems, setGridItems] = useState([]);
-    let [clickedOnPiece, setClickedOnPiece] = useState(false);
+    // let [clickedOnPiece, setClickedOnPiece] = useState(false);
     // let [testRender, setTestRender] = useState(false);
     
     function fillBoardArrayWithSquares(params) {
@@ -102,11 +102,16 @@ function Board({db, authInfo, position}) {
     function onClickHandler(e) {
         // console.log("onClick handler executed"); console.log(e.currentTarget); //returns GI
         //check if we've already clicked on piece
-        console.log("clickedOnPiece:", clickedOnPiece);
-        if (clickedOnPieceRef.current) { //clickedOnPiece
-            console.log(clickedOnPiece);
-            console.log("2nd stage");
-            //DETERMINE LEGAL MOVE
+        console.log("clickedOnPiece:", clickedOnPiece.current);
+        if (clickedOnPiece.current) { //clickedOnPiece
+            //IS SAME PIECE?
+            if (e.currentTarget.id === clickedOnPiece.current.id) {
+                clickedOnPiece.current = false;
+                console.log("piece deselected", clickedOnPiece.current);
+                return;
+            }
+            console.log("2nd stage");   
+            //IS LEGAL MOVE?
             //is square empty?
             //if not, is opponent there? Is opponent king?
 
@@ -120,16 +125,16 @@ function Board({db, authInfo, position}) {
             // setClickedOnPiece(false);
             return;
         }
-        //check its our piece
-        // if (e.currentTarget.dataset.color !== userColor.current) {
-        //     e.preventDefault();
-        //     return
-        // }
-        //register, in state, info on piece clicked on
         console.log("1st stage");
-        // setClickedOnPiece("red");// setClickedOnPiece({color: e.currentTarget.dataset.color, id: e.currentTarget.id});
-        clickedOnPieceRef.current = "red"; //{color: e.currentTarget.dataset.color, id: e.currentTarget.id}
-        console.log(clickedOnPieceRef.current);
+        //CHECK ITS OUR PIECE
+        if (e.currentTarget.dataset.color !== userColor.current) {
+            e.preventDefault();
+            return
+        }
+        //REGISTER, IN STATE, INFO ON PIECE CLICKED ON
+        // setClickedOnPiece("red");//setClickedOnPiece({color: e.currentTarget.dataset.color, id: e.currentTarget.id});
+        clickedOnPiece.current = {color: e.currentTarget.dataset.color, id: e.currentTarget.id};
+        console.log(clickedOnPiece.current);
         //HIGHLIGHT SQUARE/PIECE
     }
 
