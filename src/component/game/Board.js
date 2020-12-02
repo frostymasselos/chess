@@ -96,7 +96,7 @@ function Board({db, authInfo, position}) {
         }
         console.log(arrayOfGridItems);
         setGridItems(arrayOfGridItems);
-        // return arrayOfGridItems;
+        //return arrayOfGridItems;
     }
 
     function onClickHandler(e) {
