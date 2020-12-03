@@ -1,3 +1,4 @@
+import {pieceMoveObj, directionConverterObj} from '../../helper/boardHelp.js'; //refactor to include both from 1 file
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 
@@ -131,6 +132,9 @@ function Board({db, authInfo, position}) {
         //     return;
         // }
         console.log("clickedOnPiece:", clickedOnPiece.current); console.log("e.target:", e.target);
+        if (checkMate()) {
+            //CHECKMATE - NO POSSIBLE MOVE PREVENTS OPPONENT'S (NEXT TURN) POSSIBLE MOVE FROM KILLING KING.
+        }
         if (clickedOnPiece.current) { 
             //HAVE PREVIOUSLY CLICKED ON PIECE
             console.log("2nd stage", e.target.id, clickedOnPiece.current.id);
@@ -145,6 +149,7 @@ function Board({db, authInfo, position}) {
                 console.log("piece deselected"); //console.log("current state:", clickedOnPiece.current);
                 return;
             } 
+            //SECONDARY SQUARE ISN'T ORIGINAL SQUARE
             if (e.target.dataset.color === clickedOnPiece.current.color) {
                 //OUR PIECE: INVALID
                 //unhighlight orginal piece
@@ -155,40 +160,38 @@ function Board({db, authInfo, position}) {
                 clickedOnPiece.current = {color: e.target.dataset.color, id: e.target.id};
                 console.log("invalid - moving on our piece.", "new state:", clickedOnPiece.current);
                 return;
-            }  
-            //IS LEGAL MOVE?
-            //is square empty?
-            //if not, is opponent there? Is opponent king?
-
-            //MOVE find GI clicked on & apply CSS on it so that it becomes child of square.
-            console.log("executing", "original piece:", originalPiece);
-            if (e.target.dataset.square) {
-                //secondaryEl IS AN EMPTY SQUARE
-                let emptySquare = e.target;
-                emptySquare.append(originalPiece);
-                console.log("secondaryEl is an empty square:", e.target);
-                unhighlightOriginalPieceResetState();
-                //
-            } else {
-                //secondaryEl IS AN ENEMY PIECE
-                const enemyPiece = e.target;
-                const enemyPieceSquare = e.currentTarget;
-                //kill enemy
-                enemyPiece.classList.add(`fizzle`);
-                setTimeout(() => {
+            } 
+            //SECONDARY SQUARE ISN'T SQUARE WITH PIECE WITH SAME COLOR
+            if (legalGeography(clickedOnPiece.current.id, clickedOnPiece.current.square, e.currentTarget) && kingNotInCheck()) {
+                console.log("executing", "original piece:", originalPiece);
+                if (e.target.dataset.square) {
+                    //secondaryEl IS AN EMPTY SQUARE
+                    let emptySquare = e.target;
+                    emptySquare.append(originalPiece);
+                    console.log("secondaryEl is an empty square:", e.target);
+                    unhighlightOriginalPieceResetState();
+                    //
+                } else {
+                    //secondaryEl IS AN ENEMY PIECE
+                    const enemyPiece = e.target;
+                    const enemyPieceSquare = e.currentTarget;
+                    //kill enemy
                     enemyPiece.remove();
                     //append originalPiece
                     enemyPieceSquare.append(originalPiece);
+                    // setTimeout(() => {
+                    //     enemyPiece.classList.add(`fizzle`);
+                    // }, 2000);
                     unhighlightOriginalPieceResetState();
-                }, 2000);
-            }
-            //send this info to db full grid-area property to dB property. 
-            function unhighlightOriginalPieceResetState() {
-                //unhighlight original piece
-                originalPiece.classList.remove(`highlighted`);
-                //reset state
-                clickedOnPiece.current = false;
-                console.log(clickedOnPiece.current); 
+                }
+                //send this info to db full grid-area property to dB property. 
+                function unhighlightOriginalPieceResetState() {
+                    //unhighlight original piece
+                    originalPiece.classList.remove(`highlighted`);
+                    //reset state
+                    clickedOnPiece.current = false;
+                    console.log(clickedOnPiece.current); 
+                } 
             }
         } else {
             //HAVEN'T PREVIOUSLY CLICKED PIECE (FRESH)
@@ -202,7 +205,7 @@ function Board({db, authInfo, position}) {
             //FRESHLY CLICKED ON OWN PIECE
             let piece = e.target;
             //REGISTER, IN STATE, INFO ON PIECE CLICKED ON
-            clickedOnPiece.current = {color: piece.dataset.color, id: piece.id};
+            clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget};//🐉refactor `id: piece`.
             console.log(clickedOnPiece.current);
             //HIGHLIGHT SQUARE/PIECE
             // piece.style.setProperty('color', 'pink');
@@ -211,6 +214,25 @@ function Board({db, authInfo, position}) {
     }
 
     //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS
+    function legalGeography(originalPieceId, originalSquare, secondarySquare) {
+        //correspond items in board array with squares.
+        console.log("originalPieceId:", originalPieceId, "originalSquare:", originalSquare, "secondarySquare:", secondarySquare, pieceMoveObj, directionConverterObj );
+        //collate potentially valid boardArray indexes.
+        for (const key in pieceMoveObj) {
+            if (originalPieceId.includes(`key`)) {
+                
+            }
+        }
+        //check that items have pieces where they should (optional).
+        return true;
+    }
+    function kingNotInCheck(originalPiece, originalSquare, secondarySquare) {
+        return true;
+    }
+
+    function checkMate() {
+        return false;
+    }
 
     return (
         <>
