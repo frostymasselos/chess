@@ -34,7 +34,39 @@ div {
     }
 }
 
+.board-grid-container > div {
+    background-color: brown;
+    border-top-color: green;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-right-color: green;
+    border-right-width: 1px;
+    border-right-style: solid;
+ 
+}
+
 .board-grid-container > div > div {
-    color: pink;
+    // color: pink;
     height: 100%;
+}
+
+.black {
+    color: black;
+}
+
+.white {
+    color: white;
+}
+
+.highlighted {
+    color: pink;
+}
+
+.fizzle {
+    transition: opacity 2s;
+    opacity: 0;
+}
+
+.dead {
+    display: none;
 }
