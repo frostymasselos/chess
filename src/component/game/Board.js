@@ -162,37 +162,39 @@ function Board({db, authInfo, position}) {
                 return;
             } 
             //SECONDARY SQUARE ISN'T SQUARE WITH PIECE WITH SAME COLOR
-            if (legalGeography(clickedOnPiece.current.id, clickedOnPiece.current.square, e.currentTarget) && kingNotInCheck()) {
-                console.log("executing", "original piece:", originalPiece);
-                if (e.target.dataset.square) {
-                    //secondaryEl IS AN EMPTY SQUARE
-                    let emptySquare = e.target;
-                    emptySquare.append(originalPiece);
-                    console.log("secondaryEl is an empty square:", e.target);
-                    unhighlightOriginalPieceResetState();
-                    //
-                } else {
-                    //secondaryEl IS AN ENEMY PIECE
-                    const enemyPiece = e.target;
-                    const enemyPieceSquare = e.currentTarget;
-                    //kill enemy
-                    enemyPiece.remove();
-                    //append originalPiece
-                    enemyPieceSquare.append(originalPiece);
-                    // setTimeout(() => {
-                    //     enemyPiece.classList.add(`fizzle`);
-                    // }, 2000);
-                    unhighlightOriginalPieceResetState();
-                }
-                //send this info to db full grid-area property to dB property. 
-                function unhighlightOriginalPieceResetState() {
-                    //unhighlight original piece
-                    originalPiece.classList.remove(`highlighted`);
-                    //reset state
-                    clickedOnPiece.current = false;
-                    console.log(clickedOnPiece.current); 
-                } 
+            if (!legalGeography(clickedOnPiece.current.id, clickedOnPiece.current.square, e.currentTarget, originalPiece) && putsKingInCheck()) {
+                e.preventDefault();
+                return;
             }
+            console.log("executing", "original piece:", originalPiece);
+            if (e.target.dataset.square) {
+                //secondaryEl IS AN EMPTY SQUARE
+                let emptySquare = e.target;
+                emptySquare.append(originalPiece);
+                console.log("secondaryEl is an empty square:", e.target);
+                successfulMove();
+                //
+            } else {
+                //secondaryEl IS AN ENEMY PIECE
+                const enemyPiece = e.target;
+                const enemyPieceSquare = e.currentTarget;
+                //kill enemy
+                enemyPiece.remove();
+                //append originalPiece
+                enemyPieceSquare.append(originalPiece);
+                // setTimeout(() => {
+                //     enemyPiece.classList.add(`fizzle`);
+                // }, 2000);
+                successfulMove();
+            }
+            //send this info to db full grid-area property to dB property. 
+            function successfulMove() {
+                //unhighlight original piece
+                originalPiece.classList.remove(`highlighted`);
+                //reset state
+                clickedOnPiece.current = false;
+                console.log(clickedOnPiece.current); 
+            } 
         } else {
             //HAVEN'T PREVIOUSLY CLICKED PIECE (FRESH)
             console.log("1st stage"); console.log(e.target.dataset.color, e.target.dataset.square, e.target.id, userColor.current);
@@ -205,7 +207,7 @@ function Board({db, authInfo, position}) {
             //FRESHLY CLICKED ON OWN PIECE
             let piece = e.target;
             //REGISTER, IN STATE, INFO ON PIECE CLICKED ON
-            clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget};//🐉refactor `id: piece`.
+            clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget};
             console.log(clickedOnPiece.current);
             //HIGHLIGHT SQUARE/PIECE
             // piece.style.setProperty('color', 'pink');
@@ -213,25 +215,36 @@ function Board({db, authInfo, position}) {
         }
     }
 
-    //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS
-    function legalGeography(originalPieceId, originalSquare, secondarySquare) {
+    //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS - DONT MOVE ANYTHING IN ARRAY
+    function legalGeography(originalPieceId, originalSquare, secondarySquare, originalPiece) {
         //correspond items in board array with squares.
         console.log("originalPieceId:", originalPieceId, "originalSquare:", originalSquare, "secondarySquare:", secondarySquare, pieceMoveObj, directionConverterObj );
         //collate potentially valid boardArray indexes.
-        //identify originalPiece in array.
-        let pieceName = '';
-        const color = originalPieceId.includes("white") ? "white" : "black";
-        for (const key in pieceMoveObj) {
-            if (originalPieceId.includes(`${key}`)) {
-                pieceName = key;
-            }
+        //1.identify originalPiece in array.
+        function returnBoardArrayIndex(square) {
+            const rowPosition = window.getComputedStyle(square).getPropertyValue('grid-row').slice(0, 1); //console.log(rowPosition);
+            const columnPosition = window.getComputedStyle(square).getPropertyValue('grid-column').slice(0, 1);
+            return (8 - rowPosition) * 8 + (columnPosition - 1); 
         }
-        console.log(color); console.log(pieceName);
+        const arrayOriginalSquareIndex = returnBoardArrayIndex(originalSquare); console.log(arrayOriginalSquareIndex);
+        const arraySecondarySquareIndex = returnBoardArrayIndex(secondarySquare); console.log(arraySecondarySquareIndex);
+        // const originalPlainPieceName = originalPieceId.slice(5);//removes 'black|white' prefix//Object.keys(pieceMoveObj).find((key) => originalPieceId.includes(`${key}`));
+        // const originalPieceColor = originalPieceId.includes("white") ? "white" : "black";
+        // const arrayOriginalSquareIndex = boardArray.current.findIndex((square) => {
+        //     if (!square.piece) {
+        //         return null//this stops findIndex🐉
+        //     }
+        //     const arrayPieceColor = square.piece.white ? "white" : "black"; //see if we can refactor this
+        //     console.log(originalPlainPieceName, square.piece.name, originalPieceColor, arrayPieceColor);
+        //     return (originalPlainPieceName === square.piece.name) && (originalPieceColor === arrayPieceColor);
+        // }); console.log(arrayOriginalSquareIndex);
+        // const arraySecondarySquareIndex = ;
+        
         //is secondarySquare one of these?
         return true;
     }
-    function kingNotInCheck(originalPiece, originalSquare, secondarySquare) {
-        return true;
+    function putsKingInCheck(originalPiece, originalSquare, secondarySquare) {
+        return false;
     }
 
     function checkMate() {

@@ -34,7 +34,7 @@ div {
     }
 }
 
-.board-grid-container > div {
+.board-grid-container > div { //refactor🐉
     background-color: brown;
     border-top-color: green;
     border-top-width: 1px;
@@ -42,7 +42,6 @@ div {
     border-right-color: green;
     border-right-width: 1px;
     border-right-style: solid;
- 
 }
 
 .board-grid-container > div > div {
