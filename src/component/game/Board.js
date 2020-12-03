@@ -218,12 +218,16 @@ function Board({db, authInfo, position}) {
         //correspond items in board array with squares.
         console.log("originalPieceId:", originalPieceId, "originalSquare:", originalSquare, "secondarySquare:", secondarySquare, pieceMoveObj, directionConverterObj );
         //collate potentially valid boardArray indexes.
+        //identify originalPiece in array.
+        let pieceName = '';
+        const color = originalPieceId.includes("white") ? "white" : "black";
         for (const key in pieceMoveObj) {
-            if (originalPieceId.includes(`key`)) {
-                
+            if (originalPieceId.includes(`${key}`)) {
+                pieceName = key;
             }
         }
-        //check that items have pieces where they should (optional).
+        console.log(color); console.log(pieceName);
+        //is secondarySquare one of these?
         return true;
     }
     function kingNotInCheck(originalPiece, originalSquare, secondarySquare) {
