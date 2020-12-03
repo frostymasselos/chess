@@ -226,8 +226,8 @@ function Board({db, authInfo, position}) {
             const columnPosition = window.getComputedStyle(square).getPropertyValue('grid-column').slice(0, 1);
             return (8 - rowPosition) * 8 + (columnPosition - 1); 
         }
-        const arrayOriginalSquareIndex = returnBoardArrayIndex(originalSquare); console.log(arrayOriginalSquareIndex);
-        const arraySecondarySquareIndex = returnBoardArrayIndex(secondarySquare); console.log(arraySecondarySquareIndex);
+        const boardArrayOriginalSquareIndex = returnBoardArrayIndex(originalSquare); console.log(boardArrayOriginalSquareIndex);
+        const boardArraySecondarySquareIndex = returnBoardArrayIndex(secondarySquare); console.log(boardArraySecondarySquareIndex);
         // const originalPlainPieceName = originalPieceId.slice(5);//removes 'black|white' prefix//Object.keys(pieceMoveObj).find((key) => originalPieceId.includes(`${key}`));
         // const originalPieceColor = originalPieceId.includes("white") ? "white" : "black";
         // const arrayOriginalSquareIndex = boardArray.current.findIndex((square) => {
@@ -239,7 +239,21 @@ function Board({db, authInfo, position}) {
         //     return (originalPlainPieceName === square.piece.name) && (originalPieceColor === arrayPieceColor);
         // }); console.log(arrayOriginalSquareIndex);
         // const arraySecondarySquareIndex = ;
-        
+        const allLegalSecondarySquareIndexes = [];
+        const directions = directionConverterObj[userColor.current]; console.log(directions);
+        const pieceType = Object.keys(pieceMoveObj).find((key) => originalPieceId.includes(`${key}`)); console.log(pieceType);
+        for (const move of pieceMoveObj[pieceType].direction) { console.log(move);
+            for (const direction in directions) {
+                if (move === direction) {
+                    const total = pieceMoveObj[pieceType].total.primary; console.log(total);
+                    const moveLegalSecondaryIndexes = directions[direction].funcPrimary(total, boardArrayOriginalSquareIndex);
+                    for (const item of moveLegalSecondaryIndexes) {
+                        allLegalSecondarySquareIndexes.push(item);
+                    }
+                }
+            }
+        }
+        console.log(allLegalSecondarySquareIndexes);
         //is secondarySquare one of these?
         return true;
     }
