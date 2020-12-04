@@ -1,8 +1,8 @@
 const pieceMoveObj = {
     pawn: {
-        direction: ["forward"],
+        direction: ["left"],
         total: {
-            primary: 2,
+            primary: 8,
             secondary: null
         }
     },
@@ -51,8 +51,10 @@ const directionConverterObj = {
                 const legalSecondarySquareIndexes = [];
                 for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
                     const potentialSquare = originalSquareIndex + (value * currentTotal);
-                    if (potentialSquare <= 63) {
+                    if (potentialSquare >= 0 && potentialSquare <= 63) {
                         legalSecondarySquareIndexes.push(potentialSquare);
+                    } else {
+                        return;
                     }
                 }
                 return legalSecondarySquareIndexes;
@@ -60,18 +62,39 @@ const directionConverterObj = {
         }, 
         backward: {//-8, //check to see not below 0.
             value: -8,
-            funcPrimary(total, originalSquareIndex, value = 8) {
+            funcPrimary(total, originalSquareIndex, value = -8) {
                 const legalSecondarySquareIndexes = [];
                 for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
                     const potentialSquare = originalSquareIndex + (value * currentTotal);
-                    if (potentialSquare <= 63) {
+                    if (potentialSquare >= 0 && potentialSquare <= 63) {
                         legalSecondarySquareIndexes.push(potentialSquare);
+                    } else {
+                        return;
                     }
                 }
                 return legalSecondarySquareIndexes;
             }
         },
-        left: -1, //check to see not below 0, can't be multiple of 8. 
+        left: { //check to see not below 0 & doesn't go below closest lower multiple of 8.
+            value: -1,
+            funcPrimary(total, originalSquareIndex, value = -1) {
+                const legalSecondarySquareIndexes = [];
+                //calculate
+                let counter = 0;
+                for (let potentialSquare = originalSquareIndex + value; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
+                    if (potentialSquare % 8 === 0) {
+                        counter++;
+                        break;
+                    }
+                }
+                console.log("counter:", counter, "originalSquareIndex:", originalSquareIndex);
+                for (let potentialSquare = originalSquareIndex + value, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total); potentialSquare--, currentCounter++, currentTotal++) {
+                    const potentialSquare = originalSquareIndex + (value * currentTotal);
+                    legalSecondarySquareIndexes.push(potentialSquare);
+                }
+                return legalSecondarySquareIndexes;
+            },
+        }, 
         right: 1, //check to see not above 63, can't be multiple of 7 (starting on 8).
     },
     black: {
