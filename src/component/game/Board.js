@@ -246,7 +246,7 @@ function Board({db, authInfo, position}) {
             for (const direction in directions) {
                 if (move === direction) {
                     const total = pieceMoveObj[pieceType].total.primary; console.log(total);
-                    const moveLegalSecondaryIndexes = directions[direction].funcPrimary(total, boardArrayOriginalSquareIndex); //console.log(moveLegalSecondaryIndexes);
+                    const moveLegalSecondaryIndexes = directions[direction].funcPrimary(total, boardArrayOriginalSquareIndex); //console.log(moveLegalSecondaryIndexes); 
                     for (const item of moveLegalSecondaryIndexes) {
                         allLegalSecondarySquareIndexes.push(item);
                     }
