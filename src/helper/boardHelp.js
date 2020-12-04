@@ -1,6 +1,6 @@
 const pieceMoveObj = {
     pawn: {
-        direction: ["forward", "backward", "left", "right"],
+        direction: ["diagonal_forward_left"],
         total: {
             primary: 8,
             secondary: null
@@ -14,28 +14,28 @@ const pieceMoveObj = {
         }
     },
     knight: {
-        direction: ["foward-left", "forward-right", "left-backward", "left-forward", "backward-left", "backward-right", "right-forward", "right-backward"],
+        direction: ["foward_left", "forward_right", "left_backward", "left_forward", "backward_left", "backward_right", "right_forward", "right_backward"],
         total: {
             primary: 2,
             secondary: 1,
         }
     },
     bishop: {
-        direction: ["diagonal-forward-left", "diagonal-forward-right", "diagonal-backward-left", "diagonal-backward-right"],
+        direction: ["diagonal_forward_left", "diagonal_forward_right", "diagonal_backward_left", "diagonal_backward_right"],
         total: {
             primary: 8,
             secondary: 8,//must match primary
         }
     },
     queen: {
-        direction: ["forward", "backward", "left", "right", "diagonal-forward-left", "diagonal-forward-right", "diagonal-backward-left", "diagonal-backward-right"],
+        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_forward_right", "diagonal_backward_left", "diagonal_backward_right"],
         total: {
             primary: 8,
             secondary: 8,//must match primary
         },
     },
     king: {
-        direction: ["forward", "backward", "left", "right", "diagonal-forward-left", "diagonal-forward-right", "diagonal-backward-left", "diagonal-backward-right"],
+        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_forward_right", "diagonal_backward_left", "diagonal_backward_right"],
         total: {
             primary: 1,
             secondary: 1,
@@ -53,9 +53,10 @@ const directionConverterObj = {
                     const potentialSquare = originalSquareIndex + (value * currentTotal);
                     if (potentialSquare >= 0 && potentialSquare <= 63) {
                         legalSecondarySquareIndexes.push(potentialSquare);
-                    } else {
-                        break;
-                    }
+                    } 
+                    // else { //in case of a knight hopping.
+                    //     break;
+                    // } 
                 }
                 return legalSecondarySquareIndexes;
             },
@@ -68,9 +69,10 @@ const directionConverterObj = {
                     const potentialSquare = originalSquareIndex + (value * currentTotal);
                     if (potentialSquare >= 0 && potentialSquare <= 63) {
                         legalSecondarySquareIndexes.push(potentialSquare);
-                    } else {
-                        break;
-                    }
+                    } 
+                    // else { //in case of a knight hopping.
+                    //     break;
+                    // } 
                 }
                 return legalSecondarySquareIndexes;
             }
@@ -95,13 +97,13 @@ const directionConverterObj = {
                 return legalSecondarySquareIndexes;
             },
         }, 
-        right: {//check to see not above 63 & doesn't go above higher-closest multiple  can't be multiple of 7 (starting on 8).
+        right: {//doesn't go above higher-closest multiple of 7 (starting on 8).
             funcPrimary(total, originalSquareIndex, value = 1) {
                 const legalSecondarySquareIndexes = [];
                 //calculate
                 let counter = 0;
-                for (let potentialSquare = originalSquareIndex + value; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
-                    if (potentialSquare % 8 === 0) {
+                for (let potentialSquare = originalSquareIndex + value; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
+                    if ((potentialSquare - 7) % 8 === 0) {
                         counter++;
                         break;
                     }
@@ -113,9 +115,22 @@ const directionConverterObj = {
                 }
                 return legalSecondarySquareIndexes;
             }
-        }       
+        },
+        diagonal_forward_left: {
+            funcPrimary(total, originalSquareIndex) {
+                const legalSecondarySquareIndexes = [];
+                for (let num = 0; num < total; num++) {
+
+                    
+                }
+                directionConverterObj.white.forward.funcPrimary(1, originalSquareIndex);
+                directionConverterObj.white.left.funcPrimary(1, originalSquareIndex);
+                return legalSecondarySquareIndexes;
+            }
+        }
+
     },
-    black: {
+    black: { //reversing array for black would solve problem
         forward: -8,
         backward: 8,
         left: 1, //check to see not above 63, can't be multiple of 7.
