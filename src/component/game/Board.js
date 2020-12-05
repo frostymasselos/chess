@@ -275,7 +275,7 @@ function Board({db, authInfo, position}) {
         //is secondarySquare one of these?
         return allLegalSecondarySquareIndexes.some(legalSquareIndex => legalSquareIndex === boardArraySecondarySquareIndex);
     }
-    function putsKingInCheck(originalPiece, originalSquare, secondarySquare) {
+    function putsKingInCheck(originalPiece, originalSquare, secondarySquare, originalPiece) {
         //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece)
         //cycle through every potential secondary square of opponent (including if it'd put theirs in check?) and if any secondary square is square of our king, illegal move
         return false;
