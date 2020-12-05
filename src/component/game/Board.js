@@ -243,15 +243,10 @@ function Board({db, authInfo, position}) {
         }
     }
 
-    function returnArrayOfSquaresWithUserAndOpponentPieces(params) {
-        
-    }
-
-    //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS - DONT MOVE ANYTHING IN ARRAY
-    function returnArrayOfGeographicallyLegalSquares(pieceId, squareIndex) {
-        const allLegalSecondarySquareIndexes = [];
+    function returnSquaresWithUserAndOpponentPieces(board = boardArray.current) {
+        let both = [];
         const boardArraySquaresWithOpponentPiece = [];
-        const boardArraySquaresWithUserPiece = boardArray.current.filter((square) => {
+        const boardArraySquaresWithUserPiece = board.filter((square) => {
             if (square.piece) {
                 let pieceColor = ''; 
                 square.piece.white === true ? pieceColor = "white" : pieceColor = "black";
@@ -263,12 +258,21 @@ function Board({db, authInfo, position}) {
             
             }
         }); console.log(boardArraySquaresWithOpponentPiece, boardArraySquaresWithUserPiece);
+        both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; 
+        return both;
+    }
+
+    //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS - DONT MOVE ANYTHING IN ARRAY
+    function returnArrayOfGeographicallyLegalSquares(pieceId, squareIndex) {
+        const allLegalSecondarySquareIndexes = [];
+        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; console.log("squaresWithUserPieces", squaresWithUserPieces, "squaresWithOpponentPieces", squaresWithOpponentPieces);
         const pieceType = Object.keys(pieceMoveObj).find((key) => pieceId.includes(`${key}`)); console.log(pieceType);
         const total = pieceMoveObj[pieceType].total.primary; console.log(total);
         for (const move of pieceMoveObj[pieceType].direction) { console.log(move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
-                    const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, squareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece); //console.log(moveLegalSecondaryIndexes); 
+                    const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, squareIndex, squaresWithUserPieces, squaresWithUserPieces); //console.log(moveLegalSecondaryIndexes); 
                     moveLegalSecondaryIndexes.forEach((index) => {allLegalSecondarySquareIndexes.push(index);})
                 }
             }
@@ -283,12 +287,17 @@ function Board({db, authInfo, position}) {
     function putsKingInCheck(originalPieceId, originalSquareIndex, secondarySquareIndex, originalSquare, secondarySquare) {
         console.log("originalPieceId:", originalPieceId, "originalSquareIndex", originalSquareIndex, "secondarySquareIndex", secondarySquareIndex, "originalSquare", originalSquare, "secondarySquare", secondarySquare);
         //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece)
-        const boardArray2 = boardArray.current;
-        boardArray2[secondarySquareIndex].piece = boardArray2[originalSquareIndex].piece;
-        boardArray2[originalSquareIndex].piece = null; console.log(boardArray2);
+        function returnCopyOfBoardWithOriginalPieceInSecondSquare() {
+            const copy = boardArray.current;
+            copy[secondarySquareIndex].piece = copy[originalSquareIndex].piece;
+            copy[originalSquareIndex].piece = null; console.log(copy);
+            return copy;
+        }
+        const copy = returnCopyOfBoardWithOriginalPieceInSecondSquare();
         //cycle through every potential secondary square of opponent piece and if any potential secondary squares = square of our king, illegal move
-
-        // return false;
+        const squaresWithOpponentPieces = returnSquaresWithUserAndOpponentPieces(copy)[1]; console.log(squaresWithOpponentPieces);
+        let squareOfUserKing = ''; returnSquaresWithUserAndOpponentPieces(copy)[0].some((userSquare) => userSquare.piece.name === "king" ? squareOfUserKing = userSquare.index : null); console.log(squareOfUserKing);
+        
     }
 
     function checkMate() {
