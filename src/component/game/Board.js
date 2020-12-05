@@ -62,6 +62,9 @@ function Board({db, authInfo, position}) {
             fillBoardWithPieces(e.val(), userDb);
             opponentDb.child(`pieces`).on('value', (e) => {
                 fillBoardWithPieces(e.val(), opponentDb);
+                // if (userColor.current = "black") {
+                //     boardArray.current.reverse();
+                // }
                 //RENDER PIECES ON BOARD
                 renderPieces();
                 //TEST
@@ -240,13 +243,26 @@ function Board({db, authInfo, position}) {
         // }); console.log(arrayOriginalSquareIndex);
         // const arraySecondarySquareIndex = ;
         const allLegalSecondarySquareIndexes = [];
+        const boardArraySquaresWithOpponentPiece = [];
+        const boardArraySquaresWithUserPiece = boardArray.current.filter((square) => {
+            if (square.piece) {
+                let pieceColor = ''; 
+                square.piece.white === true ? pieceColor = "white" : pieceColor = "black";
+                if (pieceColor === userColor.current) {
+                    return true
+                } else {
+                    boardArraySquaresWithOpponentPiece.push(square);
+                }
+            
+            }
+        }); console.log(boardArraySquaresWithOpponentPiece, boardArraySquaresWithUserPiece);
         const directions = directionConverterObj[userColor.current]; console.log(directions);
         const pieceType = Object.keys(pieceMoveObj).find((key) => originalPieceId.includes(`${key}`)); console.log(pieceType);
         for (const move of pieceMoveObj[pieceType].direction) { console.log(move);
             for (const direction in directions) {
                 if (move === direction) {
                     const total = pieceMoveObj[pieceType].total.primary; console.log(total);
-                    const moveLegalSecondaryIndexes = directions[direction].funcPrimary(total, boardArrayOriginalSquareIndex); //console.log(moveLegalSecondaryIndexes); 
+                    const moveLegalSecondaryIndexes = directions[direction].funcPrimary(total, boardArrayOriginalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece); //console.log(moveLegalSecondaryIndexes); 
                     for (const item of moveLegalSecondaryIndexes) {
                         allLegalSecondarySquareIndexes.push(item);
                     }
