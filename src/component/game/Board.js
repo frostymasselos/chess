@@ -62,9 +62,20 @@ function Board({db, authInfo, position}) {
             fillBoardWithPieces(e.val(), userDb);
             opponentDb.child(`pieces`).on('value', (e) => {
                 fillBoardWithPieces(e.val(), opponentDb);
-                // if (userColor.current = "black") {
-                //     boardArray.current.reverse();
-                // }
+                console.log(boardArray.current);
+                if (userColor.current = "black") {
+                    const duplicate = [...boardArray.current.reverse()];
+                    for (const square of duplicate) {
+                        square.index = 63 - square.index;
+                        if (square.piece) {
+                            const newRowPosition = 9 - Number.parseInt(square.piece.rowPosition[0])
+                            square.piece.rowPosition = `${newRowPosition}/${newRowPosition + 1}`;
+                            const newColumnPosition = 9 - Number.parseInt(square.piece.columnPosition[0])
+                            square.piece.columnPosition = `${newColumnPosition}/${newColumnPosition + 1}`;
+                        }
+                    }
+                    boardArray.current = duplicate;
+                }
                 //RENDER PIECES ON BOARD
                 renderPieces();
                 //TEST
@@ -134,6 +145,7 @@ function Board({db, authInfo, position}) {
         //     console.log("target", e.target);
         //     return;
         // }
+        // e.stopPropagation();
         console.log("clickedOnPiece:", clickedOnPiece.current); console.log("e.target:", e.target);
         if (checkMate()) {
             //CHECKMATE - NO POSSIBLE MOVE PREVENTS OPPONENT'S (NEXT TURN) POSSIBLE MOVE FROM KILLING KING.
@@ -152,7 +164,6 @@ function Board({db, authInfo, position}) {
                 console.log("piece deselected"); //console.log("current state:", clickedOnPiece.current);
                 return;
             } 
-            //SECONDARY SQUARE ISN'T ORIGINAL SQUARE
             if (e.target.dataset.color === clickedOnPiece.current.color) {
                 //OUR PIECE: INVALID
                 //unhighlight orginal piece
@@ -164,50 +175,55 @@ function Board({db, authInfo, position}) {
                 console.log("invalid - moving on our piece.", "new state:", clickedOnPiece.current);
                 return;
             } 
-            //SECONDARY SQUARE ISN'T SQUARE WITH PIECE WITH SAME COLOR
-            if (!legalGeography(clickedOnPiece.current.id, clickedOnPiece.current.square, e.currentTarget, originalPiece) && putsKingInCheck()) {
+            if (!legalGeography(clickedOnPiece.current.id, clickedOnPiece.current.square, e.currentTarget, originalPiece) || putsKingInCheck(clickedOnPiece.current.id, clickedOnPiece.current.square, e.currentTarget, originalPiece)) {
+                //ILLEGAL MOVE OR PUTS KING IN CHECK|CHECKMATE
+                console.log("illegal geography or puts king in check");
                 e.preventDefault();
                 return;
             }
-            console.log("executing", "original piece:", originalPiece);
-            if (e.target.dataset.square) {
-                //secondaryEl IS AN EMPTY SQUARE
-                let emptySquare = e.target;
-                emptySquare.append(originalPiece);
-                console.log("secondaryEl is an empty square:", e.target);
-                successfulMove();
-                //
-            } else {
-                //secondaryEl IS AN ENEMY PIECE
-                const enemyPiece = e.target;
-                const enemyPieceSquare = e.currentTarget;
-                //kill enemy
-                enemyPiece.remove();
-                //append originalPiece
-                enemyPieceSquare.append(originalPiece);
-                // setTimeout(() => {
-                //     enemyPiece.classList.add(`fizzle`);
-                // }, 2000);
-                successfulMove();
+            //EXECUTING USER'S CLICK
+            function executeUserClick() {
+                console.log("executing", "original piece:", originalPiece);
+                if (e.target.dataset.square) {
+                    //SECOND SQUARE IS AN EMPTY SQUARE
+                    let emptySquare = e.target;
+                    emptySquare.append(originalPiece);
+                    console.log("secondaryEl is an empty square:", e.target);
+                    unhighlightAndResetClickedOnPiece();
+                    //check for checkmate?
+                } else {
+                    //SECOND SQUARE HAS AN ENEMY PIECE
+                    const enemyPiece = e.target;
+                    const enemyPieceSquare = e.currentTarget;
+                    //kill enemy
+                    enemyPiece.remove();
+                    //append originalPiece
+                    enemyPieceSquare.append(originalPiece);
+                    // setTimeout(() => {
+                    //     enemyPiece.classList.add(`fizzle`);
+                    // }, 2000);
+                    unhighlightAndResetClickedOnPiece();
+                }
+                //send this info to db full grid-area property to dB property. 
+                function unhighlightAndResetClickedOnPiece() {
+                    //unhighlight original piece
+                    originalPiece.classList.remove(`highlighted`);
+                    //reset state
+                    clickedOnPiece.current = false;
+                    console.log(clickedOnPiece.current); 
+                } 
             }
-            //send this info to db full grid-area property to dB property. 
-            function successfulMove() {
-                //unhighlight original piece
-                originalPiece.classList.remove(`highlighted`);
-                //reset state
-                clickedOnPiece.current = false;
-                console.log(clickedOnPiece.current); 
-            } 
+            executeUserClick();
         } else {
             //HAVEN'T PREVIOUSLY CLICKED PIECE (FRESH)
             console.log("1st stage"); console.log(e.target.dataset.color, e.target.dataset.square, e.target.id, userColor.current);
             if (e.target.dataset.square || e.target.dataset.color !== userColor.current) {
-                //FRESHLY CLICKED ON EMPTY SQUARE OR OPPONENT PIECE OR OFF-BOARD
+                //1ST TIME CLICK ON EMPTY SQUARE OR OPPONENT PIECE OR OFF-BOARD
                 console.log("exited");
                 e.preventDefault();
                 return;
             }
-            //FRESHLY CLICKED ON OWN PIECE
+            //1ST TIME CLICK ON OWN PIECE
             let piece = e.target;
             //REGISTER, IN STATE, INFO ON PIECE CLICKED ON
             clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget};
@@ -222,8 +238,7 @@ function Board({db, authInfo, position}) {
     function legalGeography(originalPieceId, originalSquare, secondarySquare, originalPiece) {
         //correspond items in board array with squares.
         console.log("originalPieceId:", originalPieceId, "originalSquare:", originalSquare, "secondarySquare:", secondarySquare, pieceMoveObj, directionConverterObj );
-        //collate potentially valid boardArray indexes.
-        //1.identify originalPiece in array.
+        //identify original & secondary square indexes in array.
         function returnBoardArrayIndex(square) {
             const rowPosition = window.getComputedStyle(square).getPropertyValue('grid-row').slice(0, 1); //console.log(rowPosition);
             const columnPosition = window.getComputedStyle(square).getPropertyValue('grid-column').slice(0, 1);
@@ -231,17 +246,7 @@ function Board({db, authInfo, position}) {
         }
         const boardArrayOriginalSquareIndex = returnBoardArrayIndex(originalSquare); console.log(boardArrayOriginalSquareIndex);
         const boardArraySecondarySquareIndex = returnBoardArrayIndex(secondarySquare); console.log(boardArraySecondarySquareIndex);
-        // const originalPlainPieceName = originalPieceId.slice(5);//removes 'black|white' prefix//Object.keys(pieceMoveObj).find((key) => originalPieceId.includes(`${key}`));
-        // const originalPieceColor = originalPieceId.includes("white") ? "white" : "black";
-        // const arrayOriginalSquareIndex = boardArray.current.findIndex((square) => {
-        //     if (!square.piece) {
-        //         return null//this stops findIndex🐉
-        //     }
-        //     const arrayPieceColor = square.piece.white ? "white" : "black"; //see if we can refactor this
-        //     console.log(originalPlainPieceName, square.piece.name, originalPieceColor, arrayPieceColor);
-        //     return (originalPlainPieceName === square.piece.name) && (originalPieceColor === arrayPieceColor);
-        // }); console.log(arrayOriginalSquareIndex);
-        // const arraySecondarySquareIndex = ;
+        //collate potentially valid boardArray indexes.
         const allLegalSecondarySquareIndexes = [];
         const boardArraySquaresWithOpponentPiece = [];
         const boardArraySquaresWithUserPiece = boardArray.current.filter((square) => {
@@ -256,28 +261,32 @@ function Board({db, authInfo, position}) {
             
             }
         }); console.log(boardArraySquaresWithOpponentPiece, boardArraySquaresWithUserPiece);
-        const directions = directionConverterObj[userColor.current]; console.log(directions);
         const pieceType = Object.keys(pieceMoveObj).find((key) => originalPieceId.includes(`${key}`)); console.log(pieceType);
+        const total = pieceMoveObj[pieceType].total.primary; console.log(total);
         for (const move of pieceMoveObj[pieceType].direction) { console.log(move);
-            for (const direction in directions) {
+            for (const direction in directionConverterObj) {
                 if (move === direction) {
-                    const total = pieceMoveObj[pieceType].total.primary; console.log(total);
-                    const moveLegalSecondaryIndexes = directions[direction].funcPrimary(total, boardArrayOriginalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece); //console.log(moveLegalSecondaryIndexes); 
-                    for (const item of moveLegalSecondaryIndexes) {
-                        allLegalSecondarySquareIndexes.push(item);
-                    }
+                    const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, boardArrayOriginalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece); //console.log(moveLegalSecondaryIndexes); 
+                    moveLegalSecondaryIndexes.forEach((index) => {allLegalSecondarySquareIndexes.push(index);})
                 }
             }
         }
         console.log(allLegalSecondarySquareIndexes);
         //is secondarySquare one of these?
-        return true;
+        return allLegalSecondarySquareIndexes.some(legalSquareIndex => legalSquareIndex === boardArraySecondarySquareIndex);
     }
     function putsKingInCheck(originalPiece, originalSquare, secondarySquare) {
+        //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece)
+        //cycle through every potential secondary square of opponent (including if it'd put theirs in check?) and if any secondary square is square of our king, illegal move
         return false;
     }
 
     function checkMate() {
+        //HARD: have you checkmate'd opponent? Rules about castling makes it easier to deal with here...
+        //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece).
+        //imagine, if you had another move, could you kill king. If so, find all threatening pieces that can and all the threatening squares they require to kill opponent king. Now, examining all opponent's potential pice moves, assess whether threatening pieces can be killed or all threatening squares be occupied (by opponent piece). If preventable, check. If not, check-mate.
+        //EASY: has opponent checkmate'd you?
+        //if opponent had another turn, could they kill king? If so...
         return false;
     }
 
