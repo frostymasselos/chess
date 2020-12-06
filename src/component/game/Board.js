@@ -9,8 +9,6 @@ function Board({db, authInfo, position}) {
     let [gridItems, setGridItems] = useState([]);
     let initialExecutionGridItemsUseEffect = useRef(true);
     let clickedOnPiece = useRef(false);
-    // let [clickedOnPiece, setClickedOnPiece] = useState(false);
-    // let [testyTag, setTestyTag] = useState(false);
     
     function fillBoardArrayWithSquares(params) {
         for (let num = 0; num < 64; num++) { //works
@@ -78,8 +76,6 @@ function Board({db, authInfo, position}) {
                 }
                 //RENDER PIECES ON BOARD
                 renderPieces();
-                //TEST
-                // testRenderFunction();
             })
         });
     }, []);
@@ -139,17 +135,7 @@ function Board({db, authInfo, position}) {
 
     //3.ONCLICKHANDLER
     function onClickHandler(e) {
-        // console.log("onClick handler executed"); console.log(e.currentTarget); //returns GI
-        // if (true) {
-        //     // console.log("currentTarget", e.currentTarget);
-        //     console.log("target", e.target);
-        //     return;
-        // }
         // e.stopPropagation();
-        console.log("clickedOnPiece:", clickedOnPiece.current); console.log("e.target:", e.target);
-        if (checkMate()) {
-            //CHECKMATE - NO POSSIBLE MOVE PREVENTS OPPONENT'S (NEXT TURN) POSSIBLE MOVE FROM KILLING KING.
-        }
         if (clickedOnPiece.current) { 
             //HAVE PREVIOUSLY CLICKED ON PIECE
             console.log("2nd stage", e.target.id, clickedOnPiece.current.id);
@@ -225,7 +211,7 @@ function Board({db, authInfo, position}) {
             executeUserClick();
         } else {
             //HAVEN'T PREVIOUSLY CLICKED PIECE (FRESH)
-            console.log("1st stage"); console.log(e.target.dataset.color, e.target.dataset.square, e.target.id, userColor.current);
+            console.log("1st stage");
             if (e.target.dataset.square || e.target.dataset.color !== userColor.current) {
                 //1ST TIME CLICK ON EMPTY SQUARE OR OPPONENT PIECE OR OFF-BOARD
                 console.log("exited");
@@ -257,7 +243,7 @@ function Board({db, authInfo, position}) {
                 }
             
             }
-        }); console.log(boardArraySquaresWithOpponentPiece, boardArraySquaresWithUserPiece);
+        }); console.log(boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece); //✅
         both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; 
         return both;
     }
@@ -285,19 +271,40 @@ function Board({db, authInfo, position}) {
         return returnArrayOfGeographicallyLegalSquares(originalPieceId, originalSquareIndex).some(legalSquareIndex => legalSquareIndex === secondarySquareIndex);    
     }
     function putsKingInCheck(originalPieceId, originalSquareIndex, secondarySquareIndex, originalSquare, secondarySquare) {
+        return false;
         console.log("originalPieceId:", originalPieceId, "originalSquareIndex", originalSquareIndex, "secondarySquareIndex", secondarySquareIndex, "originalSquare", originalSquare, "secondarySquare", secondarySquare);
         //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece)
         function returnCopyOfBoardWithOriginalPieceInSecondSquare() {
-            const copy = boardArray.current;
-            copy[secondarySquareIndex].piece = copy[originalSquareIndex].piece;
-            copy[originalSquareIndex].piece = null; console.log(copy);
-            return copy;
+            const copyUser = boardArray.current;
+            copyUser[secondarySquareIndex].piece = copyUser[originalSquareIndex].piece;
+            copyUser[originalSquareIndex].piece = null; console.log(copyUser);
+            return copyUser;
         }
-        const copy = returnCopyOfBoardWithOriginalPieceInSecondSquare();
+        const copyUser = returnCopyOfBoardWithOriginalPieceInSecondSquare();
+        function returnFlippedBoardForOpponent() {
+            const copyOpponent = [...copyUser.reverse()];
+            for (const square of copyOpponent) {
+                square.index = 63 - square.index;
+                if (square.piece) {
+                    const newRowPosition = 9 - Number.parseInt(square.piece.rowPosition[0])
+                    square.piece.rowPosition = `${newRowPosition}/${newRowPosition + 1}`;
+                    const newColumnPosition = 9 - Number.parseInt(square.piece.columnPosition[0])
+                    square.piece.columnPosition = `${newColumnPosition}/${newColumnPosition + 1}`;
+                }
+            }
+            return copyOpponent;
+        }
+        const copyOpponent = returnFlippedBoardForOpponent(); console.log(copyOpponent);
         //cycle through every potential secondary square of opponent piece and if any potential secondary squares = square of our king, illegal move
-        const squaresWithOpponentPieces = returnSquaresWithUserAndOpponentPieces(copy)[1]; console.log(squaresWithOpponentPieces);
-        let squareOfUserKing = ''; returnSquaresWithUserAndOpponentPieces(copy)[0].some((userSquare) => userSquare.piece.name === "king" ? squareOfUserKing = userSquare.index : null); console.log(squareOfUserKing);
-        
+        const squaresWithOpponentPieces = returnSquaresWithUserAndOpponentPieces(copyOpponent)[1]; console.log(squaresWithOpponentPieces);
+        let squareOfUserKing = ''; returnSquaresWithUserAndOpponentPieces(copyOpponent)[0].some((userSquare) => userSquare.piece.name === "king" ? squareOfUserKing = userSquare.index : null); console.log(squareOfUserKing);
+        const squaresUnderThreat = [];
+        for (const squareWithOpponentPiece of squaresWithOpponentPieces) {
+            let squareName = squareWithOpponentPiece.piece.name;
+            let squareIndex = squareWithOpponentPiece.index;
+            let arrayOfGeographicallyLegalSquares = returnArrayOfGeographicallyLegalSquares(squareName, squareIndex);
+            arrayOfGeographicallyLegalSquares.forEach((squareIndex) => squaresUnderThreat.push(squareIndex));
+        }; console.log("squares under threat:", squaresUnderThreat);
     }
 
     function checkMate() {
