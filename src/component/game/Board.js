@@ -176,7 +176,7 @@ function Board({db, authInfo, position}) {
             //all geographically legal secondary square indexes
             const geographicallyLegalSecondarySquareIndexes = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces);
             //all geographically legal secondary square indexes of all userPieces
-            const geographicallyLegalSecondarySquareIndexesOfAllPieces = [];
+            const geographicallyLegalSecondarySquareIndexesOfAllPieces = arrayOfGeographicallyLegalSquaresOfAllPieces(); console.log("geographicallyLegalSecondarySquareIndexesOfAllPieces:", geographicallyLegalSecondarySquareIndexesOfAllPieces);
             if (!geographicallyLegalSecondarySquareIndexes.some(legalSquareIndex => legalSquareIndex === secondarySquareIndex) || putsKingInCheck(clickedOnPiece.current.id, originalSquareIndex, secondarySquareIndex, clickedOnPiece.current.square, e.currentTarget)) {
                 //ILLEGAL MOVE OR PUTS KING IN CHECK|CHECKMATE
                 console.log("illegal geography or puts king in check");
@@ -252,11 +252,21 @@ function Board({db, authInfo, position}) {
         both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; //console.log(both);✅
         return both;
     }
-    function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, color = userColor.current) {
+    function arrayOfGeographicallyLegalSquaresOfAllPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
+        const geographicallyLegalSquaresOfAllPieces = [];
+        // for (const squareWithUserPiece of squaresWithUserPieces) {
+            // const pieceId = 
+            // const geographicallyLegalSquaresOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces);
+            // geographicallyLegalSquaresOfParticularPiece.forEach((legalSquare) => geographicallyLegalSquaresOfAllPieces.push(legalSquare));
+            // geographicallyLegalSquaresOfAllPieces.push()
+        // }
+        return geographicallyLegalSquaresOfAllPieces;
+    }
+    function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
         const allLegalSecondarySquareIndexes = [];
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); console.log("pieceType:", pieceType);
-        const total = pieceMoveObj[color][pieceType].total.primary; console.log("total:", total);
-        for (const move of pieceMoveObj[color][pieceType].direction) { console.log("move:", move);
+        const total = pieceMoveObj[ourColor][pieceType].total.primary; console.log("total:", total);
+        for (const move of pieceMoveObj[ourColor][pieceType].direction) { console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
                     const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
@@ -265,8 +275,7 @@ function Board({db, authInfo, position}) {
             }
         } console.log(allLegalSecondarySquareIndexes);
         return allLegalSecondarySquareIndexes; 
-    }
-  
+    }   
     function putsKingInCheck(originalPieceId, originalSquareIndex, secondarySquareIndex, originalSquare, secondarySquare) {
         console.log("originalPieceId:", originalPieceId, "originalSquareIndex:", originalSquareIndex, "secondarySquareIndex:", secondarySquareIndex, "originalSquare:", originalSquare, "secondarySquare:", secondarySquare);
         return false;
@@ -303,7 +312,6 @@ function Board({db, authInfo, position}) {
             arrayOfGeographicallyLegalSquares.forEach((squareIndex) => squaresUnderThreat.push(squareIndex));
         }; console.log("squares under threat:", squaresUnderThreat);
     }
-
     function checkMate() {
         //HARD: have you checkmate'd opponent? Rules about castling makes it easier to deal with here...
         //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece).
