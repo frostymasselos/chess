@@ -81,14 +81,14 @@ const directionConverterObj = {
     forward: { //check to see not above 63
         value: 8,
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, value = 8) {
-            const legalSecondarySquareIndexes = []; console.log(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece);
+            const legalSecondarySquareIndexes = []; console.log("total:", total, "originalSquareIndex:", originalSquareIndex, "boardArraySquaresWithUserPiece:", boardArraySquaresWithUserPiece, "boardArraySquaresWithOpponentPiece:", boardArraySquaresWithOpponentPiece);
             parent: for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
-                const potentialSquare = originalSquareIndex + (value * currentTotal);
+                const potentialSquare = originalSquareIndex + (value * currentTotal); console.log("potentialSquare", potentialSquare);
 
                 //check if potentialSquare occupied by user piece
                 for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
                     if (squareWithUserPiece.index === potentialSquare) {
-                        return;
+                        break parent;
                     }
                 }
                 //check if potentialSquare occupied by opponent piece

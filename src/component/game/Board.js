@@ -172,11 +172,11 @@ function Board({db, authInfo, position}) {
             const secondarySquareIndex = returnBoardArrayIndex(e.currentTarget); console.log("secondarySquareIndex:", secondarySquareIndex);
             //all squares with userPieces & all squares with opponentPieces
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
-            const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];
+            const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
             //all geographically legal secondary square indexes
             const geographicallyLegalSecondarySquareIndexes = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces);
             //all geographically legal secondary square indexes of all userPieces
-            const geographicallyLegalSecondarySquareIndexesOfAllPieces = arrayOfGeographicallyLegalSquaresOfAllPieces(); console.log("geographicallyLegalSecondarySquareIndexesOfAllPieces:", geographicallyLegalSecondarySquareIndexesOfAllPieces);
+            // const geographicallyLegalSecondarySquareIndexesOfAllPieces = arrayOfGeographicallyLegalSquaresOfAllPieces(squaresWithUserPieces, squaresWithOpponentPieces); console.log("geographicallyLegalSecondarySquareIndexesOfAllPieces:", geographicallyLegalSecondarySquareIndexesOfAllPieces);
             if (!geographicallyLegalSecondarySquareIndexes.some(legalSquareIndex => legalSquareIndex === secondarySquareIndex) || putsKingInCheck(clickedOnPiece.current.id, originalSquareIndex, secondarySquareIndex, clickedOnPiece.current.square, e.currentTarget)) {
                 //ILLEGAL MOVE OR PUTS KING IN CHECK|CHECKMATE
                 console.log("illegal geography or puts king in check");
@@ -254,12 +254,13 @@ function Board({db, authInfo, position}) {
     }
     function arrayOfGeographicallyLegalSquaresOfAllPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
         const geographicallyLegalSquaresOfAllPieces = [];
-        // for (const squareWithUserPiece of squaresWithUserPieces) {
-            // const pieceId = 
-            // const geographicallyLegalSquaresOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces);
-            // geographicallyLegalSquaresOfParticularPiece.forEach((legalSquare) => geographicallyLegalSquaresOfAllPieces.push(legalSquare));
-            // geographicallyLegalSquaresOfAllPieces.push()
-        // }
+        for (const squareWithUserPiece of squaresWithUserPieces) {
+            const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
+            const originalSquareIndex = squareWithUserPiece.index; //console.log(originalSquareIndex);
+            const geographicallyLegalSquaresOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces);
+            geographicallyLegalSquaresOfParticularPiece.forEach((legalSquare) => geographicallyLegalSquaresOfAllPieces.push(legalSquare));
+            geographicallyLegalSquaresOfAllPieces.push()
+        }
         return geographicallyLegalSquaresOfAllPieces;
     }
     function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
