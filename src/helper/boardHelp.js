@@ -1,40 +1,80 @@
 const pieceMoveObj = { //add onto these as #2 strategy to catering for black
-    pawn: {
-        direction: ["forward"],
-        total: {
-            primary: 8 
-        }
-    },
-    rook: {
-        direction: ["forward", "backward", "left", "right"],
-        total: {
-            primary: 8,
-        }
-    },
-    knight: {
-        direction: ["knight_forward_left", "knight_forward_right", "knight_backward_left", "knight_backward_right"],
-        total: {
-            primary: 1,
-        }
-    },
-    bishop: {
-        direction: ["diagonal_forward_left", "diagonal_forward_right", "diagonal_backward_left", "diagonal_backward_right"],
-        total: {
-            primary: 8,
-        }
-    },
-    queen: {
-        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
-        total: {
-            primary: 8,
+    white: {
+        pawn: {
+            direction: ["forward"],
+            total: {
+                primary: 8 
+            }
+        },
+        rook: {
+            direction: ["forward", "backward", "left", "right"],
+            total: {
+                primary: 8,
+            }
+        },
+        knight: {
+            direction: ["knight_forward_left", "knight_backward_left", "knight_forward_right", "knight_backward_right"],
+            total: {
+                primary: 1,
+            }
+        },
+        bishop: {
+            direction: ["diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
+            total: {
+                primary: 8,
+            }
+        },
+        queen: {
+            direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
+            total: {
+                primary: 8,
+            },
+        },
+        king: {
+            direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
+            total: {
+                primary: 1,
+            },
         },
     },
-    king: {
-        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
-        total: {
-            primary: 1,
+    black: {
+        pawn: {
+            direction: ["backward"],
+            total: {
+                primary: 8 
+            }
         },
-    },
+        rook: {
+            direction: ["backward", "forward", "right", "left"],
+            total: {
+                primary: 8,
+            }
+        },
+        knight: {
+            direction: ["knight_backward_right", "knight_forward_right", "knight_backward_left", "knight_forward_left"],
+            total: {
+                primary: 1,
+            }
+        },
+        bishop: {
+            direction: ["diagonal_backward_right", "diagonal_forward_right", "diagonal_backward_left", "diagonal_forward_left"],
+            total: {
+                primary: 8,
+            }
+        },
+        queen: {
+            direction: ["backward", "forward", "right", "left", "diagonal_backward_right", "diagonal_backward_left", "diagonal_forward_right", "diagonal_forward_left"],
+            total: {
+                primary: 8,
+            },
+        },
+        king: {
+            direction: ["backward", "forward", "right", "left", "diagonal_backward_right", "diagonal_backward_left", "diagonal_forward_right", "diagonal_forward_left"],
+            total: {
+                primary: 1,
+            },
+        },
+    }
 }
 
 const directionConverterObj = {
@@ -455,12 +495,6 @@ const directionConverterObj = {
             }
             return legalSecondarySquareIndexes;
         }
-    },
-    black: { //reversing array for black would solve problem
-        forward: -8,
-        backward: 8,
-        left: 1, //check to see not above 63, can't be multiple of 7.
-        right: -1 //check to see not below 0, can't be multiple of 8. 
     },
 };
 
