@@ -167,11 +167,17 @@ function Board({db, authInfo, position}) {
                 const columnPosition = window.getComputedStyle(square).getPropertyValue('grid-column').slice(0, 1);
                 return (8 - rowPosition) * 8 + (columnPosition - 1); 
             }
+            const originalSquareId = clickedOnPiece.current.id;
             const originalSquareIndex = returnBoardArrayIndex(clickedOnPiece.current.square); console.log("originalSquareIndex:", originalSquareIndex);
             const secondarySquareIndex = returnBoardArrayIndex(e.currentTarget); console.log("secondarySquareIndex:", secondarySquareIndex);
-            //all squares with userPieces
-            //all squares with opponentPieces
-            if (!secondarySquareIsOneOfGeographicallyLegalSquares(clickedOnPiece.current.id, originalSquareIndex, secondarySquareIndex) || putsKingInCheck(clickedOnPiece.current.id, originalSquareIndex, secondarySquareIndex, clickedOnPiece.current.square, e.currentTarget)) {
+            //all squares with userPieces & all squares with opponentPieces
+            const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
+            const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];
+            //all geographically legal secondary square indexes
+            const geographicallyLegalSecondarySquareIndexes = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces);
+            //all geographically legal secondary square indexes of all userPieces
+            const geographicallyLegalSecondarySquareIndexesOfAllPieces = [];
+            if (!geographicallyLegalSecondarySquareIndexes.some(legalSquareIndex => legalSquareIndex === secondarySquareIndex) || putsKingInCheck(clickedOnPiece.current.id, originalSquareIndex, secondarySquareIndex, clickedOnPiece.current.square, e.currentTarget)) {
                 //ILLEGAL MOVE OR PUTS KING IN CHECK|CHECKMATE
                 console.log("illegal geography or puts king in check");
                 e.preventDefault();
@@ -228,14 +234,14 @@ function Board({db, authInfo, position}) {
         }
     }
     //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS - DONT MOVE ANYTHING IN ARRAY
-    function returnSquaresWithUserAndOpponentPieces(board = boardArray.current) {
+    function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, playerColor = userColor.current) {
         let both = [];
         const boardArraySquaresWithOpponentPiece = [];
         const boardArraySquaresWithUserPiece = board.filter((square) => {
             if (square.piece) {
                 let pieceColor = ''; 
                 square.piece.white === true ? pieceColor = "white" : pieceColor = "black";
-                if (pieceColor === userColor.current) {
+                if (pieceColor === playerColor) {
                     return true
                 } else {
                     boardArraySquaresWithOpponentPiece.push(square);
@@ -246,27 +252,21 @@ function Board({db, authInfo, position}) {
         both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; //console.log(both);✅
         return both;
     }
-    function returnArrayOfGeographicallyLegalSquares(pieceId, squareIndex, color = userColor.current) {
+    function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, color = userColor.current) {
         const allLegalSecondarySquareIndexes = [];
-        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
-        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces, "squaresWithOpponentPieces:", squaresWithOpponentPieces);
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); console.log("pieceType:", pieceType);
         const total = pieceMoveObj[color][pieceType].total.primary; console.log("total:", total);
         for (const move of pieceMoveObj[color][pieceType].direction) { console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
-                    const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, squareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
+                    const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
                     moveLegalSecondaryIndexes.forEach((index) => {allLegalSecondarySquareIndexes.push(index);})
                 }
             }
         } console.log(allLegalSecondarySquareIndexes);
         return allLegalSecondarySquareIndexes; 
     }
-    function secondarySquareIsOneOfGeographicallyLegalSquares(originalPieceId, originalSquareIndex, secondarySquareIndex) {
-        console.log("originalPieceId:", originalPieceId, "originalSquareIndex:", originalSquareIndex, "secondarySquareIndex:", secondarySquareIndex);
-        //collate potentially valid boardArray indexes. Is secondarySquare one of these?
-        return returnArrayOfGeographicallyLegalSquares(originalPieceId, originalSquareIndex).some(legalSquareIndex => legalSquareIndex === secondarySquareIndex);    
-    }
+  
     function putsKingInCheck(originalPieceId, originalSquareIndex, secondarySquareIndex, originalSquare, secondarySquare) {
         console.log("originalPieceId:", originalPieceId, "originalSquareIndex:", originalSquareIndex, "secondarySquareIndex:", secondarySquareIndex, "originalSquare:", originalSquare, "secondarySquare:", secondarySquare);
         return false;
@@ -299,7 +299,7 @@ function Board({db, authInfo, position}) {
         for (const squareWithOpponentPiece of squaresWithOpponentPieces) {
             let squareName = squareWithOpponentPiece.piece.name;
             let squareIndex = squareWithOpponentPiece.index;
-            let arrayOfGeographicallyLegalSquares = returnArrayOfGeographicallyLegalSquares(squareName, squareIndex);
+            let arrayOfGeographicallyLegalSquares = arrayOfGeographicallyLegalSquares(squareName, squareIndex);
             arrayOfGeographicallyLegalSquares.forEach((squareIndex) => squaresUnderThreat.push(squareIndex));
         }; console.log("squares under threat:", squaresUnderThreat);
     }
