@@ -1,6 +1,6 @@
 const pieceMoveObj = { //add onto these as #2 strategy to catering for black
     pawn: {
-        direction: ["forward", "backward", "left", "right"],
+        direction: ["forward"],
         total: {
             primary: 8 
         }
@@ -41,7 +41,7 @@ const directionConverterObj = {
     forward: { //check to see not above 63
         value: 8,
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, value = 8) {
-            const legalSecondarySquareIndexes = [];
+            const legalSecondarySquareIndexes = []; console.log(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece);
             parent: for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
                 const potentialSquare = originalSquareIndex + (value * currentTotal);
 
@@ -65,7 +65,7 @@ const directionConverterObj = {
                 // else { //in case of a knight hopping.
                 //     break;
                 // } 
-            }
+            } console.log(legalSecondarySquareIndexes);
             return legalSecondarySquareIndexes;
         },
     }, 

@@ -61,19 +61,19 @@ function Board({db, authInfo, position}) {
             opponentDb.child(`pieces`).on('value', (e) => {
                 fillBoardWithPieces(e.val(), opponentDb);
                 console.log(boardArray.current);
-                // if (userColor.current = "black") {
-                //     const duplicate = [...boardArray.current.reverse()];
-                //     for (const square of duplicate) {
-                //         square.index = 63 - square.index;
-                //         if (square.piece) {
-                //             const newRowPosition = 9 - Number.parseInt(square.piece.rowPosition[0])
-                //             square.piece.rowPosition = `${newRowPosition}/${newRowPosition + 1}`;
-                //             const newColumnPosition = 9 - Number.parseInt(square.piece.columnPosition[0])
-                //             square.piece.columnPosition = `${newColumnPosition}/${newColumnPosition + 1}`;
-                //         }
-                //     }
-                //     boardArray.current = duplicate;
-                // }
+                if (userColor.current === "black") {
+                    const duplicate = [...boardArray.current.reverse()];
+                    for (const square of duplicate) {
+                        square.index = 63 - square.index;
+                        if (square.piece) {
+                            const newRowPosition = 9 - Number.parseInt(square.piece.rowPosition[0])
+                            square.piece.rowPosition = `${newRowPosition}/${newRowPosition + 1}`;
+                            const newColumnPosition = 9 - Number.parseInt(square.piece.columnPosition[0])
+                            square.piece.columnPosition = `${newColumnPosition}/${newColumnPosition + 1}`;
+                        }
+                    }
+                    boardArray.current = duplicate;
+                }
                 //RENDER PIECES ON BOARD
                 renderPieces();
             })
@@ -240,17 +240,17 @@ function Board({db, authInfo, position}) {
                 }
             
             }
-        }); console.log(boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece); //✅
+        }); //console.log(boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece); //✅
         both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; //console.log(both);✅
         return both;
     }
     function returnArrayOfGeographicallyLegalSquares(pieceId, squareIndex) {
         const allLegalSecondarySquareIndexes = [];
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
-        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //✅console.log("squaresWithUserPieces:", squaresWithUserPieces, "squaresWithOpponentPieces:", squaresWithOpponentPieces);
-        const pieceType = Object.keys(pieceMoveObj).find((key) => pieceId.includes(`${key}`)); //✅console.log("pieceType", pieceType);
-        const total = pieceMoveObj[pieceType].total.primary; //✅console.log(total);
-        for (const move of pieceMoveObj[pieceType].direction) { //✅console.log(move);
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; console.log("squaresWithUserPieces:", squaresWithUserPieces, "squaresWithOpponentPieces:", squaresWithOpponentPieces);
+        const pieceType = Object.keys(pieceMoveObj).find((key) => pieceId.includes(`${key}`)); console.log("pieceType:", pieceType);
+        const total = pieceMoveObj[pieceType].total.primary; console.log("total:", total);
+        for (const move of pieceMoveObj[pieceType].direction) { console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
                     const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, squareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
