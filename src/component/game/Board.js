@@ -184,8 +184,14 @@ function Board({db, authInfo, position}) {
                 e.preventDefault();
                 return;
             }
-            if (putsKingInCheck(originalSquareIndex, secondarySquareIndex)) {
-                console.log("illegal move - puts king in check");
+            //imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece)
+            const board2 = boardArray.current;
+            board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
+            board2[originalSquareIndex].piece = null; //console.log("board2", board2);
+            if (isKingInCheck(board2)) {
+                console.log("illegal move - king is in check");
+                e.preventDefault();
+                return;
             }
             //EXECUTING USER'S CLICK
             function executeUserClick() {
@@ -281,18 +287,9 @@ function Board({db, authInfo, position}) {
         } //console.log(allLegalSecondarySquareIndexes);
         return allLegalSecondarySquareIndexes; 
     }   
-    function putsKingInCheck(originalSquareIndex, secondarySquareIndex) {
-        //console.log("originalPieceId:", originalPieceId, "originalSquareIndex:", originalSquareIndex, "secondarySquareIndex:", secondarySquareIndex, "originalSquare:", originalSquare, "secondarySquare:", secondarySquare);
-        //imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece)
-        function returnCopyOfBoardWithOriginalPieceInSecondSquare() {
-            const board2 = boardArray.current;
-            board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
-            board2[originalSquareIndex].piece = null; //console.log(board2);
-            return board2;
-        }
-        const board2 = returnCopyOfBoardWithOriginalPieceInSecondSquare();
+    function isKingInCheck(board = boardArray.current) {
         //square index of user king
-        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board2);
+        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board);
         const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
         const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
         let squareIndexOfUserKing = ''; squaresWithUserPieces.some((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
@@ -301,6 +298,7 @@ function Board({db, authInfo, position}) {
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareOfOpponentPiece) => {return legalSquareOfOpponentPiece === squareIndexOfUserKing;});
     }
     function checkMate() {
+
         //HARD: have you checkmate'd opponent? Rules about castling makes it easier to deal with here...
         //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece).
         //imagine, if you had another move, could you kill king. If so, find all threatening pieces that can and all the threatening squares they require to kill opponent king. Now, examining all opponent's potential pice moves, assess whether threatening pieces can be killed or all threatening squares be occupied (by opponent piece). If preventable, check. If not, check-mate.
