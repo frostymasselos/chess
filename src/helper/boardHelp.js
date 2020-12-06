@@ -3,7 +3,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
         pawn: {
             direction: ["forward"],
             total: {
-                primary: 8 
+                primary: 2 
             }
         },
         rook: {
@@ -81,9 +81,9 @@ const directionConverterObj = {
     forward: { //check to see not above 63
         value: 8,
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, value = 8) {
-            const legalSecondarySquareIndexes = []; console.log("total:", total, "originalSquareIndex:", originalSquareIndex, "boardArraySquaresWithUserPiece:", boardArraySquaresWithUserPiece, "boardArraySquaresWithOpponentPiece:", boardArraySquaresWithOpponentPiece);
+            const legalSecondarySquareIndexes = []; //console.log("total:", total, "originalSquareIndex:", originalSquareIndex, "boardArraySquaresWithUserPiece:", boardArraySquaresWithUserPiece, "boardArraySquaresWithOpponentPiece:", boardArraySquaresWithOpponentPiece);
             parent: for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
-                const potentialSquare = originalSquareIndex + (value * currentTotal); console.log("potentialSquare", potentialSquare);
+                const potentialSquare = originalSquareIndex + (value * currentTotal); //console.log("potentialSquare", potentialSquare);
 
                 //check if potentialSquare occupied by user piece
                 for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
@@ -105,7 +105,7 @@ const directionConverterObj = {
                 // else { //in case of a knight hopping.
                 //     break;
                 // } 
-            } console.log(legalSecondarySquareIndexes);
+            } //console.log(legalSecondarySquareIndexes);
             return legalSecondarySquareIndexes;
         },
     }, 
@@ -185,7 +185,6 @@ const directionConverterObj = {
                     break;
                 }
             }
-            console.log("counter:", counter, "originalSquareIndex:", originalSquareIndex);
             parent: for (let potentialSquare = originalSquareIndex + value, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total); potentialSquare--, currentCounter++, currentTotal++) {
                 const potentialSquare = originalSquareIndex + (value * currentTotal);
 

@@ -176,7 +176,8 @@ function Board({db, authInfo, position}) {
             //all geographically legal secondary square indexes
             const geographicallyLegalSecondarySquareIndexes = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces);
             //all geographically legal secondary square indexes of all userPieces
-            // const geographicallyLegalSecondarySquareIndexesOfAllPieces = arrayOfGeographicallyLegalSquaresOfAllPieces(squaresWithUserPieces, squaresWithOpponentPieces); console.log("geographicallyLegalSecondarySquareIndexesOfAllPieces:", geographicallyLegalSecondarySquareIndexesOfAllPieces);
+            const geographicallyLegalSecondarySquareIndexesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllPieces(squaresWithUserPieces, squaresWithOpponentPieces); console.log("geographicallyLegalSecondarySquareIndexesOfAllPieces:", geographicallyLegalSecondarySquareIndexesOfAllUserPieces);
+            // const geographicallyLegalSecondarySquareIndexesOfAllOppon
             if (!geographicallyLegalSecondarySquareIndexes.some(legalSquareIndex => legalSquareIndex === secondarySquareIndex) || putsKingInCheck(clickedOnPiece.current.id, originalSquareIndex, secondarySquareIndex, clickedOnPiece.current.square, e.currentTarget)) {
                 //ILLEGAL MOVE OR PUTS KING IN CHECK|CHECKMATE
                 console.log("illegal geography or puts king in check");
@@ -265,9 +266,9 @@ function Board({db, authInfo, position}) {
     }
     function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
         const allLegalSecondarySquareIndexes = [];
-        const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); console.log("pieceType:", pieceType);
-        const total = pieceMoveObj[ourColor][pieceType].total.primary; console.log("total:", total);
-        for (const move of pieceMoveObj[ourColor][pieceType].direction) { console.log("move:", move);
+        const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); //console.log("pieceType:", pieceType);
+        const total = pieceMoveObj[ourColor][pieceType].total.primary; //console.log("total:", total);
+        for (const move of pieceMoveObj[ourColor][pieceType].direction) { //console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
                     const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
