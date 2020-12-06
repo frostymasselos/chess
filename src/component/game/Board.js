@@ -7,6 +7,8 @@ function Board({db, authInfo, position}) {
     let userColor = useRef(position === 1 ? "white" : "black");
     let opponentColor = useRef(userColor.current === "white" ? "black" : "white");
     let boardArray = useRef([]);
+    let [check, setCheck] = useState(false);
+    let [checkMate, setCheckMate] = useState(false);
     let [gridItems, setGridItems] = useState([]);
     let initialExecutionGridItemsUseEffect = useRef(true);
     let clickedOnPiece = useRef(false);
@@ -129,8 +131,12 @@ function Board({db, authInfo, position}) {
         setGridItems(arrayOfJSXSquares);
     }
 
-    //2.5 CODE TO EXECUTE WHEN THINGS"RE RENDERED ON BOARD
+    //2.5 CODE TO EXECUTE WHEN THINGS'RE RENDERED ON BOARD
     useEffect(() => {
+        //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
+        if (isKingInCheck()) {
+            setCheck(true);
+        }
     }, [gridItems])
 
     //3.ONCLICKHANDLER
@@ -297,10 +303,10 @@ function Board({db, authInfo, position}) {
         const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareOfOpponentPiece) => {return legalSquareOfOpponentPiece === squareIndexOfUserKing;});
     }
-    function checkMate() {
-
-        //HARD: have you checkmate'd opponent? Rules about castling makes it easier to deal with here...
+    function isCheckMate() {
+        //HARD: have you checkmate'd opponent? 
         //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece).
+        //could I, next turn, kill 
         //imagine, if you had another move, could you kill king. If so, find all threatening pieces that can and all the threatening squares they require to kill opponent king. Now, examining all opponent's potential pice moves, assess whether threatening pieces can be killed or all threatening squares be occupied (by opponent piece). If preventable, check. If not, check-mate.
         //EASY: has opponent checkmate'd you?
         //if opponent had another turn, could they kill king? If so...
@@ -309,6 +315,7 @@ function Board({db, authInfo, position}) {
 
     return (
         <>
+            {check && <div>You are in check</div>}
             <div className="board-grid-container">
                 {gridItems}
             </div>
