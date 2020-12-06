@@ -1,8 +1,8 @@
 const pieceMoveObj = { //add onto these as #2 strategy to catering for black
     pawn: {
-        direction: ["forward"],
+        direction: ["forward", "backward", "left", "right"],
         total: {
-            primary: 2 
+            primary: 8 
         }
     },
     rook: {
@@ -24,13 +24,13 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
         }
     },
     queen: {
-        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_forward_right", "diagonal_backward_left", "diagonal_backward_right"],
+        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
         total: {
             primary: 8,
         },
     },
     king: {
-        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_forward_right", "diagonal_backward_left", "diagonal_backward_right"],
+        direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
         total: {
             primary: 1,
         },
@@ -48,7 +48,7 @@ const directionConverterObj = {
                 //check if potentialSquare occupied by user piece
                 for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
                     if (squareWithUserPiece.index === potentialSquare) {
-                        break parent;
+                        return;
                     }
                 }
                 //check if potentialSquare occupied by opponent piece
