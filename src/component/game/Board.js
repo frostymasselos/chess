@@ -145,7 +145,6 @@ function Board({db, authInfo, position}) {
             } else {
                 setCheck(true);
             }
-            setCheck(true);
         }
     }, [gridItems])
 
