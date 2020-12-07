@@ -21,6 +21,8 @@ function Board({db, authInfo, position}) {
             })
         }
     }
+
+
     
     //1.POPULATE boardArray
     useEffect(() => {
@@ -135,6 +137,14 @@ function Board({db, authInfo, position}) {
     useEffect(() => {
         //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
         if (isKingInCheck()) {
+            const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);
+            const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
+            const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
+            if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
+                setCheckMate(true);
+            } else {
+                setCheck(true);
+            }
             setCheck(true);
         }
     }, [gridItems])
@@ -191,7 +201,7 @@ function Board({db, authInfo, position}) {
                 return;
             }
             //imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece)
-            const board2 = boardArray.current;
+            const board2 = JSON.parse(JSON.stringify(boardArray.current));;
             board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
             board2[originalSquareIndex].piece = null; //console.log("board2", board2);
             if (isKingInCheck(board2)) {
@@ -228,6 +238,9 @@ function Board({db, authInfo, position}) {
                     originalPiece.classList.remove(`highlighted`);
                     //reset state
                     clickedOnPiece.current = false;
+                    // if (checkMate()) {
+                        
+                    // }
                 } 
             }
             executeUserClick();
@@ -298,24 +311,35 @@ function Board({db, authInfo, position}) {
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board);
         const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
         const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-        let squareIndexOfUserKing = ''; squaresWithUserPieces.some((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
+        let squareIndexOfUserKing = ''; squaresWithUserPieces.some((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); //console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
         //cycle through every potential secondary square of opponent piece and if any potential secondary squares = square of our king, illegal move
         const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareOfOpponentPiece) => {return legalSquareOfOpponentPiece === squareIndexOfUserKing;});
     }
-    function isCheckMate() {
-        //HARD: have you checkmate'd opponent? 
-        //has to imagine original piece has successfully moved to second square (copy array, and reassign secondsquarepiece to originalpiece).
-        //could I, next turn, kill 
-        //imagine, if you had another move, could you kill king. If so, find all threatening pieces that can and all the threatening squares they require to kill opponent king. Now, examining all opponent's potential pice moves, assess whether threatening pieces can be killed or all threatening squares be occupied (by opponent piece). If preventable, check. If not, check-mate.
-        //EASY: has opponent checkmate'd you?
-        //if opponent had another turn, could they kill king? If so...
-        return false;
+    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
+        //for every possible move I make, am I still in check? Make a new board for each move and assess whether I'm still in check
+        for (const squareWithUserPiece of squaresWithUserPieces) {
+            const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
+            const originalSquareIndex = squareWithUserPiece.index; //console.log(originalSquareIndex);
+            const geographicallyLegalSquareIndicesOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor); console.log("geographicallyLegalSquareIndicesOfParticularPiece", geographicallyLegalSquareIndicesOfParticularPiece);
+            for (const secondarySquareIndex of geographicallyLegalSquareIndicesOfParticularPiece) {
+                //make new board
+                const board2 = JSON.parse(JSON.stringify(boardArray.current));
+                board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
+                board2[originalSquareIndex].piece = null; //console.log("board2", board2);
+                //ask question of new board
+                if (!isKingInCheck(board2)) {
+                    return false;
+                }
+            } 
+        }
+        return true;
     }
 
     return (
         <>
             {check && <div>You are in check</div>}
+            {checkMate && <div>You are in checkmate</div>}
             <div className="board-grid-container">
                 {gridItems}
             </div>
