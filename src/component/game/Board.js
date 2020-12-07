@@ -10,7 +10,8 @@ function Board({db, authInfo, position}) {
     let [check, setCheck] = useState(false);
     let [checkMate, setCheckMate] = useState(false);
     let [gridItems, setGridItems] = useState([]);
-    let initialExecutionGridItemsUseEffect = useRef(true);
+    let initialExecutionGridItems = useRef(true);
+    let initialExecutionOnClick = useRef(true);
     let clickedOnPiece = useRef(false);
     
     function fillBoardArrayWithSquares(params) {
@@ -135,6 +136,8 @@ function Board({db, authInfo, position}) {
 
     //2.5 CODE TO EXECUTE WHEN THINGS'RE RENDERED ON BOARD
     useEffect(() => {
+        //don't execute on initial execution
+        
         //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
         if (isKingInCheck()) {
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);
@@ -236,7 +239,7 @@ function Board({db, authInfo, position}) {
                     emptySquare.append(originalPiece);
                     console.log("secondaryEl is an empty square:", e.target);
                     unhighlightAndResetClickedOnPiece();
-                    //check for checkmate?
+                    
                 } else {
                     //SECOND SQUARE HAS AN ENEMY PIECE
                     const enemyPiece = e.target;
@@ -256,7 +259,8 @@ function Board({db, authInfo, position}) {
                     originalPiece.classList.remove(`highlighted`);
                     //reset state
                     clickedOnPiece.current = false;
-                    //checks if opponent in check after move
+                    //CHECK IF PIECE MOVING IS PAWN
+                    //CHECK IF OPPONENT'S KING'S IN CHECK|CHECKMATE
                     const board2 = JSON.parse(JSON.stringify(boardArray.current));
                     board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
                     board2[originalSquareIndex].piece = null;
@@ -265,18 +269,19 @@ function Board({db, authInfo, position}) {
                     // } else {
                     //     console.log("opponent king not in check");
                     // }
-                    if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
-                        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
-                        const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
-                        const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-                        if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, userColor.current)) {
-                            // setCheckMate(true);
-                            console.log("opponent is in checkmate");
-                        } else {
-                            // setCheck(true);
-                            console.log("opponent is in check");
-                        }
-                    }
+                    // if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+                    //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
+                    //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
+                    //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
+                    //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, userColor.current)) {
+                    //         // setCheckMate(true);
+                    //         console.log("opponent is in checkmate");
+                    //     } else {
+                    //         // setCheck(true);
+                    //         console.log("opponent is in check");
+                    //     }
+                    // }
+                    //CHANGE STATE TO TRIGGER PUBLISH FUNCTION
                 } 
             }
             executeUserClick();
@@ -298,6 +303,12 @@ function Board({db, authInfo, position}) {
             }
         }
     }
+    //5.publishResultsToDbAndRefresh();
+    useEffect(() => {
+        
+
+    }, []);
+
     //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS - DONT MOVE ANYTHING IN ARRAY
     function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = userColor.current) {
         let both = [];
@@ -320,12 +331,18 @@ function Board({db, authInfo, position}) {
     function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
         const allLegalSecondarySquareIndexes = [];
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); //console.log("pieceType:", pieceType);
-        const total = pieceMoveObj[ourColor][pieceType].total.primary; //console.log("total:", total);
+        let total = '';
+        if (pieceType === "pawn") {
+            let squareWithPawnPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex); console.log("squareWithPawnPiece", squareWithPawnPiece);
+            squareWithPawnPiece.piece.moved ? total = 1 : total = 2            
+        } else {
+            total = pieceMoveObj[ourColor][pieceType].total.primary; //console.log("total:", total);
+        }
         for (const move of pieceMoveObj[ourColor][pieceType].direction) { //console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
                     const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
-                    moveLegalSecondaryIndexes.forEach((index) => {allLegalSecondarySquareIndexes.push(index);})
+                    moveLegalSecondaryIndexes.forEach((index) => allLegalSecondarySquareIndexes.push(index))
                 }
             }
         } //console.log(allLegalSecondarySquareIndexes);

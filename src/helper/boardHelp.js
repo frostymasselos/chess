@@ -1,9 +1,9 @@
 const pieceMoveObj = { //add onto these as #2 strategy to catering for black
     white: {
         pawn: {
-            direction: ["forward"],
+            direction: ["pawn_forward", "pawn_diagonal_forward_left", "pawn_diagonal_forward_right",],
             total: {
-                primary: 2 
+                primary: 1 
             }
         },
         rook: {
@@ -39,7 +39,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
     },
     black: {
         pawn: {
-            direction: ["backward"],
+            direction: ["pawn_backward", "pawn_diagonal_backward_left", "pawn_diagonal_backward_right"],
             total: {
                 primary: 1
             }
@@ -78,6 +78,144 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
 }
 
 const directionConverterObj = {
+    pawn_forward: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, value = 8) {
+            const legalSecondarySquareIndexes = []; console.log("this", this);
+            parent: for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
+                const potentialSquare = originalSquareIndex + (value * currentTotal);
+                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
+                    if (squareWithUserPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
+                    if (squareWithOpponentPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                if (potentialSquare <= 63) {
+                    legalSecondarySquareIndexes.push(potentialSquare);
+                }
+            }
+            return legalSecondarySquareIndexes;
+        },
+    },
+    pawn_backward: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, value = -8) {
+            const legalSecondarySquareIndexes = []; 
+            parent: for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
+                const potentialSquare = originalSquareIndex + (value * currentTotal);
+                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
+                    if (squareWithUserPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
+                    if (squareWithOpponentPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                if (potentialSquare >= 0) {
+                    legalSecondarySquareIndexes.push(potentialSquare);
+                }
+            }
+            return legalSecondarySquareIndexes;
+        },
+    },
+    pawn_diagonal_forward_left: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueUp = 8, valueLeft = -1) {
+            total = total === 2 ? 1 : total; //stops unmoved pawns from diagonally killing up to 2 squares
+            const legalSecondarySquareIndexes = [];
+
+            //calculate squares it can hop before it reaches left-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
+                if (potentialSquare % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueLeft) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+                //check if potentialSquare occupied by opponent piece
+                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                    break parent;
+                }
+                legalSecondarySquareIndexes.push(potentialSquare);
+            }
+            return legalSecondarySquareIndexes;
+        }
+    },
+    pawn_diagonal_backward_left: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueDown = -8, valueLeft = -1) {
+            total = total === 2 ? 1 : total; //stops unmoved pawns from diagonally killing up to 2 squares
+            const legalSecondarySquareIndexes = [];
+
+            //calculate squares it can hop before it reaches left-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
+                if (potentialSquare % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueLeft) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+                //check if potentialSquare occupied by opponent piece
+                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                    break parent;
+                }
+                legalSecondarySquareIndexes.push(potentialSquare);
+            }
+            return legalSecondarySquareIndexes;
+        }
+    },
+    pawn_diagonal_forward_right: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueUp = 8, valueRight = 1) {
+            total = total === 2 ? 1 : total; //stops unmoved pawns from diagonally killing up to 2 squares
+            const legalSecondarySquareIndexes = []; 
+
+            //calculate squares before it reaches right-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
+                if ((potentialSquare - 7) % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueRight) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+                //check if potentialSquare occupied by opponent piece
+                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                    break parent;
+                }
+                legalSecondarySquareIndexes.push(potentialSquare);
+            }
+            return legalSecondarySquareIndexes;
+        }
+    },
+    pawn_diagonal_backward_right: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueDown = -8, valueRight = 1) {
+            total = total === 2 ? 1 : total; //stops unmoved pawns from diagonally killing up to 2 squares
+            const legalSecondarySquareIndexes = []; 
+
+            //calculate squares before it reaches right-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
+                if ((potentialSquare - 7) % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueRight) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+                //check if potentialSquare occupied by opponent piece
+                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                    break parent;
+                }
+                legalSecondarySquareIndexes.push(potentialSquare);
+            }
+            return legalSecondarySquareIndexes;
+        }
+    },
     forward: { //check to see not above 63
         value: 8,
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, value = 8) {

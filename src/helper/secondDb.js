@@ -17,6 +17,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '1/2',
                 alive: true,
                 name: "pawn1",
+                moved: false,
             },
             "pawn2": {
                 white: true,
@@ -24,6 +25,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '2/3',
                 alive: true,
                 name: "pawn2",
+                moved: false,
             },
             "pawn3": {
                 white: true,
@@ -31,6 +33,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '3/4',
                 alive: true,
                 name: "pawn3",
+                moved: false,
             },
             "pawn4": {
                 white: true,
@@ -38,6 +41,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '4/5',
                 alive: true,
                 name: "pawn4",
+                moved: false,
             },
             "pawn5": {
                 white: true,
@@ -45,6 +49,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '5/6',
                 alive: true,
                 name: "pawn5",
+                moved: false,
             },
             "pawn6": {
                 white: true,
@@ -52,6 +57,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '6/7',
                 alive: true,
                 name: "pawn6",
+                moved: false,
             },
             "pawn7": {
                 white: true,
@@ -59,6 +65,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '7/8',
                 alive: true,
                 name: "pawn7",
+                moved: false,
             },
             "pawn8": {
                 white: true,
@@ -66,6 +73,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '8/9',
                 alive: true,
                 name: "pawn8",
+                moved: false,
             },
             "rook1": {
                 white: true,
@@ -146,6 +154,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '8/9',
                 alive: true,
                 name: "pawn1",
+                moved: false,
             },
             "pawn2": {
                 white: false,
@@ -153,6 +162,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '7/8',
                 alive: true,
                 name: "pawn2",
+                moved: false,
             },
             "pawn3": {
                 white: false,
@@ -160,6 +170,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '6/7',
                 alive: true,
                 name: "pawn3",
+                moved: false,
             },
             "pawn4": {
                 white: false,
@@ -167,6 +178,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '5/6',
                 alive: true,
                 name: "pawn4",
+                moved: false,
             },
             "pawn5": {
                 white: false,
@@ -174,6 +186,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '4/5',
                 alive: true,
                 name: "pawn5",
+                moved: false,
             },
             "pawn6": {
                 white: false,
@@ -181,6 +194,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '3/4',
                 alive: true,
                 name: "pawn6",
+                moved: false,
             },
             "pawn7": {
                 white: false,
@@ -188,6 +202,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '2/3',
                 alive: true,
                 name: "pawn7",
+                moved: false,
             },
             "pawn8": {
                 white: false,
@@ -195,6 +210,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 columnPosition: '1/2',
                 alive: true,
                 name: "pawn8",
+                moved: false,
             },
             "rook1": {
                 white: false,
