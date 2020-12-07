@@ -146,12 +146,25 @@ function Board({db, authInfo, position}) {
                 setCheck(true);
             }
         }
-        //is opponent in check? (if we get this code right, move it to onClick handler)
-        if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
-            console.log("opponent king in check");
-        } else {
-            console.log("opponent king not in check");
-        }
+        // is opponent in check? (if we get this code right, move it to onClick handler)
+        // if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+        //     console.log("opponent king in check");
+        // } else {
+        //     console.log("opponent king not in check");
+        // }
+        // checks if opponent in check|check-mate after move
+        // if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+        //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
+        //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
+        //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
+        //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, userColor.current)) {
+        //         // setCheckMate(true);
+        //         console.log("opponent is in checkmate");
+        //     } else {
+        //         // setCheck(true);
+        //         console.log("opponent is in check");
+        //     }
+        // }
     }, [gridItems])
 
     //3.ONCLICKHANDLER
@@ -243,9 +256,27 @@ function Board({db, authInfo, position}) {
                     originalPiece.classList.remove(`highlighted`);
                     //reset state
                     clickedOnPiece.current = false;
-                    // if (checkMate()) {
-                        
+                    //checks if opponent in check after move
+                    const board2 = JSON.parse(JSON.stringify(boardArray.current));
+                    board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
+                    board2[originalSquareIndex].piece = null;
+                    // if (isKingInCheck(board2, opponentColor.current, userColor.current)) {
+                    //     console.log("opponent king in check");
+                    // } else {
+                    //     console.log("opponent king not in check");
                     // }
+                    if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+                        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
+                        const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
+                        const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
+                        if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, userColor.current)) {
+                            // setCheckMate(true);
+                            console.log("opponent is in checkmate");
+                        } else {
+                            // setCheck(true);
+                            console.log("opponent is in check");
+                        }
+                    }
                 } 
             }
             executeUserClick();

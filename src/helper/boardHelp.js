@@ -3,7 +3,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
         pawn: {
             direction: ["forward"],
             total: {
-                primary: 1 
+                primary: 2 
             }
         },
         rook: {
@@ -41,7 +41,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
         pawn: {
             direction: ["backward"],
             total: {
-                primary: 2 
+                primary: 1
             }
         },
         rook: {
