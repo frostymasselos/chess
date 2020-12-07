@@ -69,3 +69,7 @@ div {
 .dead {
     display: none;
 }
+
+.unclickable {
+    pointer-events: none;
+}

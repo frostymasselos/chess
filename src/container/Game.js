@@ -15,8 +15,8 @@ import "firebase/auth";
 
 function Game({params}) {
 
-    let [arbitrary, setArbitrary] = useState(false);
     let [invalidRoute, setinvalidRoute] = useState(false);
+    
     let [playing, setPlaying] = useState(false);
     let [canMove, setCanMove] = useState(false);
     let [user2SignedIn, setUser2SignedIn] = useState(false);
@@ -26,8 +26,9 @@ function Game({params}) {
     let [matchUrl, setMatchUrl] = useState("");
     let [position, setPosition] = useState(1);
     let [authInfo, setAuthInfo] = useState({});
+    let [arbitrary, setArbitrary] = useState(false);
 
-    let db = firebase.database(); 
+    let db = firebase.database(); //make it into a useRef|useState so it isn't run every single time?🐉
     let auth = firebase.auth();
 
     function test(color, animal) {
@@ -36,14 +37,12 @@ function Game({params}) {
         console.log(animal);
         // db.ref(`matches/template2`).set(bigObj);
     }
-
     function user2Moves(params) {
         console.log("button to make user2 move's been clicked");
         db.ref(`matches/${matchUrl}/user2`).update({
             moved: Math.random().toFixed(5)
         })
     }
-
     async function user2QuitsAndDbDeletes(params) {
         console.log("button to make user2 quit's been clicked");
         await db.ref(`matches/${matchUrl}/user2`).update({
@@ -51,7 +50,6 @@ function Game({params}) {
         });
         await db.ref(`matches/${matchUrl}`).remove();
     }
-
     async function user1QuitsAndDbDeletes(params) {
         console.log("button to make user1 quit's been clicked");
         await db.ref(`matches/${matchUrl}/user1`).update({
@@ -59,7 +57,6 @@ function Game({params}) {
         });
         await db.ref(`matches/${matchUrl}`).remove();
     }
-
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
@@ -70,7 +67,6 @@ function Game({params}) {
         }
         game.child(`user2`).orderByKey().equalTo(`signedIn`).on('child_changed', user2SignInHasChanged);
     }
-
     function listenerForOpponentQuitting(game, you, opponent) {
         console.log(`${you} listening for ${opponent} quitting`);
         async function opponentHasQuit(e) {
@@ -83,12 +79,10 @@ function Game({params}) {
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', opponentHasQuit);
         // auth.onAuthStateChanged(() => {}); don't need this as already have it in mount
     }
-
     function listenerForOpponentMoving(game, you, opponent) {
         console.log(`listening for ${opponent} moving`);
         async function opponentHasMoved(e) {
-            console.log(`callback fired for ${opponent} moving`);
-            console.log(e.val());
+            console.log(`callback fired for ${opponent} moving`); console.log(e.val());
             //CHANGE canMove IN DB
             await game.child(`${you}`).update({canMove: true});
             //CHANGE canMove IN STATE
@@ -129,8 +123,7 @@ function Game({params}) {
                                             }
                                             setPlaying(true); console.log("user1 returning"); //BOARD IS RENDERED HERE
                                             game.child(`user2/signedIn`).orderByKey().on('value', (e) => {
-                                                game.child(`user2/signedIn`).off(); //remove listener
-                                                console.log(e.val());
+                                                game.child(`user2/signedIn`).off(); console.log(e.val()); //remove listener
                                                 if (e.val()) { 
                                                     //USER2 SIGNED IN
                                                     //CAN USER1 MOVE?

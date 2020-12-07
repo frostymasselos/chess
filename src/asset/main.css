@@ -63,4 +63,8 @@ body {
 .dead {
   display: none;
 }
+
+.unclickable {
+  pointer-events: none;
+}
 /*# sourceMappingURL=main.css.map */

@@ -12,7 +12,9 @@ function Board({db, authInfo, position}) {
     let [gridItems, setGridItems] = useState([]);
     let initialExecutionGridItems = useRef(true);
     let initialExecutionOnClick = useRef(true);
+    let [readyToPublish, setReadyTopPublish] = useState(false);
     let clickedOnPiece = useRef(false);
+    const [testRefresh, setTestRefresh] = useState(false);
     
     function fillBoardArrayWithSquares(params) {
         for (let num = 0; num < 64; num++) { //works
@@ -22,8 +24,6 @@ function Board({db, authInfo, position}) {
             })
         }
     }
-
-
     
     //1.POPULATE boardArray
     useEffect(() => {
@@ -35,6 +35,10 @@ function Board({db, authInfo, position}) {
         } else {
             console.log("not rotating board");
         }
+        //BLACK ARTIFICIALLY MOVES
+        // if (condition) {
+            
+        // }
         //FILL boardArray WITH SQUARES
         fillBoardArrayWithSquares();
         //FILL boardArray WITH PIECES
@@ -66,7 +70,7 @@ function Board({db, authInfo, position}) {
             fillBoardWithPieces(e.val(), userDb);
             opponentDb.child(`pieces`).on('value', (e) => {
                 fillBoardWithPieces(e.val(), opponentDb);
-                console.log(boardArray.current);
+                console.log("boardArray.current:", boardArray.current);
                 // if (userColor.current === "black") {
                 //     const duplicate = [...boardArray.current.reverse()];
                 //     for (const square of duplicate) {
@@ -82,11 +86,18 @@ function Board({db, authInfo, position}) {
                 // }
                 //RENDER PIECES ON BOARD
                 renderPieces();
+                //IS IT USER'S TURN?
+                userDb.child(`canMove`).orderByKey().on('value', (e) => {
+                    if (e.val()) {
+                        const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
+                        board.classList.remove(`unclickable`);
+                    }
+                })
             })
         });
     }, []);
 
-    // //2.RENDER PIECES ON BOARD
+    // //2.RENDER PIECES ON BOARD //🐉Remember good question about timing
     function renderPieces(params) { 
         //MAKE PIECES
         let arrayOfJSXPieces = [];
@@ -137,7 +148,10 @@ function Board({db, authInfo, position}) {
     //2.5 CODE TO EXECUTE WHEN THINGS'RE RENDERED ON BOARD
     useEffect(() => {
         //don't execute on initial execution
-        
+        if (initialExecutionGridItems.current) {
+            initialExecutionGridItems.current = false;
+            return;
+        }
         //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
         if (isKingInCheck()) {
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);
@@ -211,6 +225,7 @@ function Board({db, authInfo, position}) {
             //all squares with userPieces & all squares with opponentPieces
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
+            const pieceMovingInArray = squaresWithUserPieces[originalSquareIndex].piece; //console.log(pieceMovingInArray);
             //all geographically legal secondary square indexes
             const geographicallyLegalSecondarySquareIndexes = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); console.log("geographicallyLegalSecondarySquareIndexes:", geographicallyLegalSecondarySquareIndexes);
             //all geographically legal secondary square indexes of all opponentPieces
@@ -231,6 +246,10 @@ function Board({db, authInfo, position}) {
                 return;
             }
             //EXECUTING USER'S CLICK
+            //freeze board
+            const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
+            board.classList.add(`unclickable`);
+            clickedOnPiece.current = false;
             function executeUserClick() {
                 console.log("executing", "original piece:", originalPiece);
                 if (e.target.dataset.square) {
@@ -257,8 +276,6 @@ function Board({db, authInfo, position}) {
                 function unhighlightAndResetClickedOnPiece() {
                     //unhighlight original piece
                     originalPiece.classList.remove(`highlighted`);
-                    //reset state
-                    clickedOnPiece.current = false;
                     //CHECK IF PIECE MOVING IS PAWN
                     //CHECK IF OPPONENT'S KING'S IN CHECK|CHECKMATE
                     const board2 = JSON.parse(JSON.stringify(boardArray.current));
@@ -282,6 +299,25 @@ function Board({db, authInfo, position}) {
                     //     }
                     // }
                     //CHANGE STATE TO TRIGGER PUBLISH FUNCTION
+                    let userDb = db.ref(`matches/${authInfo.authCode}/${authInfo.authUser}`);
+                    async function updateDb(params) {
+                        //update pawn. if pawn, if notMoved, update db 
+                        if (pieceMovingInArray.name.includes(`pawn`) && !pieceMovingInArray.moved) {
+                            console.log("here");
+                            await userDb.child(`pieces/${pieceMovingInArray.name}`).update({
+                                moved: true
+                            })
+                        }
+                        //canMove must be false. moved must be updated. 
+                        // await userDb.update({
+                        //     canMove: false
+                        // }); //console.log("attempted update");
+                        // await userDb.update({
+                        //     moved: Math.random()
+                        // })
+                        // reset state? No need..so far. 
+                    }
+                    updateDb();
                 } 
             }
             executeUserClick();
@@ -303,13 +339,8 @@ function Board({db, authInfo, position}) {
             }
         }
     }
-    //5.publishResultsToDbAndRefresh();
-    useEffect(() => {
-        
 
-    }, []);
-
-    //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS - DONT MOVE ANYTHING IN ARRAY
+    //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS
     function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = userColor.current) {
         let both = [];
         const boardArraySquaresWithOpponentPiece = [];
@@ -333,7 +364,7 @@ function Board({db, authInfo, position}) {
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); //console.log("pieceType:", pieceType);
         let total = '';
         if (pieceType === "pawn") {
-            let squareWithPawnPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex); console.log("squareWithPawnPiece", squareWithPawnPiece);
+            let squareWithPawnPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex); //console.log("squareWithPawnPiece", squareWithPawnPiece);
             squareWithPawnPiece.piece.moved ? total = 1 : total = 2            
         } else {
             total = pieceMoveObj[ourColor][pieceType].total.primary; //console.log("total:", total);
@@ -389,14 +420,19 @@ function Board({db, authInfo, position}) {
         return true;
     }
 
+    //5. MISC HELPER FUNCTIONS
+    function testy() {
+        setTestRefresh(true);
+    }
+
     return (
         <>
             {check && <div>You are in check</div>}
             {checkMate && <div>You are in checkmate</div>}
-            <div className="board-grid-container">
+            <div className="board-grid-container unclickable">
                 {gridItems}
             </div>
-            {/* <div onClick={onClickHandler}>Click me1</div> */}
+            {/* <div onClick={testy}>Click to test refresh</div> */}
             {/* {testRender()} */}
             {/* {testRender} */}
             {/* {testy.current} */}
@@ -407,17 +443,3 @@ function Board({db, authInfo, position}) {
 }
 
 export default Board;
-
-    // useEffect(() => {
-    // }, []);
-
-    // function testRenderFunction() {
-    //     let a = <div onClick={onClickHandler}>Click me2</div>;
-    //     setTestRender(a);
-    //     // let board = window.document.querySelector('.board-grid-container');//works
-    //     // let fresh = React.createElement('section', null, 'fresh');
-    //     // let fresh = window.document.createElement('section');
-    //     // board.after(fresh);
-    // }
-
-    // // let testy = useRef(React.create('section', null, 'fresh'));

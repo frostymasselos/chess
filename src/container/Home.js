@@ -12,7 +12,7 @@ import {useState} from 'react';
 
 function Home(params) {
 
-    let db = firebase.database(); 
+    let db = firebase.database(); //useState or🐉
     let auth = firebase.auth();
 
     let [notSignedIn, setNotSignedIn] = useState(false);
@@ -34,7 +34,8 @@ function Home(params) {
         // })
         
         // DECIDE WHO'S WHITE
-        if (Math.random() > 0.5) { //if true, authUser1 should be black & start on 2nd position in board. 
+        if (Math.random() > 0.5) { 
+            //authUser1 is black. Black always starts on 2nd position in board. 
             await game.child('user1').set(bigObj.user2); //works
             await game.child('user2').set(bigObj.user1); //works
             //SIGN USER1 IN
