@@ -146,6 +146,12 @@ function Board({db, authInfo, position}) {
                 setCheck(true);
             }
         }
+        //is opponent in check? (if we get this code right, move it to onClick handler)
+        if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+            console.log("opponent king in check");
+        } else {
+            console.log("opponent king not in check");
+        }
     }, [gridItems])
 
     //3.ONCLICKHANDLER
@@ -280,17 +286,6 @@ function Board({db, authInfo, position}) {
         both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; //console.log(both);✅
         return both;
     }
-    function arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
-        const geographicallyLegalSquaresOfAllPieces = [];
-        for (const squareWithUserPiece of squaresWithUserPieces) {
-            const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
-            const originalSquareIndex = squareWithUserPiece.index; //console.log(originalSquareIndex);
-            const geographicallyLegalSquaresOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor);
-            geographicallyLegalSquaresOfParticularPiece.forEach((legalSquare) => geographicallyLegalSquaresOfAllPieces.push(legalSquare));
-            geographicallyLegalSquaresOfAllPieces.push()
-        }
-        return geographicallyLegalSquaresOfAllPieces;
-    }
     function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
         const allLegalSecondarySquareIndexes = [];
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); //console.log("pieceType:", pieceType);
@@ -303,19 +298,30 @@ function Board({db, authInfo, position}) {
                 }
             }
         } //console.log(allLegalSecondarySquareIndexes);
-        return allLegalSecondarySquareIndexes; 
-    }   
-    function isKingInCheck(board = boardArray.current) {
+        return allLegalSecondarySquareIndexes;
+    } 
+    function arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
+        const geographicallyLegalSquaresOfAllPieces = [];
+        for (const squareWithUserPiece of squaresWithUserPieces) {
+            const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
+            const originalSquareIndex = squareWithUserPiece.index; //console.log(originalSquareIndex);
+            const geographicallyLegalSquaresOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor);
+            geographicallyLegalSquaresOfParticularPiece.forEach((legalSquare) => geographicallyLegalSquaresOfAllPieces.push(legalSquare));
+            geographicallyLegalSquaresOfAllPieces.push()
+        }
+        return geographicallyLegalSquaresOfAllPieces;
+    }  
+    function isKingInCheck(board = boardArray.current, ourColor = userColor.current, enemyColor = opponentColor.current) {
         //square index of user king
-        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board);
+        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board, ourColor);
         const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
         const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
         let squareIndexOfUserKing = ''; squaresWithUserPieces.some((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); //console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
         //cycle through every potential secondary square of opponent piece and if any potential secondary squares = square of our king, illegal move
-        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
+        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareOfOpponentPiece) => {return legalSquareOfOpponentPiece === squareIndexOfUserKing;});
     }
-    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
+    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current, enemyColor = opponentColor.current) {
         //for every possible move I make, am I still in check? Make a new board for each move and assess whether I'm still in check
         for (const squareWithUserPiece of squaresWithUserPieces) {
             const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
@@ -327,7 +333,7 @@ function Board({db, authInfo, position}) {
                 board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
                 board2[originalSquareIndex].piece = null; //console.log("board2", board2);
                 //ask question of new board
-                if (!isKingInCheck(board2)) {
+                if (!isKingInCheck(board2, ourColor, enemyColor)) {
                     return false;
                 }
             } 
