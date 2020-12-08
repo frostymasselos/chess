@@ -16,20 +16,19 @@ import "firebase/auth";
 function Game({params}) {
 
     let [invalidRoute, setinvalidRoute] = useState(false);
-    
+    let [authInfo, setAuthInfo] = useState({});
+    let [userColor, setUserColor] = useState("");
+    let [matchUrl, setMatchUrl] = useState(params.slice(1));
     let [playing, setPlaying] = useState(false);
     let [canMove, setCanMove] = useState(false);
     let [user2SignedIn, setUser2SignedIn] = useState(false);
     let [waiting, setWaiting] = useState(false);
     let [onForeignMatch, setOnForeignMatch] = useState(false);
     let [opponentQuits, setOpponentQuits] = useState(false);
-    let [matchUrl, setMatchUrl] = useState("");
-    let [position, setPosition] = useState(1);
-    let [authInfo, setAuthInfo] = useState({});
     let [arbitrary, setArbitrary] = useState(false);
 
-    let db = firebase.database(); //make it into a useRef|useState so it isn't run every single time?🐉
-    let auth = firebase.auth();
+    const [db, setDb] = useState(firebase.database());
+    const [auth, setAuth] = useState(firebase.auth());
 
     function test(color, animal) {
         console.log(this);
@@ -92,9 +91,8 @@ function Game({params}) {
     }
     
     useEffect(() => { 
-        let code = params.slice(1); console.log(code); setMatchUrl(code);
-        let game = db.ref(`matches/${code}`);
-        db.ref('matches').orderByKey().equalTo(`${code}`).on('value', (e) => { 
+        let game = db.ref(`matches/${matchUrl}`);
+        db.ref('matches').orderByKey().equalTo(`${matchUrl}`).on('value', (e) => { 
             db.ref('matches').off(); console.log(e.val()); //remove previous listener
             if (e.val()) { 
                 //THE GAME EXISTS
@@ -107,7 +105,7 @@ function Game({params}) {
                         let user = "";
                         auth.currentUser.email.includes("user1") ? user = "user1" : user = "user2";
                         setAuthInfo({authCode: auth.currentUser.email.slice(0, 6), authUser: user});
-                        if (auth.currentUser.email.includes(`${code}`)) { 
+                        if (auth.currentUser.email.includes(`${matchUrl}`)) { 
                             //USER1 1ST TIME OR USER1|2 RETURNING  
                             if (auth.currentUser.email.includes('user1')) { 
                                 //USER1 1ST TIME OR RETURNING
@@ -115,12 +113,8 @@ function Game({params}) {
                                     game.child(`user1/signedIn`).off(); console.log(e.val()); //remove listener
                                     if (e.val()) {
                                         //USER1 RETURNING
-                                        //determine what position player starts on via whiteness
                                         game.child(`user1/white`).on('value', (e) => {
-                                            console.log(`is user1 white?`, e.val());
-                                            if (!e.val()) {
-                                                setPosition(2); 
-                                            }
+                                            setUserColor(e.val() ? "white" : "black"); console.log(`is user1 white?`, e.val());
                                             setPlaying(true); console.log("user1 returning"); //BOARD IS RENDERED HERE
                                             game.child(`user2/signedIn`).orderByKey().on('value', (e) => {
                                                 game.child(`user2/signedIn`).off(); console.log(e.val()); //remove listener
@@ -144,17 +138,24 @@ function Game({params}) {
                                         listenerForUser2SigningIn(game);//✅
                                         listenerForOpponentQuitting(game, "user1", "user2");//✅
                                         listenerForOpponentMoving(game, "user1", "user2");//✅
-                                        async function next(params) {
+                                        async function next(e) {
+                                            game.child('user1/white').off(); //remove listener
                                             //i-v
-                                            //LISTENER FOR OPPONENT QUITTING
                                             //DBuser1SignIn TRUE
                                             await game.child('user1').update({
                                                 signedIn: true
                                             })
-                                            // ARBRITRARILY UPDATE STATE THAT RETRIGGERS UseEffect CALLBACK
+                                            //if black...
+                                            if (!e.val()) { console.log(e.val());
+                                                //you are black
+                                                await game.child(`user2`).update({
+                                                    canMove: true
+                                                })
+                                            }
+                                            // ARBRITRARILY UPDATE STATE THAT RETRIGGERS current UseEffect CALLBACK to process user1 for a 2nd time.
                                             setArbitrary(Math.random().toFixed(5));
                                         }
-                                        next();
+                                        game.child(`user1/white`).on('value', next);
                                     }
                                 })
                             } else { 
@@ -163,7 +164,7 @@ function Game({params}) {
                                 game.child(`user2/white`).on('value', (e) => {
                                     console.log(`is user2 white?`, e.val());
                                     if (!e.val()) {
-                                        setPosition(2);
+                                        setUserColor(2);
                                     }
                                     //CAN USER2 MOVE?
                                     console.log("user2 returning");
@@ -196,35 +197,38 @@ function Game({params}) {
                         }
                     } else { 
                         //USER2 1ST TIME
-                        console.log("user2 first time"); //remove listener
+                        console.log("user2 first time"); 
+                        game.child(`user2`).orderByKey().on('value', (e) => {
+                            console.log(e.val());
+                        })
+                        return;
                         game.child('user2').orderByKey().equalTo('signedIn').on('value', (e) => {
                             game.child('user2').off(); console.log(e.val().signedIn); //remove listener
                             if (e.val().signedIn) { 
-                                //USER2 ALREADY dB SIGNED IN
-                                setinvalidRoute(true); console.log("invalidRoute");
+                                //INTRUDING ON ANOTHER GAME (USER2 ALREADY dB SIGNED IN)
+                                setinvalidRoute(true); console.log("invalidRoute - user2 db already signed in");
                             } else { 
                                 //WE CAN SIGN-IN USER2
-                                console.log("we can sign in user2");
-                                async function next() {
+                                console.log("signing in user2");
+                                async function next(e) {
+                                    game.child('user2/white').off(); //remove listener
                                     //AUTH SIGN IN
                                     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); //might not need it.
-                                    await auth.createUserWithEmailAndPassword(`${code}@user2.com`, `${code}`);
+                                    await auth.createUserWithEmailAndPassword(`${matchUrl}@user2.com`, `${matchUrl}`);
                                     listenerForOpponentQuitting(game, "user2", "user1");//✅
                                     listenerForOpponentMoving(game, "user2", "user1");//✅
-                                    //BLACK ARTIFICIALLY MOVES (& FREEZES)
-                                    async function next(e) {
-                                        console.log(`is user1 white?`, e.val());
-                                        let userBlack = '';
-                                        e.val() ? userBlack = "user2" : userBlack = "user1";
-                                        await game.child(`${userBlack}`).update({moved: 1});
-                                        //DB SIGN IN (makes sense: we should only render TurnNotifier when we know who's turn it is)
-                                        await game.child('user2').update({signedIn: true});
-                                        //CHANGE STATE
-                                        setArbitrary(Math.random().toFixed(5));
+                                    //DB SIGN IN (makes sense: we should only render TurnNotifier when we know who's turn it is)
+                                    await game.child('user2').update({signedIn: true});
+                                    if (!e.val()) {
+                                        //you are black. Artificially move.
+                                        await game.child(`user1`).update({
+                                            canMove: true
+                                        })
                                     }
-                                    game.child(`user1/white`).on('value', next);
-                                }
-                                next();
+                                    //CHANGE STATE
+                                    setArbitrary(Math.random().toFixed(5));
+                                }   
+                                game.child(`user2/white`).on('value', next);
                             }
                         })
                     }; 
@@ -235,12 +239,11 @@ function Game({params}) {
                 setUser2SignedIn(false);
                 setWaiting(false);
                 setOnForeignMatch(false); 
-                if (opponentQuits) {
-                //BECAUSE OPPONENT QUIT
-                } else {
-                //NOT BECAUSE OPPONENT QUIT
-                    setinvalidRoute(true); console.log("invalidRoute");
-                }
+                setinvalidRoute(true); console.log("invalidRoute");
+                // if (opponentQuits) {
+                // //BECAUSE OPPONENT QUIT
+                // } else {
+                // //NOT BECAUSE OPPONENT QUIT
             } 
         }) //no code should execute after this dBListener
     }, [arbitrary]);
@@ -253,7 +256,7 @@ function Game({params}) {
             {playing && <Exit/>}
             {waiting && <Waiting/>}
             {user2SignedIn && <TurnNotifier turn={canMove}/>}
-            {playing && <Board db={db} authInfo={authInfo} position={position}/>}
+            {playing && <Board db={db} authInfo={authInfo} userColor={userColor}/>}
             {playing && <TerminateMatch authInfo={authInfo}/>}
             {onForeignMatch && <TerminateMatchForNewGame nativeUrl={matchUrl} intruderInfo={authInfo} setArbitrary={setArbitrary}/>}
             <button onClick={user2QuitsAndDbDeletes}>Click to make user2 quit and db delete</button>

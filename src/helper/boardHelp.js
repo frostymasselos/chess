@@ -80,7 +80,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
 const directionConverterObj = {
     pawn_forward: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, value = 8) {
-            const legalSecondarySquareIndexes = []; console.log("this", this);
+            const legalSecondarySquareIndexes = []; //console.log("this", this);
             parent: for (let currentTotal = 1; currentTotal <= total; currentTotal++) {
                 const potentialSquare = originalSquareIndex + (value * currentTotal);
                 for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {

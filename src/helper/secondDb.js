@@ -276,5 +276,3 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
 }
 
 export default bigObj;
-
-// db.ref('matches/template2').set(secondBigObj);

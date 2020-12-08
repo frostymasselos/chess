@@ -1,11 +1,10 @@
 import {pieceMoveObj, directionConverterObj} from '../../helper/boardHelp.js'; //refactor to include both from 1 file
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
+//position
+function Board({db, authInfo, userColor}) {
 
-function Board({db, authInfo, position}) {
-
-    let userColor = useRef(position === 1 ? "white" : "black");
-    let opponentColor = useRef(userColor.current === "white" ? "black" : "white");
+    let opponentColor = useRef(userColor === "white" ? "black" : "white");
     let boardArray = useRef([]);
     let [check, setCheck] = useState(false);
     let [checkMate, setCheckMate] = useState(false);
@@ -27,7 +26,7 @@ function Board({db, authInfo, position}) {
     
     //1.POPULATE boardArray
     useEffect(() => {
-        if (position === 2) {
+        if (userColor === "black") { 
             //ROTATE BOARD🐉
             let board = document.querySelector('.board-grid-container'); //works
             // board.style.setProperty("transform", "rotate(180deg)");
@@ -324,7 +323,7 @@ function Board({db, authInfo, position}) {
         } else {
             //HAVEN'T PREVIOUSLY CLICKED PIECE (FRESH)
             console.log("1st stage");
-            if (e.target.dataset.square || e.target.dataset.color !== userColor.current) {
+            if (e.target.dataset.square || e.target.dataset.color !== userColor) {
                 //PRIMARY CLICK ON EMPTY SQUARE OR OPPONENT PIECE OR OFF-BOARD
                 console.log("clicked on empty square or opponent piece");
                 e.preventDefault();
@@ -341,7 +340,7 @@ function Board({db, authInfo, position}) {
     }
 
     //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS
-    function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = userColor.current) {
+    function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = userColor) {
         let both = [];
         const boardArraySquaresWithOpponentPiece = [];
         const boardArraySquaresWithUserPiece = board.filter((square) => {
@@ -359,7 +358,7 @@ function Board({db, authInfo, position}) {
         both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; //console.log(both);✅
         return both;
     }
-    function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
+    function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor) {
         const allLegalSecondarySquareIndexes = [];
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); //console.log("pieceType:", pieceType);
         let total = '';
@@ -379,7 +378,7 @@ function Board({db, authInfo, position}) {
         } //console.log(allLegalSecondarySquareIndexes);
         return allLegalSecondarySquareIndexes;
     } 
-    function arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current) {
+    function arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor) {
         const geographicallyLegalSquaresOfAllPieces = [];
         for (const squareWithUserPiece of squaresWithUserPieces) {
             const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
@@ -390,7 +389,7 @@ function Board({db, authInfo, position}) {
         }
         return geographicallyLegalSquaresOfAllPieces;
     }  
-    function isKingInCheck(board = boardArray.current, ourColor = userColor.current, enemyColor = opponentColor.current) {
+    function isKingInCheck(board = boardArray.current, ourColor = userColor, enemyColor = opponentColor.current) {
         //square index of user king
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board, ourColor);
         const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
@@ -400,7 +399,7 @@ function Board({db, authInfo, position}) {
         const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareOfOpponentPiece) => {return legalSquareOfOpponentPiece === squareIndexOfUserKing;});
     }
-    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor.current, enemyColor = opponentColor.current) {
+    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor, enemyColor = opponentColor.current) {
         //for every possible move I make, am I still in check? Make a new board for each move and assess whether I'm still in check
         for (const squareWithUserPiece of squaresWithUserPieces) {
             const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
