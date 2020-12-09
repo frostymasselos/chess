@@ -1,39 +1,39 @@
 import {Link} from 'react-router-dom';
-import {useState, useEffect} from 'react';
-import firebase from '../../helper/firebase.js'; 
-import "firebase/auth";
+import {useState, useEffect, useRef} from 'react';
 
-function TerminateMatchForNewGame({nativeUrl, intruderInfo, setArbitrary}) { 
+function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebase}) { 
 
-    let db = firebase.database(); 
-    let auth = firebase.auth();
-
-    async function backToIntruderGame(params) {
-        window.location.replace(`/${intruderInfo.authCode}`); //Using `Link` to nav to new url doesn't 'update' Game.
+    async function backToIntrudersGame() {
+        window.location.replace(`/${intruderInfo.email.slice(0, 6)}`); //Using `Link` to nav to new url doesn't 'update' Game.
     }
-
-    async function terminateMatchForNewGame(params) {
-        //SAME AS TERMINATE MATCH EXCEPT DONT NAV HOME: UPDATE PAGE.
-        //SIGNAL TO OPPONENT QUITTING? WILL OPPONENT'S LISTNER BE ABLE TO DELETE OPPONENTAUTH? IF NOT, PERHAPS THEN THE HONOUS IS ON THE OPPONENT TO QUICKLY DELETE DB
-        await db.ref(`matches/${intruderInfo.authCode}/${intruderInfo.authUser}`).update({
-            quit: true
-        })
-        //DELETE INTRUDER DB
-        await db.ref(`matches/${intruderInfo.authCode}`).remove();
-        //DELETE INTRUDER AUTH
-        await auth.currentUser.delete();
-        //ARBRITRARILY TRIGGER STATE IN GAME
-        setArbitrary(Math.random().toFixed(3));
+    function terminateMatchForNewGame() { //SAME AS TERMINATE MATCH EXCEPT DONT NAV HOME: UPDATE PAGE.
+        async function next() {
+            authListener();
+            const intruderGameUrl = intruderInfo.email.slice(0, 6);
+            const credential = firebase.auth.EmailAuthProvider.credential(`${intruderInfo.email}`, `${intruderGameUrl}`);
+            await auth.currentUser.reauthenticateWithCredential(credential);
+            //SIGNAL TO OPPONENT QUITTING?
+            await db.ref(`matches/${intruderGameUrl}/${intruderInfo.user}`).update({
+                quit: true
+            })
+            //DELETE INTRUDER DB
+            await db.ref(`matches/${intruderGameUrl}`).remove();
+            //DELETE INTRUDER AUTH
+            await auth.currentUser.delete();
+            //ARBRITRARILY TRIGGER STATE IN GAME
+            setArbitrary(Math.random().toFixed(3));
+        }
+        let authListener = auth.onAuthStateChanged(next);
     }
         
-    useEffect(() => {
-        console.log("terminate match for new game:", nativeUrl);
-    }, []);
+    // useEffect(() => {
+    //     console.log("terminate match for new game:", intruderInfo);
+    // }, []);
 
     return (
         <>
             <div>You are currently signed in...A user can only...Would you like to?...</div>
-            <button onClick={backToIntruderGame}>Go back to your game</button>
+            <button onClick={backToIntrudersGame}>Go back to your game</button>
             <button onClick={terminateMatchForNewGame}>Join this game</button>
         </>
     )

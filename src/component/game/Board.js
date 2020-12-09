@@ -2,15 +2,14 @@ import {pieceMoveObj, directionConverterObj} from '../../helper/boardHelp.js'; /
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 //position
-function Board({db, authInfo, userColor}) {
+function Board({db, authInfo}) {
 
-    let opponentColor = useRef(userColor === "white" ? "black" : "white");
+    let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
     let [check, setCheck] = useState(false);
     let [checkMate, setCheckMate] = useState(false);
     let [gridItems, setGridItems] = useState([]);
     let initialExecutionGridItems = useRef(true);
-    let initialExecutionOnClick = useRef(true);
     let [readyToPublish, setReadyTopPublish] = useState(false);
     let clickedOnPiece = useRef(false);
     const [testRefresh, setTestRefresh] = useState(false);
@@ -26,7 +25,7 @@ function Board({db, authInfo, userColor}) {
     
     //1.POPULATE boardArray
     useEffect(() => {
-        if (userColor === "black") { 
+        if (authInfo.color === "black") { 
             //ROTATE BOARD🐉
             let board = document.querySelector('.board-grid-container'); //works
             // board.style.setProperty("transform", "rotate(180deg)");
@@ -38,14 +37,12 @@ function Board({db, authInfo, userColor}) {
         // if (condition) {
             
         // }
-        //FILL boardArray WITH SQUARES
         fillBoardArrayWithSquares();
         //FILL boardArray WITH PIECES
-        let game = db.ref(`matches/${authInfo.authCode}`);
-        let userDb = db.ref(`matches/${authInfo.authCode}/${authInfo.authUser}`);
-        let opponent = '';
-        authInfo.authUser === "user1" ? opponent = "user2" : opponent = "user1";
-        let opponentDb = db.ref(`matches/${authInfo.authCode}/${opponent}`);
+        let game = db.ref(`matches/${authInfo.url}`);
+        let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
+        let opponent = authInfo.user === "user1" ? "user2" : "user1";
+        let opponentDb = db.ref(`matches/${authInfo.url}/${opponent}`);
         //FILL boardArray WITH OWN PIECES
         userDb.child(`pieces`).on('value', (e) => {
             function fillBoardWithPieces(objOfPieces, dB) {
@@ -70,7 +67,7 @@ function Board({db, authInfo, userColor}) {
             opponentDb.child(`pieces`).on('value', (e) => {
                 fillBoardWithPieces(e.val(), opponentDb);
                 console.log("boardArray.current:", boardArray.current);
-                // if (userColor.current === "black") {
+                // if (authInfo.color.current === "black") {
                 //     const duplicate = [...boardArray.current.reverse()];
                 //     for (const square of duplicate) {
                 //         square.index = 63 - square.index;
@@ -163,17 +160,17 @@ function Board({db, authInfo, userColor}) {
             }
         }
         // is opponent in check? (if we get this code right, move it to onClick handler)
-        // if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+        // if (isKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
         //     console.log("opponent king in check");
         // } else {
         //     console.log("opponent king not in check");
         // }
         // checks if opponent in check|check-mate after move
-        // if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+        // if (isKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
         //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
         //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
         //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-        //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, userColor.current)) {
+        //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
         //         // setCheckMate(true);
         //         console.log("opponent is in checkmate");
         //     } else {
@@ -280,16 +277,16 @@ function Board({db, authInfo, userColor}) {
                     const board2 = JSON.parse(JSON.stringify(boardArray.current));
                     board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
                     board2[originalSquareIndex].piece = null;
-                    // if (isKingInCheck(board2, opponentColor.current, userColor.current)) {
+                    // if (isKingInCheck(board2, opponentColor.current, authInfo.color.current)) {
                     //     console.log("opponent king in check");
                     // } else {
                     //     console.log("opponent king not in check");
                     // }
-                    // if (isKingInCheck(boardArray.current, opponentColor.current, userColor.current)) {
+                    // if (isKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
                     //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
                     //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
                     //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-                    //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, userColor.current)) {
+                    //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
                     //         // setCheckMate(true);
                     //         console.log("opponent is in checkmate");
                     //     } else {
@@ -298,7 +295,7 @@ function Board({db, authInfo, userColor}) {
                     //     }
                     // }
                     //CHANGE STATE TO TRIGGER PUBLISH FUNCTION
-                    let userDb = db.ref(`matches/${authInfo.authCode}/${authInfo.authUser}`);
+                    let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                     async function updateDb(params) {
                         //update pawn. if pawn, if notMoved, update db 
                         if (pieceMovingInArray.name.includes(`pawn`) && !pieceMovingInArray.moved) {
@@ -323,7 +320,7 @@ function Board({db, authInfo, userColor}) {
         } else {
             //HAVEN'T PREVIOUSLY CLICKED PIECE (FRESH)
             console.log("1st stage");
-            if (e.target.dataset.square || e.target.dataset.color !== userColor) {
+            if (e.target.dataset.square || e.target.dataset.color !== authInfo.color) {
                 //PRIMARY CLICK ON EMPTY SQUARE OR OPPONENT PIECE OR OFF-BOARD
                 console.log("clicked on empty square or opponent piece");
                 e.preventDefault();
@@ -340,7 +337,7 @@ function Board({db, authInfo, userColor}) {
     }
 
     //4. LEGAL-MOVE LOGIC HELPER FUNCTIONS
-    function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = userColor) {
+    function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = authInfo.color) {
         let both = [];
         const boardArraySquaresWithOpponentPiece = [];
         const boardArraySquaresWithUserPiece = board.filter((square) => {
@@ -358,7 +355,7 @@ function Board({db, authInfo, userColor}) {
         both = [[...boardArraySquaresWithUserPiece], [...boardArraySquaresWithOpponentPiece]]; //console.log(both);✅
         return both;
     }
-    function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor) {
+    function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color) {
         const allLegalSecondarySquareIndexes = [];
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); //console.log("pieceType:", pieceType);
         let total = '';
@@ -378,7 +375,7 @@ function Board({db, authInfo, userColor}) {
         } //console.log(allLegalSecondarySquareIndexes);
         return allLegalSecondarySquareIndexes;
     } 
-    function arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor) {
+    function arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color) {
         const geographicallyLegalSquaresOfAllPieces = [];
         for (const squareWithUserPiece of squaresWithUserPieces) {
             const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
@@ -389,7 +386,7 @@ function Board({db, authInfo, userColor}) {
         }
         return geographicallyLegalSquaresOfAllPieces;
     }  
-    function isKingInCheck(board = boardArray.current, ourColor = userColor, enemyColor = opponentColor.current) {
+    function isKingInCheck(board = boardArray.current, ourColor = authInfo.color, enemyColor = opponentColor.current) {
         //square index of user king
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board, ourColor);
         const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
@@ -399,7 +396,7 @@ function Board({db, authInfo, userColor}) {
         const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareOfOpponentPiece) => {return legalSquareOfOpponentPiece === squareIndexOfUserKing;});
     }
-    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = userColor, enemyColor = opponentColor.current) {
+    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color, enemyColor = opponentColor.current) {
         //for every possible move I make, am I still in check? Make a new board for each move and assess whether I'm still in check
         for (const squareWithUserPiece of squaresWithUserPieces) {
             const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
@@ -417,6 +414,9 @@ function Board({db, authInfo, userColor}) {
             } 
         }
         return true;
+    }
+    function endOfMatch(params) {
+        //freeze 
     }
 
     //5. MISC HELPER FUNCTIONS

@@ -9,7 +9,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
         casualty: null,//name
         pawnReincarnate: null,//name
         quit: false,
-        rematch: false,
+        requestRematch: false,
         pieces: {
             "pawn1": {
                 white: true,
@@ -146,7 +146,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
         casualty: null,//name
         pawnReincarnate: null,//name
         quit: false,
-        rematch: false,
+        requestRematch: false,
         pieces: {
             "pawn1": {
                 white: false,

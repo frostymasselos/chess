@@ -6,15 +6,15 @@ import "firebase/auth";
 import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react'; 
 
-function Home(params) {
+function Home() {
 
     const [db, setDb] = useState(firebase.database());
     const [auth, setAuth] = useState(firebase.auth());
     let [notSignedIn, setNotSignedIn] = useState(false);
-    let [matchUrl, setMatchUrl] = useState('');
+    let [url, setUrl] = useState('');
     let [user, setUser] = useState('');
 
-    async function startNewGame(params) {
+    async function startNewGame() {
         let url = '';
         for (let num = 0; num < 6; num++) {
             url += Math.round(Math.random() * 9);
@@ -41,21 +41,21 @@ function Home(params) {
         //NAV TO GAME
         window.location.replace(`/${url}`);
     }
-    function terminateGame(params) {
-        async function next(params) {
+    function terminateGame() {
+        async function next() {
             authListener();
-            const credential = firebase.auth.EmailAuthProvider.credential(`${matchUrl}@${user}.com`, `${matchUrl}`);
+            const credential = firebase.auth.EmailAuthProvider.credential(`${url}@${user}.com`, `${url}`);
             await auth.currentUser.reauthenticateWithCredential(credential);
             //signal to opponent quitting?
-            await db.ref(`matches/${matchUrl}/${user}`).update({
+            await db.ref(`matches/${url}/${user}`).update({
                 quit: true
             })
             // delete db
-            // await db.ref(`matches/${matchUrl}`).remove();
+            await db.ref(`matches/${url}`).remove();
             await auth.currentUser.delete();
             // change state
             setNotSignedIn(true);
-            setMatchUrl('');
+            setUrl('');
         }
         let authListener = auth.onAuthStateChanged(next);
     }
@@ -64,7 +64,7 @@ function Home(params) {
             eventListener();//removes listener
             if (auth.currentUser) { 
                 setUser(auth.currentUser.email.slice(7, 12));
-                setMatchUrl(auth.currentUser.email.slice(0, 6));
+                setUrl(auth.currentUser.email.slice(0, 6));
                 setNotSignedIn(false);
             } else {
                 setNotSignedIn(true);
@@ -77,9 +77,9 @@ function Home(params) {
             <h4>HomeContainer</h4>
             {Instructions()}
             {notSignedIn && <div onClick={startNewGame}>Start new game</div>}
-            {matchUrl && <div>Match url: {window.location.origin}/{matchUrl}</div>} 
-            {matchUrl && <Link to={`/${matchUrl}`}>Resume Game</Link>}
-            {matchUrl && <button onClick={terminateGame}>Terminate Game</button>}
+            {url && <div>Match url: {window.location.origin}/{url}</div>} 
+            {url && <Link to={`/${url}`}>Resume Game</Link>}
+            {url && <button onClick={terminateGame}>Terminate Game</button>}
         </> 
     )
   
