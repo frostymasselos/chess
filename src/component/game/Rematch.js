@@ -1,16 +1,14 @@
-import {useState, useEffect} from 'react';
-import firebase from '../../helper/firebase.js'; 
-import "firebase/auth";
-import userEvent from '@testing-library/user-event';
+import {useState} from 'react';
 
-function TerminateMatch({authInfo, db, auth}) {
+export default function Rematch({authInfo, db, auth, firebase, indicateInterestInRematch}) {
+
+    let [waitingForOpponent, setWaitingForOpponent] = useState(false);
 
     function terminateMatch() {
-        async function next(params) {
+        async function next() {
             authListener();
             const credential = firebase.auth.EmailAuthProvider.credential(`${authInfo.email}`, `${authInfo.url}`);
             await auth.currentUser.reauthenticateWithCredential(credential);
-            // console.log("auth.currentUser", auth.currentUser); //console.log("am terminating match");
             //SIGNAL TO OPPONENT QUITTING? WILL OPPONENT'S LISTENER BE ABLE TO DELETE OPPONENTAUTH? IF NOT, PERHAPS THEN THE HONOUS IS ON THE OPPONENT TO QUICKLY DELETE DB
             await db.ref(`matches/${authInfo.url}/${authInfo.user}`).update({
                 quit: true
@@ -26,9 +24,8 @@ function TerminateMatch({authInfo, db, auth}) {
 
     return (
         <>
-        <div onClick={terminateMatch}>Terminate match (link)</div>
+            <div onClick={indicateInterestInRematch}>Request to user, rematch</div>
+            {/* <div onClick={terminateMatch}>Quit match</div> */}
         </>
     )
 }
-
-export default TerminateMatch

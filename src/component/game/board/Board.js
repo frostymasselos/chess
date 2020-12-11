@@ -1,8 +1,8 @@
-import {pieceMoveObj, directionConverterObj} from '../../helper/boardHelp.js'; //refactor to include both from 1 file
+import {pieceMoveObj, directionConverterObj} from '../../../helper/boardHelp.js'; //refactor to include both from 1 file
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
-//position
-function Board({db, authInfo}) {
+
+function Board({db, authInfo, canMove}) {
 
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
@@ -10,11 +10,10 @@ function Board({db, authInfo}) {
     let [checkMate, setCheckMate] = useState(false);
     let [gridItems, setGridItems] = useState([]);
     let initialExecutionGridItems = useRef(true);
-    let [readyToPublish, setReadyTopPublish] = useState(false);
     let clickedOnPiece = useRef(false);
-    const [testRefresh, setTestRefresh] = useState(false);
     
     function fillBoardArrayWithSquares(params) {
+        boardArray.current = [];
         for (let num = 0; num < 64; num++) { //works
             boardArray.current.push({
                 index: num,
@@ -22,6 +21,21 @@ function Board({db, authInfo}) {
             })
         }
     }
+    async function publishMove(userDb) {
+        //canMove must be false. moved must be updated. 
+        await userDb.update({
+            canMove: false
+        }); //console.log("attempted update");
+        await userDb.update({
+            moved: Math.random()
+        })
+    }
+    useEffect(() => { //🐉will this work?
+        if (canMove) {
+            const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
+            board.classList.remove(`unclickable`);
+        }
+    }, [canMove]);
     
     //1.POPULATE boardArray
     useEffect(() => {
@@ -33,10 +47,6 @@ function Board({db, authInfo}) {
         } else {
             console.log("not rotating board");
         }
-        //BLACK ARTIFICIALLY MOVES
-        // if (condition) {
-            
-        // }
         fillBoardArrayWithSquares();
         //FILL boardArray WITH PIECES
         let game = db.ref(`matches/${authInfo.url}`);
@@ -83,15 +93,13 @@ function Board({db, authInfo}) {
                 //RENDER PIECES ON BOARD
                 renderPieces();
                 //IS IT USER'S TURN?
-                userDb.child(`canMove`).orderByKey().on('value', (e) => {
-                    if (e.val()) {
-                        const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
-                        board.classList.remove(`unclickable`);
-                    }
-                })
+                if (canMove) {
+                    const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
+                    board.classList.remove(`unclickable`);
+                }
             })
         });
-    }, []);
+    }, [canMove]);
 
     // //2.RENDER PIECES ON BOARD //🐉Remember good question about timing
     function renderPieces(params) { 
@@ -287,11 +295,13 @@ function Board({db, authInfo}) {
                     //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
                     //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
                     //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
-                    //         // setCheckMate(true);
-                    //         console.log("opponent is in checkmate");
+                    //         // setCheckMate(true); console.log("opponent is in checkmate");
+                               // db.ref(`matches/${authInfo.url}/winner`).update({
+                                    // winner: authInfo.user
+                                    // return;
+                               // });
                     //     } else {
-                    //         // setCheck(true);
-                    //         console.log("opponent is in check");
+                    //         // setCheck(true); console.log("opponent is in check");
                     //     }
                     // }
                     //CHANGE STATE TO TRIGGER PUBLISH FUNCTION
@@ -304,16 +314,8 @@ function Board({db, authInfo}) {
                                 moved: true
                             })
                         }
-                        //canMove must be false. moved must be updated. 
-                        // await userDb.update({
-                        //     canMove: false
-                        // }); //console.log("attempted update");
-                        // await userDb.update({
-                        //     moved: Math.random()
-                        // })
-                        // reset state? No need..so far. 
+                        publishMove(userDb);
                     }
-                    updateDb();
                 } 
             }
             executeUserClick();
@@ -415,19 +417,11 @@ function Board({db, authInfo}) {
         }
         return true;
     }
-    function endOfMatch(params) {
-        //freeze 
-    }
-
-    //5. MISC HELPER FUNCTIONS
-    function testy() {
-        setTestRefresh(true);
-    }
 
     return (
         <>
             {check && <div>You are in check</div>}
-            {checkMate && <div>You are in checkmate</div>}
+            {checkMate && <div>Checkmate</div>}
             <div className="board-grid-container unclickable">
                 {gridItems}
             </div>

@@ -3,16 +3,12 @@ import {useState} from 'react';
 
 function ErrorPage(params) {
 
-    // useState();
-
     return (
         <>
-            <div>ErrorPage</div>
+            <div>ErrorPage. The match does not exist.</div>
             <Link to="/">Return to Homepage</Link>
         </>
     ) 
 }
 
 export default ErrorPage
-
-// {"ErrorPage": "red"}

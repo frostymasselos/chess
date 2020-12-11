@@ -1,5 +1,5 @@
 let bigObj = { //have a demo like this ready in db (that can't be deleted) that we build from
-    "user1": {
+    user1: {
         signedIn: false,
         position: 1,
         moved: 0,
@@ -9,7 +9,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
         casualty: null,//name
         pawnReincarnate: null,//name
         quit: false,
-        requestRematch: false,
+        rematch: false,
         pieces: {
             "pawn1": {
                 white: true,
@@ -146,7 +146,8 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
         casualty: null,//name
         pawnReincarnate: null,//name
         quit: false,
-        requestRematch: false,
+        rematch: false,
+        recentlyReset: false,
         pieces: {
             "pawn1": {
                 white: false,
@@ -273,6 +274,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
             },
         },
     },
+    winner: ''
 }
 
 export default bigObj;

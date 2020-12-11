@@ -22,6 +22,31 @@ div {
     // color: green;
 }
 
+.black {
+    color: black;
+}
+
+.white {
+    color: white;
+}
+
+.highlighted {
+    color: pink;
+}
+
+.fizzle {
+    transition: opacity 2s;
+    opacity: 0;
+}
+
+.dead {
+    display: none;
+}
+
+.unclickable {
+    pointer-events: none;
+}
+
 //`SECTION` WILL BE FOR GRID-CONTAINER
 .board-grid-container {
     @media screen and (max-width: 600px) {
@@ -47,29 +72,4 @@ div {
 .board-grid-container > div > div {
     // color: pink;
     height: 100%;
-}
-
-.black {
-    color: black;
-}
-
-.white {
-    color: white;
-}
-
-.highlighted {
-    color: pink;
-}
-
-.fizzle {
-    transition: opacity 2s;
-    opacity: 0;
-}
-
-.dead {
-    display: none;
-}
-
-.unclickable {
-    pointer-events: none;
 }

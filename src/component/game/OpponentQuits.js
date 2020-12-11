@@ -1,26 +1,27 @@
 import {Link} from 'react-router-dom';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
-function OpponentQuits(params) {
+function OpponentQuits() {
 
-    let [time, setTime] = useState(10);
+    let [time, setTime] = useState(5);
 
     useEffect(() => {
-        setInterval(() => {
-            setTime(time - 1);
+        let timer = setTimeout(() => {
+            if (time >= 1) {
+                setTime(time - 1);
+            } else {
+                console.log("done");
+                // window.location.replace(`/`);
+            }
         }, 1000)
-    }, [])
-
-    useEffect(() => {
-        if (time <= 0) {
-            window.location.replace(`/`);
-        }
-    }, [time])
+        return () => clearTimeout(timer);
+    }, );
 
     return (
         <>
-        <div>OpponentQuits. Redirecting to Homepage in {time} seconds</div>
-        <Link to="/">Return to Homepage</Link>
+            <div>{time}</div>
+            {/* <div>OpponentQuits. Redirecting to Homepage in {time} seconds</div> */}
+            <Link to="/">Return to Homepage</Link>
         </>
     )
 }

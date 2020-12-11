@@ -15,6 +15,32 @@ body {
   height: 100vh;
 }
 
+.black {
+  color: black;
+}
+
+.white {
+  color: white;
+}
+
+.highlighted {
+  color: pink;
+}
+
+.fizzle {
+  -webkit-transition: opacity 2s;
+  transition: opacity 2s;
+  opacity: 0;
+}
+
+.dead {
+  display: none;
+}
+
+.unclickable {
+  pointer-events: none;
+}
+
 @media screen and (max-width: 600px) {
   .board-grid-container {
     width: 100vw;
@@ -40,31 +66,5 @@ body {
 
 .board-grid-container > div > div {
   height: 100%;
-}
-
-.black {
-  color: black;
-}
-
-.white {
-  color: white;
-}
-
-.highlighted {
-  color: pink;
-}
-
-.fizzle {
-  -webkit-transition: opacity 2s;
-  transition: opacity 2s;
-  opacity: 0;
-}
-
-.dead {
-  display: none;
-}
-
-.unclickable {
-  pointer-events: none;
 }
 /*# sourceMappingURL=main.css.map */

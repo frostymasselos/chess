@@ -1,6 +1,6 @@
-function TurnNotifier({turn}) {
+function TurnNotifier({canMove}) {
     return (
-        <div>It is {turn? "your" : "your opponent's"} turn</div>
+        <div>It is {canMove? "your" : "your opponent's"} turn</div>
     )
 }
 
