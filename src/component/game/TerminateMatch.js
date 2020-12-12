@@ -12,9 +12,7 @@ function TerminateMatch({authInfo, db, auth}) {
             await auth.currentUser.reauthenticateWithCredential(credential);
             // console.log("auth.currentUser", auth.currentUser); //console.log("am terminating match");
             //SIGNAL TO OPPONENT QUITTING? WILL OPPONENT'S LISTENER BE ABLE TO DELETE OPPONENTAUTH? IF NOT, PERHAPS THEN THE HONOUS IS ON THE OPPONENT TO QUICKLY DELETE DB
-            await db.ref(`matches/${authInfo.url}/${authInfo.user}`).update({
-                quit: true
-            })
+            await db.ref(`matches/${authInfo.url}/${authInfo.user}`).update({quit: true});
             // DELETE DB (SHOULD TIME ELAPSE BEFORE?)
             await db.ref(`matches/${authInfo.url}`).remove();
             await auth.currentUser.delete();

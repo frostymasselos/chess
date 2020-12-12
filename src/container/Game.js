@@ -15,7 +15,8 @@ import "firebase/auth";
 
 function Game({params}) {
 
-    let [invalidRoute, setinvalidRoute] = useState(false);
+    //presentational
+    let [invalidRoute, setInvalidRoute] = useState(false);
     let [playing, setPlaying] = useState(false);
     let [canMove, setCanMove] = useState(false);
     let [user2SignedIn, setUser2SignedIn] = useState(false);
@@ -25,75 +26,68 @@ function Game({params}) {
     let [winner, setWinner] = useState('');
     let [askForRematch, setAskForRematch] = useState('');
     let [waitingForOpponentToConfirmRematch, setWaitingForOpponentToConfirmRematch] = useState('');
+
+    //retrigger useEffects
     let [arbitrary, setArbitrary] = useState(false);  
+    let [triggerBoardUseEffect, setTriggerBoardUseEffect] = useState(``);
     
-    const [db, setDb] = useState(firebase.database());
-    const [auth, setAuth] = useState(firebase.auth());
-
+    //info
     let authInfo = useRef({url: params.slice(1)});
+    const [auth, setAuth] = useState(firebase.auth());
+    const [db, setDb] = useState(firebase.database());
 
-    // function test(color, animal) {
-    //     console.log(this);
-    //     console.log(color);
-    //     console.log(animal);
-    //     // db.ref(`matches/template2`).set(bigObj);
-    // }
-    // function user2Moves(params) {
-    //     console.log("button to make user2 move's been clicked");
-    //     db.ref(`matches/${authInfo.current.url}/user2`).update({
-    //         moved: Math.random().toFixed(5)
-    //     })
-    // }
-    // async function user2QuitsAndDbDeletes(params) {
-    //     console.log("button to make user2 quit's been clicked");
-    //     await db.ref(`matches/${authInfo.current.url}/user2`).update({
-    //         quit: true
-    //     });
-    //     await db.ref(`matches/${authInfo.current.url}`).remove();
-    // }
-    // async function user1QuitsAndDbDeletes(params) {
-    //     console.log("button to make user1 quit's been clicked");
-    //     await db.ref(`matches/${authInfo.current.url}/user1`).update({
-    //         quit: true
-    //     });
-    //     await db.ref(`matches/${authInfo.current.url}`).remove();
-    // }
-
-    //should retrigger useEffect?
+    function test(params) {
+        turnAllPresentationalStateOnOrOffApartFrom(true, "setPlaying");
+    }
+    function turnAllPresentationalStateOnOrOffApartFrom(boolean, ...exceptions) { //as a string
+            //base start: all opposite of boolean.
+            const allSetStates = {setInvalidRoute, setPlaying, setCanMove, setUser2SignedIn, setWaiting, setOnForeignMatch, setOpponentQuits, setWinner, setAskForRematch, setWaitingForOpponentToConfirmRematch};
+            const positiveArray = [];
+            const negativeArray = [];
+            for (const key in allSetStates) {
+                for (const item of exceptions) {
+                    if (key !== item) {
+                        positiveArray.push(allSetStates[key]); 
+                    } else {
+                        negativeArray.push(allSetStates[key]);
+                    }
+                }
+            };
+            positiveArray.forEach((item) => item.call(null, boolean)); console.log(positiveArray);
+            negativeArray.forEach((item) => item.call(null, !boolean)); console.log(negativeArray);
+    }
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
             game.child(`user2`).orderByKey().equalTo(`signedIn`).off(); console.log(`callback fired for user2 signing in`, e.val());
             setWaiting(false);
-            setUser2SignedIn(true);
-            // setArbitrary(Math.random());//do we need this?🐉
+            setUser2SignedIn(true); // setArbitrary(Math.random());//do we need this?
         }
         game.child(`user2`).orderByKey().equalTo(`signedIn`).on('child_changed', user2SignInHasChanged);
     }
     function listenerForOpponentQuitting(game, you, opponent) {
         console.log(`${you} listening for ${opponent} quitting`);
-        async function opponentHasQuit(e) {
+        async function opponentHasQuit(e) { console.log("callback executed for opponent ");
             //game.child(`${opponent}`).orderByKey().equalTo('quit').off(); console.log(`${you} has registered ${opponent}'s quit`);
             const credential = firebase.auth.EmailAuthProvider.credential(`${authInfo.current.email}`, `${authInfo.current.email.slice(0, 6)}`);
             await auth.currentUser.reauthenticateWithCredential(credential);
             await auth.currentUser.delete();
-            setOpponentQuits(true);
+            db.ref(`matches/${authInfo.url}`).remove();
+            turnAllPresentationalStateOnOrOffApartFrom(false, "setOpponentQuits");
         }
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', opponentHasQuit);
     }
     function listenerForOpponentMoving(game, you, opponent) {
         console.log(`listening for ${opponent} moving`);
-        async function opponentHasMoved(e) {
-            console.log(`callback fired for ${opponent} moving`, e.val());
-            //CHANGE canMove IN DB
+        async function opponentHasMoved(e) { console.log(`callback fired for ${opponent} moving`, e.val());
             await game.child(`${you}`).update({canMove: true});
-            setCanMove(true); //do we need to reexecute useEffect?
+            setCanMove(true); setTriggerBoardUseEffect(Math.random()); //just use canMove?
         }
         game.child(`${opponent}`).orderByKey().equalTo(`moved`).on('child_changed', opponentHasMoved);
     }
     function listenerForWinner(game, you) { 
         console.log(`${you} listening for player winning`);
-        async function endGame(e) {
+        async function endGame(e) { console.log("ending game");
             game.orderByKey().equalTo(`winner`).off(); //remove listener
             setWinner(e.val());
             setCanMove(false);
@@ -138,25 +132,28 @@ function Game({params}) {
                 await game.child('user1/pieces').set(bigObj.user2.pieces); 
                 await game.child('user2/pieces').set(bigObj.user1.pieces); 
                 await game.child(`user1`).update({white: false});
-                await game.child(`user2`).update({white: true});
-                await game.child(`user2`).update({canMove: true});
+                await game.child(`user2`).update({white: true, canMove: true});
+                // await game.child(`user2`).update({canMove: true});
             } else { console.log('user1 is white');
                 await game.child('user1/pieces').set(bigObj.user1.pieces); 
                 await game.child('user2/pieces').set(bigObj.user2.pieces);
-                await game.child(`user1`).update({white: true});
+                await game.child(`user1`).update({white: true, canMove: true});
                 await game.child(`user2`).update({white: false});
-                await game.child(`user1`).update({canMove: true});
+                // await game.child(`user1`).update({canMove: true});
             }
             await game.child(`user1`).update({signedIn: true});
-            await game.child(`user2`).update({signedIn: true}); //✅ (listener for user2 signing in IS retriggering mount).
+            await game.child(`user2`).update({signedIn: true, recentlyReset: true}); //✅ (listener for user2 signing in IS retriggering mount).
+            // await game.child(`user2`).update({recentlyReset: true});
+            listenerForOpponentQuitting(game, "user1", "user2");//do we need this?🐉
+            listenerForOpponentMoving(game, "user1", "user2");
             listenerForWinner(game, "user1");
             listenerForRematch(game, "user1", "user2");
-            await game.child(`user2`).update({recentlyReset: true});
             setWinner(false); setWaitingForOpponentToConfirmRematch(false);
             //reset state or rerun (get user2 to arbitrarily refresh?)
             setArbitrary(Math.random());
+            setTriggerBoardUseEffect(Math.random());
         }
-        game.child(`user1`).orderByKey().on(`value`, next); //🐉for some reason next'd keep retriggering unless we shut it off
+        game.child(`user1`).orderByKey().on(`value`, next); 
     }
     
     useEffect(() => { 
@@ -165,10 +162,10 @@ function Game({params}) {
             db.ref('matches').off(); console.log(e.val()); //remove previous listener
             if (e.val()) { 
                 //THE GAME EXISTS
-                const match = e.val()[authInfo.current.url]; const user1 = match.user1; const user2 = match.user2; console.log("match:", match, "user1:", user1, "user2:", user2);
+                const match = e.val()[authInfo.current.url]; const user1 = match.user1; const user2 = match.user2; //console.log("match:", match, "user1:", user1, "user2:", user2);
                 let authListener = auth.onAuthStateChanged(() => { 
                     authListener(); //remove listener
-                    if (auth.currentUser) { console.log("authSignedIn");
+                    if (auth.currentUser) { //console.log("authSignedIn");
                         //USER1 1ST TIME OR USER1|2 RETURNING OR INTRUDING
                         authInfo.current = {...authInfo.current, user: auth.currentUser.email.includes("user1") ? "user1" : "user2", email: auth.currentUser.email};
                         if (auth.currentUser.email.includes(`${authInfo.current.url}`)) { 
@@ -177,7 +174,7 @@ function Game({params}) {
                             if (auth.currentUser.email.includes('user1')) { 
                                 //USER1 1ST TIME OR RETURNING
                                 game.child(`user1`).orderByKey().on('value', (e) => { 
-                                    game.child(`user1`).off(); console.log(e.val()); //remove listener
+                                    game.child(`user1`).off(); //console.log(e.val()); //remove listener
                                     if (user1.signedIn) {
                                         //USER1 RETURNING
                                         console.log("user1 returning");
@@ -189,8 +186,7 @@ function Game({params}) {
                                             }
                                         }
                                         authInfo.current = {...authInfo.current, color: e.val().white ? "white" : "black"};
-                                        setCanMove(user1.canMove ? true : false);
-                                        setPlaying(true); //BOARD IS RENDERED HERE
+                                        setCanMove(user1.canMove ? true : false); setPlaying(true); //BOARD IS RENDERED HERE
                                         game.child(`user2/signedIn`).orderByKey().on('value', (e) => {
                                             game.child(`user2/signedIn`).off(); console.log("user2 signed in:", e.val()); //remove listener
                                             if (e.val()) { 
@@ -214,13 +210,9 @@ function Game({params}) {
                                         (async function next(e) {
                                             //if black...
                                             if (!user1.white) { console.log(user1.white);
-                                                //you are black
                                                 await game.child(`user2`).update({canMove: true});
                                             }
-                                            //DBuser1SignIn TRUE
-                                            await game.child('user1').update({
-                                                signedIn: true
-                                            })
+                                            await game.child('user1').update({signedIn: true});
                                             // ARBRITRARILY UPDATE STATE THAT RETRIGGERS current UseEffect CALLBACK to process 'user1 for a 2nd time'.
                                             setArbitrary(Math.random().toFixed(5));
                                         })();
@@ -229,49 +221,44 @@ function Game({params}) {
                             } else { 
                                 //USER2 RETURNING
                                 console.log("user2 returning");
-                                if (match.winner) {
-                                    endGame(game, "user2");
-                                    return;
-                                }
-                                game.child(`user2`).on('value', (e) => { 
-                                    authInfo.current = {...authInfo.current, color: user2.white ? "white" : "black"};
-                                    setCanMove(user2.canMove ? true : false);
-                                    setPlaying(true); //BOARD IS RENDERED HERE
-                                    setUser2SignedIn(true);
-                                    setWaiting(false);
-                                    if (user2.recentlyReset) {
-                                        game.child(`user2`).update({recentlyReset: false});
-                                        listenerForWinner(game, "user2");
+                                if (match.winner) { console.log("mount recognises winner");
+                                    endGame(game, "user2", match.winner);
+                                    if (user2.rematch) {
+                                        setWaitingForOpponentToConfirmRematch(true);
+                                        setAskForRematch(false);
                                     }
-                                });
+                                }
+                                authInfo.current = {...authInfo.current, color: user2.white ? "white" : "black"};
+                                setCanMove(user2.canMove ? true : false);
+                                setPlaying(true); //BOARD IS RENDERED HERE
+                                setUser2SignedIn(true);
+                                setWaiting(false);
+                                if (user2.recentlyReset) {
+                                    game.child(`user2`).update({recentlyReset: false});
+                                    listenerForWinner(game, "user2");
+                                    listenerForOpponentQuitting(game, "user2", "user1");
+                                    listenerForOpponentMoving(game, "user2", "user1"); 
+                                }
                             }  
                         } else { 
-                            //SIGNED IN USER1|2 INTRUDING
+                            //SIGNED IN USER1|2 INTRUDING 
                             console.log("signed in user1|2 intruding");
                             //IS GAME FULL?
-                            game.child('user2/signedIn').orderByKey().on('value', (e) => {
-                                game.child('user2/signedIn').off(); console.log(e.val()); //remove listener
-                                if (e.val()) { 
-                                    //game full (user has joined)
-                                    setinvalidRoute(true); console.log("game full");//✅
-                                } else {
-                                    //game not full (user2 hasn't joined yet)
-                                    setOnForeignMatch(true); console.log('on foreign match'); 
-                                }
-                            })
+                            if (user2.signedIn) {
+                                turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");//setInvalidRoute(true); console.log("game full");//✅
+                            } else {
+                                turnAllPresentationalStateOnOrOffApartFrom(false, "setOnForeignMatch");//setOnForeignMatch(true); console.log('on foreign match'); 
+                            }
                         }
                     } else { 
                         //USER2 1ST TIME
                         console.log("user2 first time"); 
-                        async function next(e) {
-                            game.child(`user2`).off(); //remove listener
-                            const user2 = e.val();
-                            if (user2.signedIn) {
-                                //INTRUDING ON ANOTHER GAME (USER2 ALREADY dB SIGNED IN)
-                                setinvalidRoute(true); console.log("invalidRoute - user2 db already signed in");
-                            } else { 
+                        if (user2.signedIn) {
+                            //INTRUDING ON ANOTHER GAME (USER2 ALREADY dB SIGNED IN)
+                            turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");//setInvalidRoute(true); console.log("invalidRoute - user2 db already signed in");
+                        } else { console.log("signing in user2");
+                            (async function name(params) {
                                 //WE CAN SIGN-IN USER2
-                                console.log("signing in user2");
                                 //auth sign in
                                 await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); //might not need it.
                                 await auth.createUserWithEmailAndPassword(`${authInfo.current.url}@user2.com`, `${authInfo.current.url}`);
@@ -281,58 +268,53 @@ function Game({params}) {
                                 //db sign in
                                 if (!user2.white) {
                                     //you are black. Artificially move.
-                                    await game.child(`user1`).update({
-                                        canMove: true
-                                    })
+                                    await game.child(`user1`).update({canMove: true});
                                 }
                                 await game.child('user2').update({signedIn: true});
                                 setArbitrary(Math.random().toFixed(5)); //rerun useEffect.
-                            }
+                            })();
                         }
-                        game.child(`user2`).orderByKey().on('value', next);
                     }; 
-                }); //no code should execute after this authListener.
+                    }); //no code should execute after this authListener.
             } else { 
                 //THE GAME DOES NOT EXIST
-                setPlaying(false);
-                setUser2SignedIn(false);
-                setWaiting(false);
-                setOnForeignMatch(false); 
-                setinvalidRoute(true); console.log("invalidRoute");
+                turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");
+                // setPlaying(false);
+                // setUser2SignedIn(false);
+                // setWaiting(false);
+                // setOnForeignMatch(false); 
+                // setInvalidRoute(true); console.log("invalidRoute");
                 // if (opponentQuits) {
                 // //BECAUSE OPPONENT QUIT
                 // } else {
                 // //NOT BECAUSE OPPONENT QUIT
             } 
-        }) //no code should execute after this dBListener
+        });
     }, [arbitrary]);
-    
+
     return ( 
         <>
             <h4>GameContainer</h4>
             {waitingForOpponentToConfirmRematch && <div>Waiting for opponnent to confirm rematch</div>}
-            {askForRematch && <Rematch authInfo={authInfo.current} db={db} auth={auth} firebase={firebase} indicateInterestInRematch={indicateInterestInRematch}/>}
+            {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch}/>}
             {winner && <div>{winner} wins</div>}
             {opponentQuits && <OpponentQuits/>}
             {invalidRoute && <ErrorPage/>}
             {playing && <Exit/>}
             {waiting && <Waiting/>}
             {user2SignedIn && <TurnNotifier canMove={canMove}/>}
-            {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove}/>}
+            {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect}/>}
             {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
-            {/* {color && <Test color={color.current}/>} */}
-            {/* <button onClick={changeColorState}>Arbitrarily change state</button> */}
-            {/* <button onClick={user2QuitsAndDbDeletes}>Click to make user2 quit and db delete</button>
-            <button onClick={user1QuitsAndDbDeletes}>Click to make user1 quit and db delete</button>
-            <button onClick={user2Moves}>Click to make user2 'move'</button>
-            <button onClick={test.bind("this", "blue", "fish")}>Click to execute 'test'</button>
-            <button onClick={makeTestsTrue}>Make test1 and test2 true</button> */}
+
+            {/* <div onClick={test}>Reveal</div> */}
         </>
     )
 }
 
 export default Game
+
+
 
 
 

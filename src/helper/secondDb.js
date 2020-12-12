@@ -1,7 +1,6 @@
 let bigObj = { //have a demo like this ready in db (that can't be deleted) that we build from
     user1: {
         signedIn: false,
-        position: 1,
         moved: 0,
         white: true,
         canMove: false,
@@ -138,7 +137,6 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
     },
     user2: {
         signedIn: false,
-        position: 2,
         moved: 0,
         white: false,
         canMove: false,

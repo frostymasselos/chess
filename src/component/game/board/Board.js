@@ -2,7 +2,7 @@ import {pieceMoveObj, directionConverterObj} from '../../../helper/boardHelp.js'
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 
-function Board({db, authInfo, canMove}) {
+function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
 
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
@@ -11,7 +11,7 @@ function Board({db, authInfo, canMove}) {
     let [gridItems, setGridItems] = useState([]);
     let initialExecutionGridItems = useRef(true);
     let clickedOnPiece = useRef(false);
-    
+
     function fillBoardArrayWithSquares(params) {
         boardArray.current = [];
         for (let num = 0; num < 64; num++) { //works
@@ -22,18 +22,16 @@ function Board({db, authInfo, canMove}) {
         }
     }
     async function publishMove(userDb) {
-        //canMove must be false. moved must be updated. 
-        await userDb.update({
-            canMove: false
-        }); //console.log("attempted update");
-        await userDb.update({
-            moved: Math.random()
-        })
+        await userDb.update({canMove: false, moved: Math.random()}); 
+        setCanMove(false);
     }
-    useEffect(() => { //🐉will this work?
+    //freeze/unfreeze board
+    useEffect(() => { 
+        const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
         if (canMove) {
-            const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
             board.classList.remove(`unclickable`);
+        } else {
+            board.classList.add(`unclickable`);
         }
     }, [canMove]);
     
@@ -92,16 +90,11 @@ function Board({db, authInfo, canMove}) {
                 // }
                 //RENDER PIECES ON BOARD
                 renderPieces();
-                //IS IT USER'S TURN?
-                if (canMove) {
-                    const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
-                    board.classList.remove(`unclickable`);
-                }
             })
         });
-    }, [canMove]);
+    }, [triggerBoardUseEffect]);
 
-    // //2.RENDER PIECES ON BOARD //🐉Remember good question about timing
+    //2.RENDER PIECES ON BOARD
     function renderPieces(params) { 
         //MAKE PIECES
         let arrayOfJSXPieces = [];
@@ -306,7 +299,7 @@ function Board({db, authInfo, canMove}) {
                     // }
                     //CHANGE STATE TO TRIGGER PUBLISH FUNCTION
                     let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
-                    async function updateDb(params) {
+                    (async function updateDbPieces(params) {
                         //update pawn. if pawn, if notMoved, update db 
                         if (pieceMovingInArray.name.includes(`pawn`) && !pieceMovingInArray.moved) {
                             console.log("here");
@@ -314,8 +307,8 @@ function Board({db, authInfo, canMove}) {
                                 moved: true
                             })
                         }
-                        publishMove(userDb);
-                    }
+                    })();
+                    publishMove(userDb);
                 } 
             }
             executeUserClick();
@@ -425,11 +418,6 @@ function Board({db, authInfo, canMove}) {
             <div className="board-grid-container unclickable">
                 {gridItems}
             </div>
-            {/* <div onClick={testy}>Click to test refresh</div> */}
-            {/* {testRender()} */}
-            {/* {testRender} */}
-            {/* {testy.current} */}
-            {/* {testyTag} */}
         </>
     )
 

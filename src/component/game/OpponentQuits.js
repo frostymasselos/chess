@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
 import {useState, useEffect, useRef} from 'react';
 
-function OpponentQuits() {
+function OpponentQuits() { //🐉refactor to use useRef & arbitrarily rerun page (to have UI display updated time)
 
     let [time, setTime] = useState(5);
 
@@ -11,7 +11,7 @@ function OpponentQuits() {
                 setTime(time - 1);
             } else {
                 console.log("done");
-                // window.location.replace(`/`);
+                window.location.replace(`/`);
             }
         }, 1000)
         return () => clearTimeout(timer);
