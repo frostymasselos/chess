@@ -222,7 +222,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             //all squares with userPieces & all squares with opponentPieces
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
-            const pieceMovingInArray = squaresWithUserPieces[originalSquareIndex].piece; //console.log(pieceMovingInArray);
+            const pieceMovingInArray = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex).piece;
             //all geographically legal secondary square indexes
             const geographicallyLegalSecondarySquareIndexes = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); console.log("geographicallyLegalSecondarySquareIndexes:", geographicallyLegalSecondarySquareIndexes);
             //all geographically legal secondary square indexes of all opponentPieces

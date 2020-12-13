@@ -91,7 +91,7 @@ function Game({params}) {
         console.log(`listening for ${opponent} moving`);
         async function opponentHasMoved(e) { console.log(`callback fired for ${opponent} moving`, e.val());
             await game.child(`${you}`).update({canMove: true});
-            setCanMove(true); setTriggerBoardUseEffect(Math.random()); //just use canMove?
+            setCanMove(true); setTriggerBoardUseEffect(Math.random()); //use canMove?
         }
         game.child(`${opponent}`).orderByKey().equalTo(`moved`).on('child_changed', opponentHasMoved);
     }

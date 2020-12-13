@@ -24,18 +24,16 @@ function Home() {
         game.set(bigObj); 
         
         // DECIDE WHO'S WHITE
-        if (Math.random() > 0.5) { 
+        if (Math.random() > 0.5) { console.log("user1 is black");
             //user1 is black. Black always starts on 2nd position in board. 
             await game.child('user1').set(bigObj.user2); //works
-            //remove recentlyReset
             await game.child(`user1/recentlyReset`).remove();
             await game.child('user2').set(bigObj.user1); //works
-            //add recentlyReset
             await game.child(`user2/recentlyReset`).set(false);
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             await auth.createUserWithEmailAndPassword(`${url}@user1.com`, `${url}`);
-        } else { 
+        } else { console.log("user1 is white");
             //user1 is white. White always starts on 1st position in board.
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
