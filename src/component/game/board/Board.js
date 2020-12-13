@@ -1,4 +1,4 @@
-import {pieceMoveObj, directionConverterObj} from '../../../helper/boardHelp.js'; //refactor to include both from 1 file
+import {pieceMoveObj, directionConverterObj} from '../../../helper/boardHelp.js'; 
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 
@@ -38,12 +38,11 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     //1.POPULATE boardArray
     useEffect(() => {
         if (authInfo.color === "black") { 
-            //ROTATE BOARD🐉
-            let board = document.querySelector('.board-grid-container'); //works
-            // board.style.setProperty("transform", "rotate(180deg)");
+            //ROTATE BOARD
             console.log("rotating board");
-        } else {
-            console.log("not rotating board");
+            let board = document.querySelector('.board-grid-container');
+            board.style.setProperty("transform", "rotate(180deg)");
+        } else { console.log("not rotating board");
         }
         fillBoardArrayWithSquares();
         //FILL boardArray WITH PIECES
@@ -53,8 +52,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         let opponentDb = db.ref(`matches/${authInfo.url}/${opponent}`);
         //FILL boardArray WITH OWN PIECES
         userDb.child(`pieces`).on('value', (e) => {
+            userDb.child(`pieces`).off(); //remove listener
             function fillBoardWithPieces(objOfPieces, dB) {
-                dB.child(`pieces`).off(); //remove listener
                 for (let key in objOfPieces) {
                     //if piece is alive
                     if (!objOfPieces[key].alive) {
