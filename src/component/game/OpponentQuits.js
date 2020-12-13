@@ -8,6 +8,10 @@ function OpponentQuits() { //refactor so that its a pop-up with everything uncli
     let [arbitrarilyRefresh, setArbitrarilyRefresh] = useState(false);
 
     useEffect(() => {
+        //ui
+        // const root = document.querySelector(`#root`);
+        // root.classList.add(`unclickable`);
+        //timer
         let timer = setInterval(() => {
             if (time.current > 1) {
                 time.current = time.current - 1;
@@ -15,8 +19,8 @@ function OpponentQuits() { //refactor so that its a pop-up with everything uncli
             } else {
                 time.current = time.current - 1;
                 setArbitrarilyRefresh(Math.random());
-                console.log("done");
                 clearInterval(timer);
+                console.log("done");
                 // window.location.replace(`/`);
             }
         }, 1000)

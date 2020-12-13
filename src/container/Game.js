@@ -115,8 +115,7 @@ function Game({params}) {
     }
     async function indicateInterestInRematch() { console.log(`${authInfo.current.user} indicating interest in rematch`);
         await db.ref(`matches/${authInfo.current.url}/${authInfo.current.user}`).update({rematch: true});
-        setWaitingForOpponentToConfirmRematch(true);
-        setAskForRematch(false);
+        setWaitingForOpponentToConfirmRematch(true); setAskForRematch(false);
     }
     function listenerForRematch(game, you, opponent) { 
         async function seeWhoHasRequestedRematch(e) { console.log("someone has requested rematch"); //mystery as to why user1 couldn't trigger this log
@@ -161,7 +160,7 @@ function Game({params}) {
         }
         game.child(`user1`).orderByKey().on(`value`, next); 
     }
-    
+
     useEffect(() => { 
         let game = db.ref(`matches/${authInfo.current.url}`);
         db.ref('matches').orderByKey().equalTo(`${authInfo.current.url}`).on('value', (e) => { 

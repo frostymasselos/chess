@@ -52,7 +52,7 @@ div {
 }
 
 //`SECTION` WILL BE FOR GRID-CONTAINER
-#root .board-grid-container {
+.board-grid-container {
     @media screen and (max-width: 600px) {
         width: 100vw;
         height: 100vw;

@@ -309,6 +309,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                         }
                     })();
                     publishMove(userDb);
+                    //🐉 change dbPieces. piecename as it'd appear in db. grid-row/column. 
+
                 } 
             }
             executeUserClick();

@@ -50,7 +50,7 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-  #root .board-grid-container {
+  .board-grid-container {
     width: 100vw;
     height: 100vw;
     display: -ms-grid;
