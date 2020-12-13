@@ -27,6 +27,10 @@ body {
   color: pink;
 }
 
+.z-index-1 {
+  z-index: 1;
+}
+
 .fizzle {
   -webkit-transition: opacity 2s;
   transition: opacity 2s;
@@ -41,8 +45,12 @@ body {
   pointer-events: none;
 }
 
+.clickable {
+  pointer-events: auto;
+}
+
 @media screen and (max-width: 600px) {
-  .board-grid-container {
+  #root .board-grid-container {
     width: 100vw;
     height: 100vw;
     display: -ms-grid;

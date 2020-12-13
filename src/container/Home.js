@@ -27,7 +27,11 @@ function Home() {
         if (Math.random() > 0.5) { 
             //user1 is black. Black always starts on 2nd position in board. 
             await game.child('user1').set(bigObj.user2); //works
+            //remove recentlyReset
+            await game.child(`user1/recentlyReset`).remove();
             await game.child('user2').set(bigObj.user1); //works
+            //add recentlyReset
+            await game.child(`user2/recentlyReset`).set(false);
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             await auth.createUserWithEmailAndPassword(`${url}@user1.com`, `${url}`);

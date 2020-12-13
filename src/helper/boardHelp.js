@@ -135,7 +135,7 @@ const directionConverterObj = {
                     break;
                 }
             }
-            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueLeft) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueLeft) * currentTotal, currentCounter++) { 
                 //check if potentialSquare occupied by opponent piece
                 if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
                     break parent;
@@ -158,7 +158,7 @@ const directionConverterObj = {
                     break;
                 }
             }
-            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueLeft) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueLeft) * currentTotal, currentCounter++) { 
                 //check if potentialSquare occupied by opponent piece
                 if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
                     break parent;
@@ -182,7 +182,7 @@ const directionConverterObj = {
                 }
             }
 
-            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueRight) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueRight) * currentTotal, currentCounter++) { 
                 //check if potentialSquare occupied by opponent piece
                 if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
                     break parent;
@@ -206,7 +206,7 @@ const directionConverterObj = {
                 }
             }
 
-            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueRight) * currentTotal, currentCounter++) { //is 'potentialSquare' bit superflous?🐉
+            parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueRight) * currentTotal, currentCounter++) { 
                 //check if potentialSquare occupied by opponent piece
                 if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
                     break parent;

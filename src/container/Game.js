@@ -36,25 +36,35 @@ function Game({params}) {
     const [auth, setAuth] = useState(firebase.auth());
     const [db, setDb] = useState(firebase.database());
 
+    function test3(params) {
+        db.ref(`a`).off();
+    }
+    function test2(params) {
+        db.ref(`a`).update({c: Math.random()});
+    }
+    function test1(params) {
+        db.ref(`a`).orderByKey().equalTo(`c`).on('child_changed', (e) => {
+            console.log("red");
+        })
+    }
     function test(params) {
         turnAllPresentationalStateOnOrOffApartFrom(true, "setPlaying");
     }
-    function turnAllPresentationalStateOnOrOffApartFrom(boolean, ...exceptions) { //as a string
-            //base start: all opposite of boolean.
-            const allSetStates = {setInvalidRoute, setPlaying, setCanMove, setUser2SignedIn, setWaiting, setOnForeignMatch, setOpponentQuits, setWinner, setAskForRematch, setWaitingForOpponentToConfirmRematch};
-            const positiveArray = [];
-            const negativeArray = [];
-            for (const key in allSetStates) {
-                for (const item of exceptions) {
-                    if (key !== item) {
-                        positiveArray.push(allSetStates[key]); 
-                    } else {
-                        negativeArray.push(allSetStates[key]);
-                    }
+    function turnAllPresentationalStateOnOrOffApartFrom(boolean, ...exceptions) { //as a string  
+        const allSetStates = {setInvalidRoute, setPlaying, setCanMove, setUser2SignedIn, setWaiting, setOnForeignMatch, setOpponentQuits, setWinner, setAskForRematch, setWaitingForOpponentToConfirmRematch};
+        const positiveArray = [];
+        const negativeArray = [];
+        for (const key in allSetStates) {
+            for (const item of exceptions) {
+                if (key !== item) {
+                    positiveArray.push(allSetStates[key]); 
+                } else {
+                    negativeArray.push(allSetStates[key]);
                 }
-            };
-            positiveArray.forEach((item) => item.call(null, boolean)); console.log(positiveArray);
-            negativeArray.forEach((item) => item.call(null, !boolean)); console.log(negativeArray);
+            }
+        };
+        positiveArray.forEach((item) => item.call(null, boolean)); console.log(positiveArray, negativeArray);
+        negativeArray.forEach((item) => item.call(null, !boolean)); //console.log(negativeArray);
     }
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
@@ -73,7 +83,7 @@ function Game({params}) {
             await auth.currentUser.reauthenticateWithCredential(credential);
             await auth.currentUser.delete();
             db.ref(`matches/${authInfo.url}`).remove();
-            turnAllPresentationalStateOnOrOffApartFrom(false, "setOpponentQuits");
+            turnAllPresentationalStateOnOrOffApartFrom(false, "setOpponentQuits");//setOpponentQuits(true);
         }
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', opponentHasQuit);
     }
@@ -126,24 +136,20 @@ function Game({params}) {
         async function next(e) {
             game.child(`user1`).orderByKey().off(); console.log("executing restart game");
             // reset db & decide who's white 
-            // console.log()
-            await game.set(bigObj); //✅ matches/${authInfo.url}
+            await game.set(bigObj); //✅
             if (Math.random() > 0.5) { console.log('user1 is black');
                 await game.child('user1/pieces').set(bigObj.user2.pieces); 
                 await game.child('user2/pieces').set(bigObj.user1.pieces); 
                 await game.child(`user1`).update({white: false});
                 await game.child(`user2`).update({white: true, canMove: true});
-                // await game.child(`user2`).update({canMove: true});
             } else { console.log('user1 is white');
                 await game.child('user1/pieces').set(bigObj.user1.pieces); 
                 await game.child('user2/pieces').set(bigObj.user2.pieces);
                 await game.child(`user1`).update({white: true, canMove: true});
                 await game.child(`user2`).update({white: false});
-                // await game.child(`user1`).update({canMove: true});
             }
             await game.child(`user1`).update({signedIn: true});
             await game.child(`user2`).update({signedIn: true, recentlyReset: true}); //✅ (listener for user2 signing in IS retriggering mount).
-            // await game.child(`user2`).update({recentlyReset: true});
             listenerForOpponentQuitting(game, "user1", "user2");//do we need this?🐉
             listenerForOpponentMoving(game, "user1", "user2");
             listenerForWinner(game, "user1");
@@ -173,51 +179,45 @@ function Game({params}) {
                             setOnForeignMatch(false);
                             if (auth.currentUser.email.includes('user1')) { 
                                 //USER1 1ST TIME OR RETURNING
-                                game.child(`user1`).orderByKey().on('value', (e) => { 
-                                    game.child(`user1`).off(); //console.log(e.val()); //remove listener
-                                    if (user1.signedIn) {
-                                        //USER1 RETURNING
-                                        console.log("user1 returning");
-                                        if (match.winner) { console.log("mount recognises winner");
-                                            endGame(game, "user1", match.winner);
-                                            if (user1.rematch) {
-                                                setWaitingForOpponentToConfirmRematch(true);
-                                                setAskForRematch(false);
-                                            }
+                                if (user1.signedIn) {
+                                    //USER1 RETURNING
+                                    console.log("user1 returning");
+                                    if (match.winner) { console.log("mount recognises winner");
+                                        endGame(game, "user1", match.winner);
+                                        if (user1.rematch) {
+                                            setWaitingForOpponentToConfirmRematch(true);
+                                            setAskForRematch(false);
                                         }
-                                        authInfo.current = {...authInfo.current, color: e.val().white ? "white" : "black"};
-                                        setCanMove(user1.canMove ? true : false); setPlaying(true); //BOARD IS RENDERED HERE
-                                        game.child(`user2/signedIn`).orderByKey().on('value', (e) => {
-                                            game.child(`user2/signedIn`).off(); console.log("user2 signed in:", e.val()); //remove listener
-                                            if (e.val()) { 
-                                                //USER2 SIGNED IN
-                                                setUser2SignedIn(true); console.log("user2 is signed in");
-                                                setWaiting(false);
-                                            } else { 
-                                                //USER2 NOT SIGNED IN YET✅
-                                                setWaiting(true); console.log("user2 not signed in");
-                                                setUser2SignedIn(false);
-                                            }
-                                        });
-                                    } else { //
-                                        //USER1 1ST TIME
-                                        console.log("user1 own game first-time");
-                                        listenerForUser2SigningIn(game);//✅
-                                        listenerForOpponentQuitting(game, "user1", "user2");
-                                        listenerForOpponentMoving(game, "user1", "user2");
-                                        listenerForWinner(game, "user1");
-                                        listenerForRematch(game, "user1", "user2");
-                                        (async function next(e) {
-                                            //if black...
-                                            if (!user1.white) { console.log(user1.white);
-                                                await game.child(`user2`).update({canMove: true});
-                                            }
-                                            await game.child('user1').update({signedIn: true});
-                                            // ARBRITRARILY UPDATE STATE THAT RETRIGGERS current UseEffect CALLBACK to process 'user1 for a 2nd time'.
-                                            setArbitrary(Math.random().toFixed(5));
-                                        })();
                                     }
-                                })
+                                    authInfo.current = {...authInfo.current, color: user1.white ? "white" : "black"};
+                                    setCanMove(user1.canMove ? true : false); setPlaying(true); //BOARD IS RENDERED HERE
+                                    if (user2.signedIn) { 
+                                        //USER2 SIGNED IN
+                                        setUser2SignedIn(true); console.log("user2 is signed in");
+                                        setWaiting(false);
+                                    } else { 
+                                        //USER2 NOT SIGNED IN YET✅
+                                        setWaiting(true); console.log("user2 not signed in");
+                                        setUser2SignedIn(false);
+                                    }
+                                } else { //
+                                    //USER1 1ST TIME
+                                    console.log("user1 own game first-time");
+                                    listenerForUser2SigningIn(game);//✅
+                                    listenerForOpponentQuitting(game, "user1", "user2");
+                                    listenerForOpponentMoving(game, "user1", "user2");
+                                    listenerForWinner(game, "user1");
+                                    listenerForRematch(game, "user1", "user2");
+                                    (async function next(e) {
+                                        //if black...
+                                        if (!user1.white) {
+                                            await game.child(`user2`).update({canMove: true});
+                                        }
+                                        await game.child('user1').update({signedIn: true});
+                                        // ARBRITRARILY UPDATE STATE THAT RETRIGGERS current UseEffect CALLBACK to process 'user1 for a 2nd time'.
+                                        setArbitrary(Math.random().toFixed(5));
+                                    })();
+                                }
                             } else { 
                                 //USER2 RETURNING
                                 console.log("user2 returning");
@@ -307,7 +307,9 @@ function Game({params}) {
             {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
 
-            {/* <div onClick={test}>Reveal</div> */}
+            {/* <div onClick={test1}>Prepare listener</div>
+            <div onClick={test2}>Alter db</div>
+            <div onClick={test3}>Turn off listener</div> */}
         </>
     )
 }

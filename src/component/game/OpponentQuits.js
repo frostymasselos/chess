@@ -1,26 +1,30 @@
 import {Link} from 'react-router-dom';
 import {useState, useEffect, useRef} from 'react';
+import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
-function OpponentQuits() { //🐉refactor to use useRef & arbitrarily rerun page (to have UI display updated time)
+function OpponentQuits() { //refactor so that its a pop-up with everything unclickable behind it
 
-    let [time, setTime] = useState(5);
+    let time = useRef(5);
+    let [arbitrarilyRefresh, setArbitrarilyRefresh] = useState(false);
 
     useEffect(() => {
-        let timer = setTimeout(() => {
-            if (time >= 1) {
-                setTime(time - 1);
+        let timer = setInterval(() => {
+            if (time.current > 1) {
+                time.current = time.current - 1;
+                setArbitrarilyRefresh(Math.random());
             } else {
+                time.current = time.current - 1;
+                setArbitrarilyRefresh(Math.random());
                 console.log("done");
-                window.location.replace(`/`);
+                clearInterval(timer);
+                // window.location.replace(`/`);
             }
         }, 1000)
-        return () => clearTimeout(timer);
-    }, );
+    }, []);
 
     return (
         <>
-            <div>{time}</div>
-            {/* <div>OpponentQuits. Redirecting to Homepage in {time} seconds</div> */}
+            <div>{time.current}</div>
             <Link to="/">Return to Homepage</Link>
         </>
     )
