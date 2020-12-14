@@ -63,16 +63,21 @@ body {
 }
 
 .board-grid-container > div {
-  background-color: brown;
-  border-top-color: green;
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-right-color: green;
-  border-right-width: 1px;
-  border-right-style: solid;
+  background-color: grey;
+  border: solid 1px grey;
 }
 
 .board-grid-container > div > div {
   height: 100%;
+}
+
+.board-grid-container > div.potentialUserSquare {
+  border-top-color: yellow;
+  border-left-color: yellow;
+}
+
+.board-grid-container > div.potentialOpponentSquare {
+  border-right-color: brown;
+  border-bottom-color: brown;
 }
 /*# sourceMappingURL=main.css.map */

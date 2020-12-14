@@ -9,7 +9,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     let [check, setCheck] = useState(false);
     let [checkMate, setCheckMate] = useState(false);
     let [squareTags, setSquareTags] = useState([]);
-    let initialExecutionSquareTagUseEffect = useRef(true);
+    let [showingUserPieces, setShowingUserPieces] = useState(false);
+    let [showingOpponentPieces, setShowingOpponentPieces] = useState(false);
     let clickedOnPiece = useRef(false);
 
     function fillBoardArrayWithSquares() {
@@ -55,7 +56,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 gridColumn:`${col}`,
             }
             let square = (
-            <div id={index} data-square style={styleVal} onClick={onClickHandler} key={Math.random()}>
+            <div id={`i${index}`} data-square style={styleVal} onClick={onClickHandler} key={Math.random()}>
                 {potentialPiece}
             </div>
             );
@@ -68,6 +69,56 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         }
         setSquareTags(arrayOfJSXSquares);
     }
+    function highlightSquares(player) {
+        const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
+        const arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, authInfo.color); //console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces);
+        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
+        
+        if (showingUserPieces && player === "user") {
+            for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces) {
+                const square = window.document.querySelector(`#i${squareIndex}`);
+                square.classList.remove(`potentialUserSquare`);
+            }
+            // showingUserPieces.current = false;
+            setShowingUserPieces(false);
+            return;
+        } 
+        
+        if (showingOpponentPieces && player === "opponent") {
+            for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces) {
+                const square = window.document.querySelector(`#i${squareIndex}`);
+                square.classList.remove(`potentialOpponentSquare`);
+            }
+            // showingOpponentPieces.current = false;
+            setShowingOpponentPieces(false);
+            return;
+        }
+        
+        let squareIndices = '';
+        if (player === "user") {
+            squareIndices = arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces;
+            // showingUserPieces.current = true;
+            setShowingUserPieces(true);
+        } else {
+            squareIndices = arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces;
+            // showingOpponentPieces.current = true;
+            setShowingOpponentPieces(true);
+        }
+        
+        for (const potentialSquareIndex of squareIndices) {
+            for (const square of boardArray.current) {
+                if (potentialSquareIndex === square.index) {
+                    let squareToHighlight = window.document.querySelector(`#i${potentialSquareIndex}`);
+                    if (player === "user") {
+                        squareToHighlight.classList.add(`potentialUserSquare`);
+                    } else {
+                        squareToHighlight.classList.add(`potentialOpponentSquare`);
+                    }
+                }
+            }
+        }
+    }
     async function publishMove(userDb) {
         await userDb.update({canMove: false, moved: Math.random()}); 
         setCanMove(false);
@@ -79,8 +130,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         const boardArraySquaresWithOpponentPiece = [];
         const boardArraySquaresWithUserPiece = board.filter((square) => {
             if (square.piece) {
-                let pieceColor = ''; 
-                square.piece.white === true ? pieceColor = "white" : pieceColor = "black";
+                let pieceColor = square.piece.white === true ? "white" : "black";
                 if (pieceColor === ourColor) {
                     return true
                 } else {
@@ -115,81 +165,67 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     function arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color) {
         const geographicallyLegalSquaresOfAllPieces = [];
         for (const squareWithUserPiece of squaresWithUserPieces) {
-            const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
-            const originalSquareIndex = squareWithUserPiece.index; //console.log(originalSquareIndex);
-            const geographicallyLegalSquaresOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor);
+            const geographicallyLegalSquaresOfParticularPiece = arrayOfGeographicallyLegalSquares(squareWithUserPiece.piece.name, squareWithUserPiece.index, squaresWithUserPieces, squaresWithOpponentPieces, ourColor);
             geographicallyLegalSquaresOfParticularPiece.forEach((legalSquare) => geographicallyLegalSquaresOfAllPieces.push(legalSquare));
-            geographicallyLegalSquaresOfAllPieces.push()
         }
         return geographicallyLegalSquaresOfAllPieces;
     }  
-    function isKingInCheck(board = boardArray.current, ourColor = authInfo.color, enemyColor = opponentColor.current) {
+    function isUserKingInCheck(board = boardArray.current, ourColor = authInfo.color, enemyColor = opponentColor.current) {
         //square index of user king
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board, ourColor);
-        const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
-        const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-        let squareIndexOfUserKing = ''; squaresWithUserPieces.some((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); //console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
-        //cycle through every potential secondary square of opponent piece and if any potential secondary squares = square of our king, illegal move
-        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
-        return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareOfOpponentPiece) => {return legalSquareOfOpponentPiece === squareIndexOfUserKing;});
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
+        let squareIndexOfUserKing = ''; squaresWithUserPieces.forEach((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); //console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
+        //cycle through every potential secondary square of opponent piece and if any potential secondary squares = square of our king, check
+        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); //console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
+        return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareIndexOfOpponentPiece) => {return legalSquareIndexOfOpponentPiece === squareIndexOfUserKing;});
     }
-    function isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color, enemyColor = opponentColor.current) {
+    function isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color, enemyColor = opponentColor.current) {
         //for every possible move I make, am I still in check? Make a new board for each move and assess whether I'm still in check
         for (const squareWithUserPiece of squaresWithUserPieces) {
-            const pieceId = squareWithUserPiece.piece.name; //console.log(pieceId)
-            const originalSquareIndex = squareWithUserPiece.index; //console.log(originalSquareIndex);
-            const geographicallyLegalSquareIndicesOfParticularPiece = arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor); console.log("geographicallyLegalSquareIndicesOfParticularPiece", geographicallyLegalSquareIndicesOfParticularPiece);
+            const originalSquareIndex = squareWithUserPiece.index;
+            const geographicallyLegalSquareIndicesOfParticularPiece = arrayOfGeographicallyLegalSquares(squareWithUserPiece.piece.name, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor); console.log("geographicallyLegalSquareIndicesOfParticularPiece", geographicallyLegalSquareIndicesOfParticularPiece);
             for (const secondarySquareIndex of geographicallyLegalSquareIndicesOfParticularPiece) {
                 //make new board
                 const board2 = JSON.parse(JSON.stringify(boardArray.current));
                 board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
                 board2[originalSquareIndex].piece = null; //console.log("board2", board2);
                 //ask question of new board
-                if (!isKingInCheck(board2, ourColor, enemyColor)) {
+                if (!isUserKingInCheck(board2, ourColor, enemyColor)) {
                     return false;
                 }
             } 
         }
         return true;
     }
-
     function onClickHandler(e) {
-        // e.stopPropagation();
         if (clickedOnPiece.current) { 
-            //SECONDARY CLICK
             console.log("2nd stage");
-            //identify original & secondary square indexes in array.
-            let originalPiece = clickedOnPiece.current.piece;
+            const originalPiece = clickedOnPiece.current.piece;
+            const originalSquareId = clickedOnPiece.current.id;
+            const originalSquareIndex = clickedOnPiece.current.square.id.slice(1); console.log(originalSquareIndex);
             if (e.target.id === clickedOnPiece.current.id) {
-                //SAME PIECE: DESELECT
-                //unhighlight
-                clickedOnPiece.current.piece.classList.remove(`highlighted`);
-                //reset state
-                clickedOnPiece.current = false;
+                //clicked on same square
                 console.log("piece deselected");
+                clickedOnPiece.current.piece.classList.remove(`highlighted`);
+                clickedOnPiece.current = false;
                 return;
             } 
-            if (e.target.dataset.color === clickedOnPiece.current.color) { //✅
-                //OUR PIECE: INVALID
+            if (e.target.dataset.color === clickedOnPiece.current.color) { 
+                //clicked on fellow piece
                 const secondaryPiece = e.target;
-                //unhighlight orginal piece
                 originalPiece.classList.remove(`highlighted`);
-                //highlight clicked on piece
-                e.target.classList.add(`highlighted`);
-                //reset state
+                secondaryPiece.classList.add(`highlighted`);
                 clickedOnPiece.current = {color: secondaryPiece.dataset.color, id: secondaryPiece.id, square: e.currentTarget, piece: secondaryPiece};
-                // clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target}; console.log("clickedOnPiece.current:", clickedOnPiece.current);
-                console.log("invalid - moving on our piece.", "new state:", clickedOnPiece.current);
+                console.log("reselected piece", "new state:", clickedOnPiece.current);
                 return;
             } 
-            function returnBoardArrayIndex(square) {
+            function returnIndexOfSquare(square) {
                 const rowPosition = window.getComputedStyle(square).getPropertyValue('grid-row').slice(0, 1); //console.log(rowPosition);
                 const columnPosition = window.getComputedStyle(square).getPropertyValue('grid-column').slice(0, 1);
                 return (8 - rowPosition) * 8 + (columnPosition - 1); 
             }
-            const originalSquareId = clickedOnPiece.current.id;
-            const originalSquareIndex = returnBoardArrayIndex(clickedOnPiece.current.square); console.log("originalSquareIndex:", originalSquareIndex);
-            const secondarySquareIndex = returnBoardArrayIndex(e.currentTarget); console.log("secondarySquareIndex:", secondarySquareIndex);
+            // const originalSquareIndex = returnIndexOfSquare(clickedOnPiece.current.square); //console.log("originalSquareIndex:", originalSquareIndex);
+            const secondarySquareIndex = returnIndexOfSquare(e.currentTarget); console.log("secondarySquareIndex:", secondarySquareIndex);
             //all squares with userPieces & all squares with opponentPieces
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
@@ -208,7 +244,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             const board2 = JSON.parse(JSON.stringify(boardArray.current));;
             board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
             board2[originalSquareIndex].piece = null; //console.log("board2", board2);
-            if (isKingInCheck(board2)) {
+            if (isUserKingInCheck(board2)) {
                 console.log("illegal move - king is in check");
                 e.preventDefault();
                 return;
@@ -249,16 +285,16 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                     const board2 = JSON.parse(JSON.stringify(boardArray.current));
                     board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
                     board2[originalSquareIndex].piece = null;
-                    // if (isKingInCheck(board2, opponentColor.current, authInfo.color.current)) {
+                    // if (isUserKingInCheck(board2, opponentColor.current, authInfo.color.current)) {
                     //     console.log("opponent king in check");
                     // } else {
                     //     console.log("opponent king not in check");
                     // }
-                    // if (isKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
+                    // if (isUserKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
                     //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
                     //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
                     //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-                    //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
+                    //     if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
                     //         // setCheckMate(true); console.log("opponent is in checkmate");
                                // db.ref(`matches/${authInfo.url}/winner`).update({
                                     // winner: authInfo.user
@@ -286,19 +322,16 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             }
             executeUserClick();
         } else {
-            //HAVEN'T PREVIOUSLY CLICKED PIECE (FRESH)
+            //haven't previously clicked on piece
             console.log("1st stage");
             if (e.target.dataset.square || e.target.dataset.color !== authInfo.color) {
-                //PRIMARY CLICK ON EMPTY SQUARE OR OPPONENT PIECE OR OFF-BOARD
                 console.log("clicked on empty square or opponent piece");
                 e.preventDefault();
                 return;
             } else {
-                //PRIMARY CLICK ON OWN PIECE
+                //clicked on piece
                 let piece = e.target;
-                //REGISTER, IN STATE, INFO ON PIECE CLICKED ON
                 clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target};  
-                //HIGHLIGHT SQUARE/PIECE
                 piece.classList.add(`highlighted`);
             }
         }
@@ -317,12 +350,12 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     //1.populate boardArray & ui
     useEffect(() => {
         //rotate board for black
-        if (authInfo.color === "black") { 
-            console.log("rotating board");
-            let board = document.querySelector('.board-grid-container');
-            board.style.setProperty("transform", "rotate(180deg)");
-        } else { console.log("not rotating board");
-        }
+        // if (authInfo.color === "black") { 
+        //     console.log("rotating board");
+        //     let board = document.querySelector('.board-grid-container');
+        //     board.style.setProperty("transform", "rotate(180deg)");
+        // } else { console.log("not rotating board");
+        // }
         fillBoardArrayWithSquares();
         //fill board array with pieces
         let game = db.ref(`matches/${authInfo.url}`);
@@ -355,34 +388,30 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
 
     //2.execute when square tags're rendered
     useEffect(() => { console.log("checking for check/checkmate");
-        //don't execute on initial execution
-        if (initialExecutionSquareTagUseEffect.current) {
-            initialExecutionSquareTagUseEffect.current = false;
-            return;
-        }
         //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
-        if (isKingInCheck()) {
+        if (isUserKingInCheck()) {
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current); console.log(squaresWithUserAndOpponentPieces);
             const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0]; console.log(squaresWithUserPieces);
             const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1]; console.log(squaresWithOpponentPieces);
-            if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
+            if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
                 setCheckMate(true);
+                db.ref(`matches/${authInfo.url}`).update({winner: `${authInfo.color} ${authInfo.user}`});
             } else {
                 setCheck(true);
             }
         }
         // is opponent in check? (if we get this code right, move it to onClick handler)
-        // if (isKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
+        // if (isUserKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
         //     console.log("opponent king in check");
         // } else {
         //     console.log("opponent king not in check");
         // }
         // checks if opponent in check|check-mate after move
-        // if (isKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
+        // if (isUserKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
         //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
         //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
         //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-        //     if (isInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
+        //     if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
         //         // setCheckMate(true);
         //         console.log("opponent is in checkmate");
         //     } else {
@@ -390,7 +419,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         //         console.log("opponent is in check");
         //     }
         // }
-    }, [squareTags])
+    }, [])
 
     return (
         <>
@@ -399,6 +428,9 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             <div className="board-grid-container unclickable">
                 {squareTags}
             </div>
+            <div onClick={highlightSquares.bind(null, "user")}>Reveal possible squares you can land on {showingUserPieces ? <span>✅</span> : null}</div>
+            <div onClick={highlightSquares.bind(null, "opponent")}>Reveal possible squares opponent can land on {showingOpponentPieces ? <span>✅</span> : null}</div>
+            <div>Reveal possible squares clicked-on piece could land on</div>
         </>
     )
 
