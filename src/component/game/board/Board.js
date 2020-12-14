@@ -10,13 +10,11 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
     let [showingOpponentPiecesPotentialMoves, setShowingOpponentPiecesPotentialMoves] = useState(false);
     let [showingClickedOnPiecePotentialMoves, setShowingClickedOnPiecePotentialMoves] = useState(false);
-    // let showingClickedOnPiecePotentialMovesUseRef = useRef(showingClickedOnPiecePotentialMoves ? true : false);
+    // let showingClickedOnPiecePotentialMovesUseRef = useRef(showingClickedOnPiecePotentialMoves ? true : false); //🐉 has to be this technique.
     
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
     let clickedOnPiece = useRef(false);
-
-    console.log(showingClickedOnPiecePotentialMoves);
 
     function fillBoardArrayWithSquares() {
         boardArray.current = [];
@@ -72,8 +70,10 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 row--;
             }
         }
+        // return arrayOfJSXSquares;
         setSquareTags(arrayOfJSXSquares);
     }
+
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton(params) {
         if (showingClickedOnPiecePotentialMoves) {
             setShowingClickedOnPiecePotentialMoves(false);
@@ -387,7 +387,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         let opponent = authInfo.user === "user1" ? "user2" : "user1";
         game.on('value', (e) => {
             game.off(); //remove listener
-            function fillBoardWithPieces(objOfPieces) {
+            function fillBoardArrayWithPieces(objOfPieces) {
                 for (let key in objOfPieces) {
                     //if piece is alive
                     if (!objOfPieces[key].alive) {
@@ -404,12 +404,18 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                     }
                 }
             }
-            fillBoardWithPieces(e.val().user1.pieces);
-            fillBoardWithPieces(e.val().user2.pieces);
+            fillBoardArrayWithPieces(e.val().user1.pieces);
+            fillBoardArrayWithPieces(e.val().user2.pieces);
             console.log("boardArray.current:", boardArray.current);
             renderPieces();
+            //
         });
     }, [triggerBoardUseEffect]);
+
+    useEffect(() => {
+        const square = window.document.querySelector(`#i${1}`);
+        console.log(square);
+    }, [squareTags]);
 
     //2.execute when square tags're rendered
     useEffect(() => { console.log("checking for check/checkmate");
@@ -451,6 +457,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             {check && <div>You are in check</div>}
             {checkMate && <div>Checkmate</div>}
             <div className="board-grid-container unclickable">
+                {/* {renderTags()} */}
+                {/* {renderPieces()} */}
                 {squareTags}
             </div>
             <div onClick={highlightSquares.bind(null, "user")}>Reveal possible squares you can land on {showingUserPiecesPotentialMoves ? <span>✅</span> : null}</div>
