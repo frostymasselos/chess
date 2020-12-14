@@ -80,4 +80,8 @@ body {
   border-right-color: brown;
   border-bottom-color: brown;
 }
+
+.board-grid-container > div.potentialClickedOnPieceSquare {
+  background-color: pink;
+}
 /*# sourceMappingURL=main.css.map */
