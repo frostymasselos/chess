@@ -33,7 +33,7 @@ function Game({params}) {
     
     //info
     let authInfo = useRef({url: params.slice(1)});
-    const [auth, setAuth] = useState(firebase.auth());
+    const [auth, setAuth] = useState(firebase.auth()); //refactor to be useRef? Then put the function in useEffect?🐉 
     const [db, setDb] = useState(firebase.database());
 
     function test3(params) {

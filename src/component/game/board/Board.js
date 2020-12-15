@@ -1,5 +1,5 @@
 import {pieceMoveObj, directionConverterObj} from '../../../helper/boardHelp.js'; 
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useMemo} from 'react';
 import React from 'react';  
 
 function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
@@ -73,7 +73,6 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         // return arrayOfJSXSquares;
         setSquareTags(arrayOfJSXSquares);
     }
-
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton(params) {
         if (showingClickedOnPiecePotentialMoves) {
             setShowingClickedOnPiecePotentialMoves(false);
@@ -412,10 +411,14 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         });
     }, [triggerBoardUseEffect]);
 
-    useEffect(() => {
-        const square = window.document.querySelector(`#i${1}`);
-        console.log(square);
-    }, [squareTags]);
+    // //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect
+    // useEffect(() => {
+    //     const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`)); //console.log(allSquareTags);
+    //     for (const squareTag of allSquareTags) {
+    //         squareTag.onclick = null;
+    //         squareTag.onclick = onClickHandler;
+    //     }
+    // });
 
     //2.execute when square tags're rendered
     useEffect(() => { console.log("checking for check/checkmate");
