@@ -11,6 +11,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     let [showingOpponentPiecesPotentialMoves, setShowingOpponentPiecesPotentialMoves] = useState(false);
     let [showingClickedOnPiecePotentialMoves, setShowingClickedOnPiecePotentialMoves] = useState(false);
     
+    let opponent = useRef(authInfo.user === "user1" ? "user2" : "user1");
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
     let clickedOnPiece = useRef(false);
@@ -141,10 +142,6 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             }
         }
     }
-    async function publishMove(userDb) {
-        await userDb.update({canMove: false, moved: Math.random()}); 
-        setCanMove(false);
-    }
 
     //legal-move-logic helper functions
     function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = authInfo.color) {
@@ -221,11 +218,11 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     function onClickHandler(e) {
         if (clickedOnPiece.current) { 
             console.log("2nd stage");
-            const boardTag = window.document.querySelector(`.board-grid-container`);
             const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`));
             const originalPiece = clickedOnPiece.current.piece;//console.log(originalPiece);
             const originalSquareId = clickedOnPiece.current.id;
             const originalSquareIndex = Number.parseFloat(clickedOnPiece.current.square.id.slice(1)); //console.log(originalSquareIndex);
+            const secondarySquareTag = e.currentTarget;
             const secondarySquareIndex = Number.parseFloat(e.currentTarget.id.slice(1)); //console.log(secondarySquareIndex);
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
@@ -269,36 +266,52 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 e.preventDefault();
                 return;
             }
-            //executing user's click.
+            //EXECUTING USER'S CLICK.
             console.log(`executing user's click`);
-            boardTag.classList.add(`unclickable`);
+            originalPiece.classList.remove(`highlighted`);
             clickedOnPiece.current = false;
+            setCanMove(false); //boardTag.classList.add(`unclickable`);
             if (e.target.dataset.square) {
                 //second square is an empty square
                 let emptySquare = e.target;
                 emptySquare.append(originalPiece);
                 console.log("secondaryEl is an empty square:", e.target);
-                unhighlightAndResetClickedOnPiece();
+                publishMoveToDb();
                 
             } else {
                 //second square has an enemy piece
                 const enemyPiece = e.target;
                 const enemyPieceSquare = e.currentTarget;
-                //kill enemy
                 enemyPiece.remove();
-                //append originalPiece
-                enemyPieceSquare.append(originalPiece);
                 // setTimeout(() => {
                 //     enemyPiece.classList.add(`fizzle`);
                 // }, 2000);
-                unhighlightAndResetClickedOnPiece();
+                enemyPieceSquare.append(originalPiece);
+                publishMoveToDb(enemyPiece.id.slice(5));
             }
             //send this info to db full grid-area property to dB property. 
-            function unhighlightAndResetClickedOnPiece() {
-                //unhighlight original piece
-                originalPiece.classList.remove(`highlighted`);
-                //CHECK IF PIECE MOVING IS PAWN
-                //CHECK IF OPPONENT'S KING'S IN CHECK|CHECKMATE
+            async function publishMoveToDb(opponentToKill) {
+                //move user piece
+                let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
+                let opponentDb = db.ref(`matches/${authInfo.url}/${opponent.current}`);
+                const updatedRowPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue(`grid-row`).slice(0, 1);
+                const updatedColumnPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue('grid-column').slice(0, 1);
+                await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({
+                    rowPosition: `${updatedRowPosition}/${String(Number.parseInt(updatedRowPosition) + 1)}`,
+                    columnPosition: `${updatedColumnPosition}/${String(Number.parseInt(updatedColumnPosition) + 1)}`,
+                });
+                //potentially kill opponent piece
+                if (opponentToKill) {
+                    await opponentDb.child(`pieces/${opponentToKill}`).update({alive: false});
+                }
+                //potentially update pawn
+                if (boardArrayOriginalPiece.name.includes(`pawn`) && !boardArrayOriginalPiece.moved) { console.log("updating pawn");
+                    await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({moved: true}); 
+                }
+                await userDb.update({canMove: false, moved: Math.random()});
+            } 
+            function checkIfOpponentIsInCheckOrCheckmate() {
+                //check if opponent's king's in check/checkmate
                 const board2 = JSON.parse(JSON.stringify(boardArray.current));
                 board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
                 board2[originalSquareIndex].piece = null;
@@ -313,29 +326,15 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
                 //     if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
                 //         // setCheckMate(true); console.log("opponent is in checkmate");
-                           // db.ref(`matches/${authInfo.url}/winner`).update({
+                            // db.ref(`matches/${authInfo.url}/winner`).update({
                                 // winner: authInfo.user
                                 // return;
-                           // });
+                            // });
                 //     } else {
                 //         // setCheck(true); console.log("opponent is in check");
                 //     }
                 // }
-                //CHANGE STATE TO TRIGGER PUBLISH FUNCTION
-                let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
-                (async function updateDbPieces(params) {
-                    //update pawn. if pawn, if notMoved, update db 
-                    if (boardArrayOriginalPiece.name.includes(`pawn`) && !boardArrayOriginalPiece.moved) {
-                        console.log("here");
-                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({
-                            moved: true
-                        })
-                    }
-                })();
-                publishMove(userDb);
-                //🐉 change dbPieces. piecename as it'd appear in db. grid-row/column. 
-
-            } 
+            }
         } else {
             //haven't previously clicked on piece
             console.log("1st stage"); 
