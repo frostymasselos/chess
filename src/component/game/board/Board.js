@@ -10,6 +10,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
     let [showingOpponentPiecesPotentialMoves, setShowingOpponentPiecesPotentialMoves] = useState(false);
     let [showingClickedOnPiecePotentialMoves, setShowingClickedOnPiecePotentialMoves] = useState(false);
+    let [optionToReincarnate, setOptionToReincarnate] = useState(false);
     
     let opponent = useRef(authInfo.user === "user1" ? "user2" : "user1");
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
@@ -271,6 +272,16 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             originalPiece.classList.remove(`highlighted`);
             clickedOnPiece.current = false;
             setCanMove(false); //boardTag.classList.add(`unclickable`);
+            if (originalPiece.id.includes(`pawn`)) { //if pawn's reached other side
+                if (originalPiece.id.includes(`white`) && secondarySquareIndex === 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63) { //🐉range refactor into 1 if
+                    setOptionToReincarnate(true);
+                    return;   
+                }
+                if (originalPiece.id.includes(`black`) && secondarySquareIndex === 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7) {
+                    setOptionToReincarnate(true);
+                    return;
+                }
+            }
             if (e.target.dataset.square) {
                 //second square is an empty square
                 let emptySquare = e.target;
@@ -309,6 +320,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({moved: true}); 
                 }
                 await userDb.update({canMove: false, moved: Math.random()});
+                //potentially update king/rook
             } 
             function checkIfOpponentIsInCheckOrCheckmate() {
                 //check if opponent's king's in check/checkmate
@@ -426,7 +438,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1]; console.log(squaresWithOpponentPieces);
             if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
                 setCheckMate(true);
-                db.ref(`matches/${authInfo.url}`).update({winner: `${authInfo.color} ${authInfo.user}`});
+                db.ref(`matches/${authInfo.url}`).update({winner: `${authInfo.color} (${authInfo.user})`});
+                setCanMove(false);
             } else {
                 setCheck(true);
             }
