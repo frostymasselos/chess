@@ -91,3 +91,12 @@ div {
 .board-grid-container > div.potentialClickedOnPieceSquare {
     background-color: pink;
 }
+
+.pawn-promotion-grid-container {
+    width: 100vw;
+    height: 100vw;
+    // transform: rotate(180deg);
+    display: grid;
+    grid-template-columns: repeat(1fr 1fr);
+    grid-template-rows: repeat(1fr 1fr); 
+}

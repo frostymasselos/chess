@@ -5,7 +5,7 @@ import ErrorPage from '../component/game/ErrorPage.js';
 import Exit from '../component/game/Exit.js';
 import Waiting from '../component/game/Waiting.js';
 import TurnNotifier from '../component/game/TurnNotifier.js';
-import Board from '../component/game/board/Board.js';
+import Board from '../component/game/Board.js';
 import TerminateMatch from '../component/game/TerminateMatch.js';
 import TerminateMatchForNewGame from '../component/game/TerminateMatchForNewGame.js';
 import OpponentQuits from '../component/game/OpponentQuits.js';

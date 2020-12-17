@@ -84,4 +84,15 @@ body {
 .board-grid-container > div.potentialClickedOnPieceSquare {
   background-color: pink;
 }
+
+.pawn-promotion-grid-container {
+  width: 100vw;
+  height: 100vw;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[1fr];
+      grid-template-columns: repeat(1fr 1fr);
+  -ms-grid-rows: (1fr)[1fr];
+      grid-template-rows: repeat(1fr 1fr);
+}
 /*# sourceMappingURL=main.css.map */

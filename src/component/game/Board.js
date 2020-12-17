@@ -1,5 +1,6 @@
-import {pieceMoveObj, directionConverterObj} from '../../../helper/boardHelp.js'; 
-import {useState, useEffect, useRef, useMemo} from 'react';
+import {pieceMoveObj, directionConverterObj} from '../../helper/boardHelp.js'; 
+import PawnPromotionOptions from './board/PawnPromotionOptions.js';
+import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 
 function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
@@ -10,11 +11,13 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
     let [showingOpponentPiecesPotentialMoves, setShowingOpponentPiecesPotentialMoves] = useState(false);
     let [showingClickedOnPiecePotentialMoves, setShowingClickedOnPiecePotentialMoves] = useState(false);
-    let [optionToReincarnate, setOptionToReincarnate] = useState(false);
+    let [canPawnPromote, setCanPawnPromote] = useState(false);
     
     let opponent = useRef(authInfo.user === "user1" ? "user2" : "user1");
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
+    let pawnPromotionGraveyard = useRef([]);
+    let nonPawnPromotionGraveyard = useRef([]);
     let clickedOnPiece = useRef(false);
 
     function fillBoardArrayWithSquares() {
@@ -25,6 +28,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 piece: null,
             })
         }
+        pawnPromotionGraveyard.current = [];
+        nonPawnPromotionGraveyard.current = [];
     }
     function renderPieces() { 
         //make pieces
@@ -220,8 +225,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         if (clickedOnPiece.current) { 
             console.log("2nd stage");
             const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`));
-            const originalPiece = clickedOnPiece.current.piece;//console.log(originalPiece);
-            const originalSquareId = clickedOnPiece.current.id;
+            const originalPiece = clickedOnPiece.current.piece; //console.log(originalPiece);
+            const originalSquareId = clickedOnPiece.current.id; 
             const originalSquareIndex = Number.parseFloat(clickedOnPiece.current.square.id.slice(1)); //console.log(originalSquareIndex);
             const secondarySquareTag = e.currentTarget;
             const secondarySquareIndex = Number.parseFloat(e.currentTarget.id.slice(1)); //console.log(secondarySquareIndex);
@@ -272,15 +277,14 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             originalPiece.classList.remove(`highlighted`);
             clickedOnPiece.current = false;
             setCanMove(false); //boardTag.classList.add(`unclickable`);
-            if (originalPiece.id.includes(`pawn`)) { //if pawn's reached other side
-                if (originalPiece.id.includes(`white`) && secondarySquareIndex === 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63) { //🐉range refactor into 1 if
-                    setOptionToReincarnate(true);
-                    return;   
-                }
-                if (originalPiece.id.includes(`black`) && secondarySquareIndex === 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7) {
-                    setOptionToReincarnate(true);
-                    return;
-                }
+            function secondarySquareIndexIsAtEndOfBoard(color, secondarySquareIndex) {
+                const endSquaresWhite = [56, 57, 58, 59, 60, 61, 62, 63];
+                const endSquaresBlack = [0, 1, 2, 3, 4, 5, 6, 7];
+                return color === "white" ? endSquaresWhite.some((index) => index === secondarySquareIndex) : endSquaresBlack.some((index) => index === secondarySquareIndex);
+            }
+            if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { 
+                setCanPawnPromote(true);
+                return;   
             }
             if (e.target.dataset.square) {
                 //second square is an empty square
@@ -392,13 +396,20 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         fillBoardArrayWithSquares();
         //fill board array with pieces
         let game = db.ref(`matches/${authInfo.url}`);
-        let opponent = authInfo.user === "user1" ? "user2" : "user1";
         game.on('value', (e) => {
             game.off(); //remove listener
             function fillBoardArrayWithPieces(objOfPieces) {
                 for (let key in objOfPieces) {
                     //if piece is alive
                     if (!objOfPieces[key].alive) {
+                        if (authInfo.color === "white" && objOfPieces[key].white || authInfo.color === "black" && !objOfPieces[key].white ) {
+                            const possiblePromotions = ["rook", "knight", "bishop", "queen"];
+                            if (possiblePromotions.some((possiblePromotion) => objOfPieces[key].name.includes(possiblePromotion))) {
+                                pawnPromotionGraveyard.current.push(objOfPieces[key]);
+                            } else {
+                                nonPawnPromotionGraveyard.current.push(objOfPieces[key]);
+                            }
+                        }
                         continue;
                     }
                     let rowPosition = objOfPieces[key].rowPosition.slice(0, 1); //"1/2"
@@ -469,6 +480,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         <>
             {check && <div>You are in check</div>}
             {checkMate && <div>Checkmate</div>}
+            {canPawnPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} setCanPawnPromote={setCanPawnPromote}/>}
             <div className="board-grid-container unclickable">
                 {squareTags}
             </div>
@@ -503,3 +515,8 @@ export default Board;
 // }
 //const originalSquareIndex = returnIndexOfSquare(clickedOnPiece.current.square); //console.log("originalSquareIndex:", originalSquareIndex);
 //const secondarySquareIndex = returnIndexOfSquare(e.currentTarget); console.log("secondarySquareIndex:", secondarySquareIndex);
+
+// function thereAreDeadPiecesForPawnToPromoteTo() {
+//     const possiblePromotions = ["rook", "knight", "bishop", "queen"];
+//     return graveyard.current.some((deadPiece) => possiblePromotions.some((possiblePromotion) => deadPiece.name.includes(possiblePromotion)));
+// } //test🐉
