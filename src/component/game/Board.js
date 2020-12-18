@@ -11,14 +11,16 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
     let [showingOpponentPiecesPotentialMoves, setShowingOpponentPiecesPotentialMoves] = useState(false);
     let [showingClickedOnPiecePotentialMoves, setShowingClickedOnPiecePotentialMoves] = useState(false);
-    let [canPawnPromote, setCanPawnPromote] = useState(false);
+    let [opportunityForPawnToPromote, setOpportunityForPawnToPromote] = useState(false);
     
     let opponent = useRef(authInfo.user === "user1" ? "user2" : "user1");
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
+    let clickedOnPiece = useRef(false);
     let pawnPromotionGraveyard = useRef([]);
     let nonPawnPromotionGraveyard = useRef([]);
-    let clickedOnPiece = useRef(false);
+    let pawnPromotionResolveFunction = useRef('');
+    let pieceToPromotePawnTo = useRef('');
 
     function fillBoardArrayWithSquares() {
         boardArray.current = [];
@@ -148,6 +150,13 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             }
         }
     }
+    function updatePieceToPromotePawnTo(piece) {
+        pieceToPromotePawnTo.current = piece;
+    }
+    function resolvePawnPromotion() {
+        pawnPromotionResolveFunction.current.call(null, 5);
+        setOpportunityForPawnToPromote(false);
+    }
 
     //legal-move-logic helper functions
     function returnSquaresWithUserAndOpponentPieces(board = boardArray.current, ourColor = authInfo.color) {
@@ -221,7 +230,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         }
         return true;
     }
-    function onClickHandler(e) {
+    async function onClickHandler(e) {
         if (clickedOnPiece.current) { 
             console.log("2nd stage");
             const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`));
@@ -282,17 +291,26 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 const endSquaresBlack = [0, 1, 2, 3, 4, 5, 6, 7];
                 return color === "white" ? endSquaresWhite.some((index) => index === secondarySquareIndex) : endSquaresBlack.some((index) => index === secondarySquareIndex);
             }
+            function canPromotePawn(params) {
+                
+            }
             if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { 
-                setCanPawnPromote(true);
-                return;   
+                setOpportunityForPawnToPromote(true);
+                await new Promise((resolve) => { console.log("waiting to resolve"); 
+                    pawnPromotionResolveFunction.current = resolve;
+                });
+                //if user's clicked on piece to promote to...change ui, change db, skill pawn
+                if (pieceToPromotePawnTo.current) {
+                    //change originalPiece, 
+                }
             }
             if (e.target.dataset.square) {
                 //second square is an empty square
                 let emptySquare = e.target;
                 emptySquare.append(originalPiece);
                 console.log("secondaryEl is an empty square:", e.target);
+                //pawnProm. func here🐉
                 publishMoveToDb();
-                
             } else {
                 //second square has an enemy piece
                 const enemyPiece = e.target;
@@ -302,6 +320,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 //     enemyPiece.classList.add(`fizzle`);
                 // }, 2000);
                 enemyPieceSquare.append(originalPiece);
+                //pawnProm. func here🐉
                 publishMoveToDb(enemyPiece.id.slice(5));
             }
             //send this info to db full grid-area property to dB property. 
@@ -480,7 +499,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         <>
             {check && <div>You are in check</div>}
             {checkMate && <div>Checkmate</div>}
-            {canPawnPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} setCanPawnPromote={setCanPawnPromote}/>}
+            {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion}/>}
             <div className="board-grid-container unclickable">
                 {squareTags}
             </div>

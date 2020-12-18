@@ -1,11 +1,8 @@
-export default function pawnPromotion({pawnPromotionGraveyard, setCanPawnPromote}) {
-
-    function exit(e) {
-        setCanPawnPromote(false);
-    }
+export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion}) {
 
     function choosePiece(e) {
-        
+        updatePieceToPromotePawnTo(e.target.dataset.info);
+        resolvePawnPromotion();
     }
     
     function options() {
@@ -20,7 +17,7 @@ export default function pawnPromotion({pawnPromotionGraveyard, setCanPawnPromote
         }
         //each item of filtered made into GI, 2x2.
         for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) {
-            const tag = <div onClick={choosePiece} info={piece} key={Math.random()}>{piece.name.replace(/\d/, '')}</div>;
+            const tag = <div onClick={choosePiece} data-info={piece} key={Math.random()}>{piece.name.replace(/\d/, '')}</div>;
             optionTags.push(tag);
         }
         return optionTags;
@@ -30,7 +27,7 @@ export default function pawnPromotion({pawnPromotionGraveyard, setCanPawnPromote
         <>
             <div className='pawn-promotion-grid-container'>
                 {options()}
-                <a onClick={exit}>Exit</a>
+                <a onClick={resolvePawnPromotion}>Exit</a>
             </div>
         </>
     )
