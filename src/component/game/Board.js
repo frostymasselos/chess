@@ -291,25 +291,21 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 const endSquaresBlack = [0, 1, 2, 3, 4, 5, 6, 7];
                 return color === "white" ? endSquaresWhite.some((index) => index === secondarySquareIndex) : endSquaresBlack.some((index) => index === secondarySquareIndex);
             }
-            function canPromotePawn(params) {
-                
-            }
-            if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { 
-                setOpportunityForPawnToPromote(true);
-                await new Promise((resolve) => { console.log("waiting to resolve"); 
-                    pawnPromotionResolveFunction.current = resolve;
-                });
-                //if user's clicked on piece to promote to...change ui, change db, skill pawn
-                if (pieceToPromotePawnTo.current) {
-                    //change originalPiece, 
-                }
-            }
             if (e.target.dataset.square) {
                 //second square is an empty square
                 let emptySquare = e.target;
                 emptySquare.append(originalPiece);
                 console.log("secondaryEl is an empty square:", e.target);
-                //pawnProm. func here🐉
+                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { 
+                    setOpportunityForPawnToPromote(true);
+                    await new Promise((resolve) => { console.log("waiting to resolve"); 
+                        pawnPromotionResolveFunction.current = resolve;
+                    });
+                    if (pieceToPromotePawnTo.current) { //don't need to change variables for publishMoveToDb
+                        //change dB
+                        //change UI
+                    }
+                }
                 publishMoveToDb();
             } else {
                 //second square has an enemy piece
