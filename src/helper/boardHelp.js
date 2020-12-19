@@ -13,7 +13,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
             }
         },
         knight: {
-            direction: ["knight_forward_left", "knight_backward_left", "knight_forward_right", "knight_backward_right"],
+            direction: ["knight_forward_left", "knight_backward_left", "knight_forward_right", "knight_backward_right", "knight_left_forward", "knight_left_backward", "knight_right_forward", "knight_right_backward"],
             total: {
                 primary: 1,
             }
@@ -51,7 +51,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
             }
         },
         knight: {
-            direction: ["knight_backward_right", "knight_forward_right", "knight_backward_left", "knight_forward_left"],
+            direction: ["knight_backward_right", "knight_forward_right", "knight_backward_left", "knight_forward_left", "knight_right_backward", "knight_right_forward", "knight_left_backward", "knight_left_forward"],
             total: {
                 primary: 1,
             }
@@ -633,6 +633,151 @@ const directionConverterObj = {
             return legalSecondarySquareIndexes;
         }
     },
+    knight_left_forward: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueUp = 8, valueLeft = -2) {
+            const legalSecondarySquareIndexes = [];
+
+            //calculate squares it can hop before it reaches left-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
+                if (potentialSquare % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+
+            parent: for (let potentialSquare = originalSquareIndex + valueUp + valueLeft, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; potentialSquare = potentialSquare + valueUp + valueLeft, currentCounter++, currentTotal++) {
+                const potentialSquare = originalSquareIndex + ((valueUp + valueLeft) * currentTotal);
+
+                //check if potentialSquare occupied by user piece
+                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
+                    if (squareWithUserPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                //check if potentialSquare occupied by opponent piece
+                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
+                    if (squareWithOpponentPiece.index === potentialSquare) {
+                        legalSecondarySquareIndexes.push(potentialSquare);
+                        break parent;
+                    }
+                }
+
+                legalSecondarySquareIndexes.push(potentialSquare);
+
+            }
+            return legalSecondarySquareIndexes;
+        }
+    },
+    knight_left_backward: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueDown = -8, valueLeft = -2) {
+            const legalSecondarySquareIndexes = [];
+
+            //calculate squares it can hop before it reaches left-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
+                if (potentialSquare % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+
+            parent: for (let potentialSquare = originalSquareIndex + valueDown + valueLeft, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; potentialSquare = potentialSquare + valueDown + valueLeft, currentCounter++, currentTotal++) {
+                const potentialSquare = originalSquareIndex + ((valueDown + valueLeft) * currentTotal);
+
+                //check if potentialSquare occupied by user piece
+                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
+                    if (squareWithUserPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                //check if potentialSquare occupied by opponent piece
+                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
+                    if (squareWithOpponentPiece.index === potentialSquare) {
+                        legalSecondarySquareIndexes.push(potentialSquare);
+                        break parent;
+                    }
+                }
+
+                legalSecondarySquareIndexes.push(potentialSquare);
+
+            }
+            return legalSecondarySquareIndexes;
+        }
+
+    },
+    knight_right_forward: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueUp = 8, valueRight = 2) {
+            const legalSecondarySquareIndexes = [];
+
+            //calculate squares before it reaches right-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
+                if ((potentialSquare - 7) % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+
+            parent: for (let potentialSquare = originalSquareIndex + valueUp + valueRight, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; potentialSquare = potentialSquare + valueUp + valueRight, currentCounter++, currentTotal++) {
+                const potentialSquare = originalSquareIndex + ((valueUp + valueRight) * currentTotal);
+
+                //check if potentialSquare occupied by user piece
+                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
+                    if (squareWithUserPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                //check if potentialSquare occupied by opponent piece
+                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
+                    if (squareWithOpponentPiece.index === potentialSquare) {
+                        legalSecondarySquareIndexes.push(potentialSquare);
+                        break parent;
+                    }
+                }
+
+                legalSecondarySquareIndexes.push(potentialSquare);
+
+            }
+            return legalSecondarySquareIndexes;
+        }
+    },
+    knight_right_backward: {
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, valueDown = -8, valueRight = 2) {
+            const legalSecondarySquareIndexes = [];
+
+            //calculate squares before it reaches right-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
+                if ((potentialSquare - 7) % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+
+            parent: for (let potentialSquare = originalSquareIndex + valueDown + valueRight, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; potentialSquare = potentialSquare + valueDown + valueRight, currentCounter++, currentTotal++) {
+                const potentialSquare = originalSquareIndex + ((valueDown + valueRight) * currentTotal);
+
+                //check if potentialSquare occupied by user piece
+                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
+                    if (squareWithUserPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                //check if potentialSquare occupied by opponent piece
+                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
+                    if (squareWithOpponentPiece.index === potentialSquare) {
+                        legalSecondarySquareIndexes.push(potentialSquare);
+                        break parent;
+                    }
+                }
+
+                legalSecondarySquareIndexes.push(potentialSquare);
+
+            }
+            return legalSecondarySquareIndexes;
+        }
+    }
 };
 
 export {pieceMoveObj, directionConverterObj};

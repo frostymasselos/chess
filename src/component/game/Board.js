@@ -562,4 +562,4 @@ export default Board;
 // function thereAreDeadPiecesForPawnToPromoteTo() {
 //     const possiblePromotions = ["rook", "knight", "bishop", "queen"];
 //     return graveyard.current.some((deadPiece) => possiblePromotions.some((possiblePromotion) => deadPiece.name.includes(possiblePromotion)));
-// } //test🐉
+// }
