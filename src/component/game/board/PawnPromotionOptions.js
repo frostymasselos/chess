@@ -1,7 +1,7 @@
 export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion}) {
 
     function choosePiece(e) {
-        updatePieceToPromotePawnTo(e.target.dataset.info);
+        updatePieceToPromotePawnTo(e.target.dataset.name);
         resolvePawnPromotion();
     }
     
@@ -15,9 +15,10 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
             }
             pawnPromotionGraveyardFilteredOutDuplicateNames.push(deadPiece);
         }
+        console.log(pawnPromotionGraveyardFilteredOutDuplicateNames);
         //each item of filtered made into GI, 2x2.
-        for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) {
-            const tag = <div onClick={choosePiece} data-info={piece} key={Math.random()}>{piece.name.replace(/\d/, '')}</div>;
+        for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) { 
+            const tag = <div onClick={choosePiece} data-name={piece.name} key={Math.random()}>{piece.name.replace(/\d/, '')}</div>;
             optionTags.push(tag);
         }
         return optionTags;

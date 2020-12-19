@@ -151,7 +151,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         }
     }
     function updatePieceToPromotePawnTo(piece) {
-        pieceToPromotePawnTo.current = piece;
+        pieceToPromotePawnTo.current = piece;//console.log(piece, pieceToPromotePawnTo.current);
     }
     function resolvePawnPromotion() {
         pawnPromotionResolveFunction.current.call(null, 5);
@@ -241,7 +241,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             const secondarySquareIndex = Number.parseFloat(e.currentTarget.id.slice(1)); //console.log(secondarySquareIndex);
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
-            const boardArrayOriginalPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex).piece; console.log(boardArrayOriginalPiece);
+            let boardArrayOriginalPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex).piece; //console.log(boardArrayOriginalPiece);
             const geographicallyLegalSecondarySquareIndices = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); console.log("geographicallyLegalSecondarySquareIndices:", geographicallyLegalSecondarySquareIndices);
             // const geographicallyLegalSecondarySquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current); console.log("geographicallyLegalSecondarySquareIndicesOfAllPieces:", geographicallyLegalSecondarySquareIndicesOfAllUserPieces);
             if (e.target.id === clickedOnPiece.current.id) {
@@ -296,17 +296,27 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 let emptySquare = e.target;
                 emptySquare.append(originalPiece);
                 console.log("secondaryEl is an empty square:", e.target);
-                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { 
+                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { //console.log("here");
                     setOpportunityForPawnToPromote(true);
                     await new Promise((resolve) => { console.log("waiting to resolve"); 
                         pawnPromotionResolveFunction.current = resolve;
-                    });
-                    if (pieceToPromotePawnTo.current) { //don't need to change variables for publishMoveToDb
-                        //change dB
+                    }); 
+                    if (pieceToPromotePawnTo.current) { 
                         //change UI
+                        emptySquare.firstElementChild.remove();
+                        const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;  //add class & data-color
+                        newTag.append(`${pieceToPromotePawnTo.current}`);
+                        emptySquare.append(newTag);
+                        //change dB
+                        const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
+                        //kill pawn
+                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({alive: false}); //originalSquareId.slice(5).replace(/\d/, '')
+                        //revive
+                        await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({alive: true,});
+                        boardArrayOriginalPiece = {name: pieceToPromotePawnTo.current}; // console.log(pieceToPromotePawnTo.current); console.log(boardArrayOriginalPiece);
                     }
                 }
-                publishMoveToDb();
+                publishMoveToDb(); console.log("finished onClick handler");
             } else {
                 //second square has an enemy piece
                 const enemyPiece = e.target;
@@ -316,12 +326,31 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 //     enemyPiece.classList.add(`fizzle`);
                 // }, 2000);
                 enemyPieceSquare.append(originalPiece);
-                //pawnProm. func here🐉
-                publishMoveToDb(enemyPiece.id.slice(5));
+                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { //console.log("here");
+                    setOpportunityForPawnToPromote(true);
+                    await new Promise((resolve) => { console.log("waiting to resolve"); 
+                        pawnPromotionResolveFunction.current = resolve;
+                    }); 
+                    if (pieceToPromotePawnTo.current) { 
+                        //change UI
+                        enemyPieceSquare.firstElementChild.remove();
+                        const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;  //add class & data-color
+                        newTag.append(`${pieceToPromotePawnTo.current}`);
+                        enemyPieceSquare.append(newTag);
+                        //change dB
+                        const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
+                        //kill pawn
+                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({alive: false}); //originalSquareId.slice(5).replace(/\d/, '')
+                        //revive
+                        await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({alive: true,});
+                        boardArrayOriginalPiece = {name: pieceToPromotePawnTo.current}; // console.log(pieceToPromotePawnTo.current); console.log(boardArrayOriginalPiece);
+                    }
+                }   
+                publishMoveToDb(enemyPiece.id.slice(5)); console.log("finished onClick handler");
             }
             //send this info to db full grid-area property to dB property. 
             async function publishMoveToDb(opponentToKill) {
-                //move user piece
+                //update user piece's coordinates
                 let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                 let opponentDb = db.ref(`matches/${authInfo.url}/${opponent.current}`);
                 const updatedRowPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue(`grid-row`).slice(0, 1);
@@ -339,7 +368,6 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({moved: true}); 
                 }
                 await userDb.update({canMove: false, moved: Math.random()});
-                //potentially update king/rook
             } 
             function checkIfOpponentIsInCheckOrCheckmate() {
                 //check if opponent's king's in check/checkmate
@@ -376,7 +404,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             } else {
                 //clicked on piece
                 let piece = e.target;
-                clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target};  
+                clickedOnPiece.current = {color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target}; console.log(clickedOnPiece.current);
                 piece.classList.add(`highlighted`);
                 //highlight potential squares
                 if (showingClickedOnPiecePotentialMoves) { console.log("here2"); //showingClickedOnPiecePotentialMoves
