@@ -91,7 +91,7 @@ function Game({params}) {
         console.log(`listening for ${opponent} moving`);
         async function opponentHasMoved(e) { console.log(`callback fired for ${opponent} moving`, e.val());
             await game.child(`${you}`).update({canMove: true});
-            setCanMove(true); setTriggerBoardUseEffect(Math.random()); //use canMove?
+            setCanMove(true); setTriggerBoardUseEffect(Math.random()); //only need use canMove?
         }
         game.child(`${opponent}`).orderByKey().equalTo(`moved`).on('child_changed', opponentHasMoved);
     }
@@ -266,7 +266,7 @@ function Game({params}) {
                                 listenerForWinner(game, "user2");
                                 //db sign in
                                 if (!user2.white) {
-                                    //you are black. Artificially move.
+                                    //you are black. Allow user1 to move.
                                     await game.child(`user1`).update({canMove: true});
                                 }
                                 await game.child('user2').update({signedIn: true});
