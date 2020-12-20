@@ -442,8 +442,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         fillBoardArrayWithSquares();
         //fill board array with pieces
         let game = db.ref(`matches/${authInfo.url}`);
-        game.on('value', (e) => {
-            game.off(); //remove listener
+        game.on('value', function listener(e) {
+            game.off('value', listener); //remove listener
             function fillBoardArrayWithPieces(objOfPieces) {
                 for (let key in objOfPieces) {
                     //if piece is alive

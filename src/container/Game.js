@@ -49,7 +49,7 @@ function Game({params}) {
                 }
             }
         };
-        positiveArray.forEach((item) => item.call(null, boolean)); console.log(positiveArray, negativeArray);
+        positiveArray.forEach((item) => item.call(null, boolean)); //console.log(positiveArray, negativeArray);
         negativeArray.forEach((item) => item.call(null, !boolean)); //console.log(negativeArray);
     }
     function listenerForUser2SigningIn(game) {
@@ -64,11 +64,11 @@ function Game({params}) {
     function listenerForOpponentQuitting(game, you, opponent) {
         console.log(`${you} listening for ${opponent} quitting`);
         async function opponentHasQuit(e) { console.log("callback executed for opponent ");
-            //game.child(`${opponent}`).orderByKey().equalTo('quit').off(); console.log(`${you} has registered ${opponent}'s quit`);
+            game.child(`${opponent}`).off('child_changed', opponentHasQuit);//remove listener
             const credential = firebase.auth.EmailAuthProvider.credential(`${authInfo.current.email}`, `${authInfo.current.email.slice(0, 6)}`);
             await auth.currentUser.reauthenticateWithCredential(credential);
             await auth.currentUser.delete();
-            db.ref(`matches/${authInfo.url}`).remove();
+            game.remove();
             turnAllPresentationalStateOnOrOffApartFrom(false, "setOpponentQuits");//setOpponentQuits(true);
         }
         game.child(`${opponent}`).orderByKey().equalTo('quit').on('child_changed', opponentHasQuit);
@@ -84,15 +84,13 @@ function Game({params}) {
     function listenerForWinner(game, you) { 
         console.log(`${you} listening for player winning`);
         async function endGame(e) { console.log("ending game");
-            game.orderByKey().equalTo(`winner`).off(); //remove listener
+            game.off('child_changed', endGame); //remove listener
             setWinner(e.val());
             setCanMove(false);
             await game.child(`${you}`).update({canMove: false});
             setAskForRematch(true);
         }
-        db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', (e) => {
-            console.log(e.val(), "red");
-        });
+        db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', endGame);
     }
     async function endGame(game, user, winner) {
         game.orderByKey().equalTo(`winner`).off(); //remove listener
@@ -103,10 +101,11 @@ function Game({params}) {
     }
     async function indicateInterestInRematch() { console.log(`${authInfo.current.user} indicating interest in rematch`);
         await db.ref(`matches/${authInfo.current.url}/${authInfo.current.user}`).update({rematch: true});
-        setWaitingForOpponentToConfirmRematch(true); setAskForRematch(false);
+        setAskForRematch(false); setWaitingForOpponentToConfirmRematch(true);
     }
     function listenerForRematch(game, you, opponent) { 
-        async function seeWhoHasRequestedRematch(e) { console.log("someone has requested rematch"); //mystery as to why user1 couldn't trigger this log
+        console.log(`${you} listening for rematch`);
+        async function seeWhoHasRequestedRematch(e) { console.log("someone has requested rematch");
             await game.orderByKey().on(`value`, (e) => { //game.orderByKey().off();
                 if (e.val().user1.rematch && e.val().user2.rematch) { console.log("both players want rematch");
                     game.child(`${you}`).orderByKey().equalTo(`rematch`).off();
@@ -115,9 +114,8 @@ function Game({params}) {
                 }
             })
         }
-        console.log(`${you} listening for rematch`);
         game.child(`${you}`).orderByKey().equalTo(`rematch`).on(`child_changed`, seeWhoHasRequestedRematch);
-        game.child(`${opponent}`).orderByKey().equalTo(`rematch`).on(`child_changed`, seeWhoHasRequestedRematch);
+        // game.child(`${opponent}`).orderByKey().equalTo(`rematch`).on(`child_changed`, seeWhoHasRequestedRematch);
     }
     async function restartGame(game) {
         async function next(e) {
@@ -180,7 +178,7 @@ function Game({params}) {
                                     listenerForUser2SigningIn(game);//✅
                                     listenerForOpponentQuitting(game, "user1", "user2");
                                     listenerForOpponentMoving(game, "user1", "user2");
-                                    setTimeout(() => {listenerForWinner(game, "user1");}, 1000);
+                                    listenerForWinner(game, "user1");
                                     listenerForRematch(game, "user1", "user2");
                                     authInfo.current = {...authInfo.current, color: user1.white ? "white" : "black"};
                                     setCanMove(user1.canMove ? true : false); setPlaying(true); //BOARD IS RENDERED HERE
@@ -280,12 +278,6 @@ function Game({params}) {
         });
     }, [arbitrary]);
 
-    function winnerChangeHandler(params) { console.log("handler set");
-        db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', (e) => {
-            console.log("red");
-        })
-    }
-
     return ( 
         <>
             <h4>GameContainer</h4>
@@ -300,8 +292,6 @@ function Game({params}) {
             {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect}/>}
             {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
-
-            <div onClick={winnerChangeHandler}>Set up handler</div>
         </>
     )
 }

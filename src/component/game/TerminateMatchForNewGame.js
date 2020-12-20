@@ -3,9 +3,8 @@ import {useState, useEffect, useRef} from 'react';
 
 function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebase}) { 
 
-    async function backToIntrudersGame() {
-        window.location.replace(`/${intruderInfo.url}`); 
-        //using `Link` to nav to new url doesn't 'update' Game.🐉Try arbitrarily refresh?
+    async function backToIntrudersGame() { console.log(intruderInfo.url);
+        window.location.replace(`/${intruderInfo.email.slice(0, 6)}`); //using `Link` to nav to new url doesn't 'update' Game. Try arbitrarily refresh?🐉
     }
     function terminateMatchForNewGame() { //same as TerminateMatch except don't nav home: update page.
         async function next() {

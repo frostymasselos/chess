@@ -21,14 +21,14 @@ function OpponentQuits() { //refactor so that its a pop-up with everything uncli
                 setArbitrarilyRefresh(Math.random());
                 clearInterval(timer);
                 console.log("done");
-                // window.location.replace(`/`);
+                window.location.replace(`/`);
             }
         }, 1000)
     }, []);
 
     return (
         <>
-            <div>{time.current}</div>
+            <div>Opponent quit - returning to homepage in {time.current} seconds</div>
             <Link to="/">Return to Homepage</Link>
         </>
     )
