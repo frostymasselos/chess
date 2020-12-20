@@ -3,19 +3,21 @@ import {useState, useEffect, useRef} from 'react';
 
 function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebase}) { 
 
-    async function backToIntrudersGame() { console.log(intruderInfo.url);
-        window.location.replace(`/${intruderInfo.email.slice(0, 6)}`); //using `Link` to nav to new url doesn't 'update' Game. Try arbitrarily refresh?🐉
+    const intruderUrl = useRef(intruderInfo.email.slice(0, 6));
+    
+    async function backToIntrudersGame() { //console.log(intruderInfo.url);
+        window.location.replace(`/${intruderUrl.current}`); //using `Link` to nav to new url doesn't 'update' Game. Try arbitrarily refresh?🐉
     }
     function terminateMatchForNewGame() { //same as TerminateMatch except don't nav home: update page.
         async function next() {
             authListener();
-            const credential = firebase.auth.EmailAuthProvider.credential(`${intruderInfo.email}`, `${intruderInfo.url}`);
+            const credential = firebase.auth.EmailAuthProvider.credential(`${intruderInfo.email}`, `${intruderUrl.current}`);
             await auth.currentUser.reauthenticateWithCredential(credential);
-            await db.ref(`matches/${intruderInfo.url}/${intruderInfo.user}`).update({quit: true});
-            await db.ref(`matches/${intruderInfo.url}`).remove();
+            await db.ref(`matches/${intruderUrl.current}/${intruderInfo.user}`).update({quit: true});
+            await db.ref(`matches/${intruderUrl.current}`).remove();
             await auth.currentUser.delete();
             //ARBRITRARILY TRIGGER STATE IN GAME
-            setArbitrary(Math.random().toFixed(3));
+            setArbitrary(Math.random());
         }
         let authListener = auth.onAuthStateChanged(next);
     }
