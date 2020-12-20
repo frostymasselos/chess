@@ -36,20 +36,6 @@ function Game({params}) {
     const [auth, setAuth] = useState(firebase.auth()); //refactor to be useRef? Then put the function in useEffect?🐉 
     const [db, setDb] = useState(firebase.database());
 
-    function test3(params) {
-        db.ref(`a`).off();
-    }
-    function test2(params) {
-        db.ref(`a`).update({c: Math.random()});
-    }
-    function test1(params) {
-        db.ref(`a`).orderByKey().equalTo(`c`).on('child_changed', (e) => {
-            console.log("red");
-        })
-    }
-    function test(params) {
-        turnAllPresentationalStateOnOrOffApartFrom(true, "setPlaying");
-    }
     function turnAllPresentationalStateOnOrOffApartFrom(boolean, ...exceptions) { //as a string  
         const allSetStates = {setInvalidRoute, setPlaying, setCanMove, setUser2SignedIn, setWaiting, setOnForeignMatch, setOpponentQuits, setWinner, setAskForRematch, setWaitingForOpponentToConfirmRematch};
         const positiveArray = [];
@@ -104,7 +90,9 @@ function Game({params}) {
             await game.child(`${you}`).update({canMove: false});
             setAskForRematch(true);
         }
-        game.orderByKey().equalTo(`winner`).on(`child_changed`, endGame);
+        db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', (e) => {
+            console.log(e.val(), "red");
+        });
     }
     async function endGame(game, user, winner) {
         game.orderByKey().equalTo(`winner`).off(); //remove listener
@@ -134,6 +122,7 @@ function Game({params}) {
     async function restartGame(game) {
         async function next(e) {
             game.child(`user1`).orderByKey().off(); console.log("executing restart game");
+            //do same turning off listeners on dbopponent?🐉(test nd see if it'll work) 
             // reset db & decide who's white 
             await game.set(bigObj); //✅
             if (Math.random() > 0.5) { console.log('user1 is black');
@@ -161,7 +150,7 @@ function Game({params}) {
         game.child(`user1`).orderByKey().on(`value`, next); 
     }
 
-    useEffect(() => { 
+    useEffect(() => { console.log("useEffect getting run");
         let game = db.ref(`matches/${authInfo.current.url}`);
         db.ref('matches').orderByKey().equalTo(`${authInfo.current.url}`).on('value', (e) => { 
             db.ref('matches').off(); console.log(e.val()); //remove previous listener
@@ -188,6 +177,11 @@ function Game({params}) {
                                             setAskForRematch(false);
                                         }
                                     }
+                                    listenerForUser2SigningIn(game);//✅
+                                    listenerForOpponentQuitting(game, "user1", "user2");
+                                    listenerForOpponentMoving(game, "user1", "user2");
+                                    setTimeout(() => {listenerForWinner(game, "user1");}, 1000);
+                                    listenerForRematch(game, "user1", "user2");
                                     authInfo.current = {...authInfo.current, color: user1.white ? "white" : "black"};
                                     setCanMove(user1.canMove ? true : false); setPlaying(true); //BOARD IS RENDERED HERE
                                     if (user2.signedIn) { 
@@ -202,11 +196,6 @@ function Game({params}) {
                                 } else { //
                                     //USER1 1ST TIME
                                     console.log("user1 own game first-time");
-                                    listenerForUser2SigningIn(game);//✅
-                                    listenerForOpponentQuitting(game, "user1", "user2");
-                                    listenerForOpponentMoving(game, "user1", "user2");
-                                    listenerForWinner(game, "user1");
-                                    listenerForRematch(game, "user1", "user2");
                                     (async function next(e) {
                                         //if black...
                                         if (!user1.white) {
@@ -227,6 +216,9 @@ function Game({params}) {
                                         setAskForRematch(false);
                                     }
                                 }
+                                listenerForOpponentQuitting(game, "user2", "user1");//✅
+                                listenerForOpponentMoving(game, "user2", "user1");//✅
+                                listenerForWinner(game, "user2");
                                 authInfo.current = {...authInfo.current, color: user2.white ? "white" : "black"};
                                 setCanMove(user2.canMove ? true : false);
                                 setPlaying(true); //BOARD IS RENDERED HERE
@@ -261,9 +253,6 @@ function Game({params}) {
                                 //auth sign in
                                 await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); //might not need it.
                                 await auth.createUserWithEmailAndPassword(`${authInfo.current.url}@user2.com`, `${authInfo.current.url}`);
-                                listenerForOpponentQuitting(game, "user2", "user1");//✅
-                                listenerForOpponentMoving(game, "user2", "user1");//✅
-                                listenerForWinner(game, "user2");
                                 //db sign in
                                 if (!user2.white) {
                                     //you are black. Allow user1 to move.
@@ -291,6 +280,12 @@ function Game({params}) {
         });
     }, [arbitrary]);
 
+    function winnerChangeHandler(params) { console.log("handler set");
+        db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', (e) => {
+            console.log("red");
+        })
+    }
+
     return ( 
         <>
             <h4>GameContainer</h4>
@@ -306,9 +301,7 @@ function Game({params}) {
             {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
 
-            {/* <div onClick={test1}>Prepare listener</div>
-            <div onClick={test2}>Alter db</div>
-            <div onClick={test3}>Turn off listener</div> */}
+            <div onClick={winnerChangeHandler}>Set up handler</div>
         </>
     )
 }

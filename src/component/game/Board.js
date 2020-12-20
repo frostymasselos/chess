@@ -91,7 +91,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         } else {
             setShowingClickedOnPiecePotentialMoves(true);
             if (clickedOnPiece.current) { //if clicked onPiece true, add its highlighting.
-                const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
+                const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(); console.log(squaresWithUserAndOpponentPieces);
                 const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
                 const geographicallyLegalSecondarySquareIndicesOfClickedOnPiece = arrayOfGeographicallyLegalSquares(clickedOnPiece.current.id, Number.parseFloat(clickedOnPiece.current.square.id.slice(1)), squaresWithUserPieces, squaresWithOpponentPieces); //console.log("geographicallyLegalSecondarySquareIndices:", geographicallyLegalSecondarySquareIndices);
                 simpleHighlightSquares(geographicallyLegalSecondarySquareIndicesOfClickedOnPiece);
@@ -216,7 +216,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         //for every possible move I make, am I still in check? Make a new board for each move and assess whether I'm still in check
         for (const squareWithUserPiece of squaresWithUserPieces) {
             const originalSquareIndex = squareWithUserPiece.index;
-            const geographicallyLegalSquareIndicesOfParticularPiece = arrayOfGeographicallyLegalSquares(squareWithUserPiece.piece.name, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor); console.log("geographicallyLegalSquareIndicesOfParticularPiece", geographicallyLegalSquareIndicesOfParticularPiece);
+            const geographicallyLegalSquareIndicesOfParticularPiece = arrayOfGeographicallyLegalSquares(squareWithUserPiece.piece.name, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor); //console.log("geographicallyLegalSquareIndicesOfParticularPiece", geographicallyLegalSquareIndicesOfParticularPiece);
             for (const secondarySquareIndex of geographicallyLegalSquareIndicesOfParticularPiece) {
                 //make new board
                 const board2 = JSON.parse(JSON.stringify(boardArray.current));
@@ -417,7 +417,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         }
     }
 
-    //0.freeze/unfreeze board
+    //freeze/unfreeze board
     useEffect(() => { 
         const board = window.document.querySelector(`.board-grid-container`); //console.log("board:", board);
         if (canMove) {
@@ -426,16 +426,19 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             board.classList.add(`unclickable`);
         }
     }, [canMove]);
-    
-    //1.populate boardArray & ui
+
+    //rotate for black
     useEffect(() => {
-        //rotate board for black
         // if (authInfo.color === "black") { 
         //     console.log("rotating board");
         //     let board = document.querySelector('.board-grid-container');
         //     board.style.setProperty("transform", "rotate(180deg)");
         // } else { console.log("not rotating board");
         // }
+    })
+    
+    //1.populate boardArray & ui
+    useEffect(() => {
         fillBoardArrayWithSquares();
         //fill board array with pieces
         let game = db.ref(`matches/${authInfo.url}`);
@@ -470,11 +473,30 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             fillBoardArrayWithPieces(e.val().user2.pieces);
             console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            //
+            //check for check & checkamte
+            const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current); //console.log(squaresWithUserAndOpponentPieces);
+            const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithOpponentPieces);
+            //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
+            if (isUserKingInCheck()) {
+                if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
+                    endGame();
+                    return;
+                } else {
+                    setCheck(true); return;
+                }
+            }
+            if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
+                endGame();
+            }
+            function endGame(params) {
+                setCheckMate(true);
+                db.ref(`matches/${authInfo.url}`).update({winner: `${authInfo.color} (${authInfo.user})`});
+                setCanMove(false);
+            }
         });
     }, [triggerBoardUseEffect]);
 
-    // //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
+    //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
     useEffect(() => {
         const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`)); //console.log(allSquareTags);
         for (const squareTag of allSquareTags) {
@@ -484,20 +506,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     });
 
     //2.execute when square tags're rendered
-    useEffect(() => { console.log("checking for check/checkmate");
-        //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
-        if (isUserKingInCheck()) {
-            const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current); console.log(squaresWithUserAndOpponentPieces);
-            const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0]; console.log(squaresWithUserPieces);
-            const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1]; console.log(squaresWithOpponentPieces);
-            if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
-                setCheckMate(true);
-                db.ref(`matches/${authInfo.url}`).update({winner: `${authInfo.color} (${authInfo.user})`});
-                setCanMove(false);
-            } else {
-                setCheck(true);
-            }
-        }
+    useEffect(() => { //console.log("checking for check/checkmate");
         // is opponent in check? (if we get this code right, move it to onClick handler)
         // if (isUserKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
         //     console.log("opponent king in check");
