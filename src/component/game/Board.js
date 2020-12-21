@@ -3,7 +3,7 @@ import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 
-function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
+function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoardUseEffect}) {
 
     let [check, setCheck] = useState(false);
     let [checkMate, setCheckMate] = useState(false);
@@ -429,13 +429,12 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
 
     //rotate for black
     useEffect(() => {
-        // if (authInfo.color === "black") { 
-        //     console.log("rotating board");
+        // if (authInfo.color === "black") { console.log("rotating board");
         //     let board = document.querySelector('.board-grid-container');
-        //     board.style.setProperty("transform", "rotate(180deg)");
+        //     board.classList.add(`rotate180`);//board.style.setProperty("transform", "rotate(180deg)");
         // } else { console.log("not rotating board");
         // }
-    })
+    }, []);
     
     //1.populate boardArray & ui
     useEffect(() => {
@@ -490,8 +489,8 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             }
             function endGame(params) {
                 setCheckMate(true);
-                db.ref(`matches/${authInfo.url}`).update({winner: `${authInfo.color} (${authInfo.user})`});
-                setCanMove(false);
+                db.ref(`matches/${authInfo.url}`).update({winner: `${opponentColor.current} (${opponent.current})`});
+                setCanMove(false); setUser2SignedIn(false)//stops TurnNotifier showing
             }
         });
     }, [triggerBoardUseEffect]);

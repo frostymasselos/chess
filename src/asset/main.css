@@ -49,6 +49,11 @@ body {
   pointer-events: auto;
 }
 
+.rotate180 {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
 @media screen and (max-width: 600px) {
   .board-grid-container {
     width: 100vw;

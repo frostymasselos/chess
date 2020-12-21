@@ -50,6 +50,9 @@ div {
 .clickable {
     pointer-events: auto;
 }
+.rotate180 {
+    transform: rotate(180deg);
+}
 
 //`SECTION` WILL BE FOR GRID-CONTAINER
 .board-grid-container {

@@ -55,9 +55,8 @@ function Game({params}) {
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
-            game.child(`user2`).orderByKey().equalTo(`signedIn`).off(); console.log(`callback fired for user2 signing in`, e.val());
-            setWaiting(false);
-            setUser2SignedIn(true); // setArbitrary(Math.random());//do we need this?
+            game.child(`user2`).off('child_changed', user2SignInHasChanged);//console.log(`callback fired for user2 signing in`, e.val());
+            setWaiting(false); setUser2SignedIn(true);//setArbitrary(Math.random());//do we need this?
         }
         game.child(`user2`).orderByKey().equalTo(`signedIn`).on('child_changed', user2SignInHasChanged);
     }
@@ -84,7 +83,7 @@ function Game({params}) {
     function listenerForWinner(game, you) { 
         console.log(`${you} listening for player winning`);
         async function endGame(e) { console.log("ending game");
-            game.off('child_changed', endGame); //remove listener
+            game.off('child_changed', endGame);//remove listener
             setWinner(e.val());
             setCanMove(false);
             await game.child(`${you}`).update({canMove: false});
@@ -93,7 +92,7 @@ function Game({params}) {
         db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', endGame);
     }
     async function endGame(game, user, winner) {
-        game.orderByKey().equalTo(`winner`).off(); //remove listener
+        //game.orderByKey().equalTo(`winner`).off();//remove listener
         setAskForRematch(true);
         setWinner(winner);
         setCanMove(false);
@@ -115,7 +114,7 @@ function Game({params}) {
             })
         }
         game.child(`${you}`).orderByKey().equalTo(`rematch`).on(`child_changed`, seeWhoHasRequestedRematch);
-        // game.child(`${opponent}`).orderByKey().equalTo(`rematch`).on(`child_changed`, seeWhoHasRequestedRematch);
+        game.child(`${opponent}`).orderByKey().equalTo(`rematch`).on(`child_changed`, seeWhoHasRequestedRematch);
     }
     async function restartGame(game) {
         async function next(e) {
@@ -151,7 +150,7 @@ function Game({params}) {
     useEffect(() => { console.log("useEffect getting run");
         let game = db.ref(`matches/${authInfo.current.url}`);
         db.ref('matches').orderByKey().equalTo(`${authInfo.current.url}`).on('value', (e) => { 
-            db.ref('matches').off(); console.log(e.val()); //remove previous listener
+        db.ref('matches').off(); console.log(e.val()); //remove previous listener
             if (e.val()) { 
                 //THE GAME EXISTS
                 const match = e.val()[authInfo.current.url]; const user1 = match.user1; const user2 = match.user2; //console.log("match:", match, "user1:", user1, "user2:", user2);
@@ -224,9 +223,9 @@ function Game({params}) {
                                 setWaiting(false);
                                 if (user2.recentlyReset) {
                                     game.child(`user2`).update({recentlyReset: false});
-                                    listenerForWinner(game, "user2");
-                                    listenerForOpponentQuitting(game, "user2", "user1");
-                                    listenerForOpponentMoving(game, "user2", "user1"); 
+                                    // listenerForWinner(game, "user2");
+                                    // listenerForOpponentQuitting(game, "user2", "user1");
+                                    // listenerForOpponentMoving(game, "user2", "user1"); 
                                 }
                             }  
                         } else { 
@@ -261,9 +260,10 @@ function Game({params}) {
                             })();
                         }
                     }; 
-                    }); //no code should execute after this authListener.
+                }); //no code should execute after this authListener.
             } else { 
                 //THE GAME DOES NOT EXIST
+                //is user auth signedIn?
                 turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");
                 // setPlaying(false);
                 // setUser2SignedIn(false);
@@ -289,7 +289,7 @@ function Game({params}) {
             {playing && <Exit/>}
             {waiting && <Waiting/>}
             {user2SignedIn && <TurnNotifier canMove={canMove}/>}
-            {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect}/>}
+            {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} setUser2SignedIn={setUser2SignedIn} triggerBoardUseEffect={triggerBoardUseEffect}/>}
             {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
         </>
