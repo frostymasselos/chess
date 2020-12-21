@@ -85,18 +85,20 @@ function Game({params}) {
         async function endGame(e) { console.log("ending game");
             game.off('child_changed', endGame);//remove listener
             setWinner(e.val());
-            setCanMove(false);
+            setCanMove(false); 
+            setUser2SignedIn(false); setWaiting(false);//stops TurnNotifier showing
             await game.child(`${you}`).update({canMove: false});
             setAskForRematch(true);
         }
         db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', endGame);
     }
-    async function endGame(game, user, winner) {
+    async function endGame(game, user, winner) { console.log("endGame reached");
         //game.orderByKey().equalTo(`winner`).off();//remove listener
-        setAskForRematch(true);
         setWinner(winner);
         setCanMove(false);
-        game.child(`${user}`).update({canMove: false});
+        setUser2SignedIn(false); setWaiting(false);//stops TurnNotifier showing
+        setAskForRematch(true);
+        // game.child(`${user}`).update({canMove: false});
     }
     async function indicateInterestInRematch() { console.log(`${authInfo.current.user} indicating interest in rematch`);
         await db.ref(`matches/${authInfo.current.url}/${authInfo.current.user}`).update({rematch: true});
@@ -105,8 +107,10 @@ function Game({params}) {
     function listenerForRematch(game, you, opponent) { 
         console.log(`${you} listening for rematch`);
         async function seeWhoHasRequestedRematch(e) { console.log("someone has requested rematch");
-            await game.orderByKey().on(`value`, (e) => { //game.orderByKey().off();
+            await game.orderByKey().on(`value`, (e) => { 
+                game.off();//remove listener
                 if (e.val().user1.rematch && e.val().user2.rematch) { console.log("both players want rematch");
+                    game.child(`${you}`).off(); game.child(`${opponent}`).off();//remove listeners (also removes listener for opp moving).
                     game.child(`${you}`).orderByKey().equalTo(`rematch`).off();
                     game.child(`${opponent}`).orderByKey().equalTo(`rematch`).off();
                     restartGame(game); 
@@ -117,11 +121,10 @@ function Game({params}) {
         game.child(`${opponent}`).orderByKey().equalTo(`rematch`).on(`child_changed`, seeWhoHasRequestedRematch);
     }
     async function restartGame(game) {
-        async function next(e) {
-            game.child(`user1`).orderByKey().off(); console.log("executing restart game");
-            //do same turning off listeners on dbopponent?🐉(test nd see if it'll work) 
+        async function next(e) { console.log("executing restart game");
+            game.child(`user1`).off('value', next);//remove listener
             // reset db & decide who's white 
-            await game.set(bigObj); //✅
+            await game.set(bigObj);
             if (Math.random() > 0.5) { console.log('user1 is black');
                 await game.child('user1/pieces').set(bigObj.user2.pieces); 
                 await game.child('user2/pieces').set(bigObj.user1.pieces); 
@@ -134,18 +137,33 @@ function Game({params}) {
                 await game.child(`user2`).update({white: false});
             }
             await game.child(`user1`).update({signedIn: true});
-            await game.child(`user2`).update({signedIn: true, recentlyReset: true}); //✅ (listener for user2 signing in IS retriggering mount).
             listenerForOpponentQuitting(game, "user1", "user2");//do we need this?🐉
             listenerForOpponentMoving(game, "user1", "user2");
             listenerForWinner(game, "user1");
             listenerForRematch(game, "user1", "user2");
             setWinner(false); setWaitingForOpponentToConfirmRematch(false);
-            //reset state or rerun (get user2 to arbitrarily refresh?)
-            setArbitrary(Math.random());
+            setArbitrary(Math.random());//neccessary? Get user2 to arbitrarily refresh?
             setTriggerBoardUseEffect(Math.random());
+            await game.child(`user2`).update({signedIn: true, recentlyReset: true});//listener for user2 signing in IS retriggering mount?🐉
         }
         game.child(`user1`).orderByKey().on(`value`, next); 
     }
+    function listenerForUser1RestartingGame(game, you, opponent) {
+        async function refresh() { console.log("here - refresh");
+            game.child(`${you}`).off(`child_changed`, refresh);//remove this listener
+            game.off(); game.child(`${opponent}`).off();//remove all other listeners: quitting, moving, winner?
+            await game.child(`${you}`).update({recentlyReset: false});
+            setArbitrary(Math.random()); setTriggerBoardUseEffect(Math.random());
+        }
+        game.child(`${you}`).orderByKey().equalTo(`recentlyReset`).on(`child_changed`, refresh);
+    }
+    // if (match.winner) { console.log("mount recognises winner");//🐉Abstract into function?
+        // endGame(game, "user1", match.winner);
+        // if (user1.rematch) {
+        //     setWaitingForOpponentToConfirmRematch(true);
+        //     setAskForRematch(false);
+        // }
+    // }   
 
     useEffect(() => { console.log("useEffect getting run");
         let game = db.ref(`matches/${authInfo.current.url}`);
@@ -167,13 +185,6 @@ function Game({params}) {
                                 if (user1.signedIn) {
                                     //USER1 RETURNING
                                     console.log("user1 returning");
-                                    if (match.winner) { console.log("mount recognises winner");
-                                        endGame(game, "user1", match.winner);
-                                        if (user1.rematch) {
-                                            setWaitingForOpponentToConfirmRematch(true);
-                                            setAskForRematch(false);
-                                        }
-                                    }
                                     listenerForUser2SigningIn(game);//✅
                                     listenerForOpponentQuitting(game, "user1", "user2");
                                     listenerForOpponentMoving(game, "user1", "user2");
@@ -190,7 +201,15 @@ function Game({params}) {
                                         setWaiting(true); console.log("user2 not signed in");
                                         setUser2SignedIn(false);
                                     }
-                                } else { //
+                                    // isAWinnerDeclared();
+                                    if (match.winner) { console.log("mount recognises winner");//🐉Abstract into function?
+                                        endGame(game, "user1", match.winner);
+                                        if (user1.rematch) {
+                                            setWaitingForOpponentToConfirmRematch(true);
+                                            setAskForRematch(false);
+                                        }
+                                    }       
+                                } else {
                                     //USER1 1ST TIME
                                     console.log("user1 own game first-time");
                                     (async function next(e) {
@@ -204,28 +223,23 @@ function Game({params}) {
                                     })();
                                 }
                             } else { 
-                                //USER2 RETURNING
+                                //USER2 RETURNING🐉
                                 console.log("user2 returning");
+                                listenerForOpponentQuitting(game, "user2", "user1");//✅
+                                listenerForOpponentMoving(game, "user2", "user1");//✅
+                                listenerForWinner(game, "user2");
+                                listenerForUser1RestartingGame(game, "user2", "user1");
+                                authInfo.current = {...authInfo.current, color: user2.white ? "white" : "black"};
+                                setCanMove(user2.canMove ? true : false);
+                                setPlaying(true); //BOARD IS RENDERED HERE
+                                setUser2SignedIn(true);
+                                setWaiting(false);
                                 if (match.winner) { console.log("mount recognises winner");
                                     endGame(game, "user2", match.winner);
                                     if (user2.rematch) {
                                         setWaitingForOpponentToConfirmRematch(true);
                                         setAskForRematch(false);
                                     }
-                                }
-                                listenerForOpponentQuitting(game, "user2", "user1");//✅
-                                listenerForOpponentMoving(game, "user2", "user1");//✅
-                                listenerForWinner(game, "user2");
-                                authInfo.current = {...authInfo.current, color: user2.white ? "white" : "black"};
-                                setCanMove(user2.canMove ? true : false);
-                                setPlaying(true); //BOARD IS RENDERED HERE
-                                setUser2SignedIn(true);
-                                setWaiting(false);
-                                if (user2.recentlyReset) {
-                                    game.child(`user2`).update({recentlyReset: false});
-                                    // listenerForWinner(game, "user2");
-                                    // listenerForOpponentQuitting(game, "user2", "user1");
-                                    // listenerForOpponentMoving(game, "user2", "user1"); 
                                 }
                             }  
                         } else { 

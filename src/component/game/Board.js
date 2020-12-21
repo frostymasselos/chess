@@ -490,7 +490,6 @@ function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoar
             function endGame(params) {
                 setCheckMate(true);
                 db.ref(`matches/${authInfo.url}`).update({winner: `${opponentColor.current} (${opponent.current})`});
-                setCanMove(false); setUser2SignedIn(false)//stops TurnNotifier showing
             }
         });
     }, [triggerBoardUseEffect]);
