@@ -3,7 +3,7 @@ import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 
-function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoardUseEffect}) {
+function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
 
     let [check, setCheck] = useState(false);
     let [checkMate, setCheckMate] = useState(false);
@@ -78,8 +78,23 @@ function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoar
                 row--;
             }
         }
-        // return arrayOfJSXSquares;
+        //return arrayOfJSXSquares;
         setSquareTags(arrayOfJSXSquares);
+        //color in black squares🐉no clue how its able to see the square-tags here.
+        (function colorInBlackSquares(params) {
+            let arrayOfSquares = Array.from(document.querySelectorAll(`.board-grid-container > div`));//console.log(arrayOfSquares);
+            for (let index = 0, total = 1; index <= 63; total++) {
+                arrayOfSquares[index].classList.add(`black-square`);
+                if (total === 4) {
+                    index = index + 3;
+                } else if (total === 8) {
+                    index = index + 1;
+                    total = 0;
+                } else {
+                    index = index + 2;
+                }
+            } 
+        })();
     }
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton(params) {
         if (showingClickedOnPiecePotentialMoves) {
@@ -178,15 +193,15 @@ function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoar
     }
     function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color) {
         const allLegalSecondarySquareIndexes = [];
-        const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`)); //console.log("pieceType:", pieceType);
+        const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`));//console.log("pieceType:", pieceType);
         let total = '';
         if (pieceType === "pawn") {
-            let squareWithPawnPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex); //console.log("squareWithPawnPiece", squareWithPawnPiece);
+            let squareWithPawnPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex);//console.log("squareWithPawnPiece", squareWithPawnPiece);
             squareWithPawnPiece.piece.moved ? total = 1 : total = 2            
         } else {
-            total = pieceMoveObj[ourColor][pieceType].total.primary; //console.log("total:", total);
+            total = pieceMoveObj[ourColor][pieceType].total.primary;//console.log("total:", total);
         }
-        for (const move of pieceMoveObj[ourColor][pieceType].direction) { //console.log("move:", move);
+        for (const move of pieceMoveObj[ourColor][pieceType].direction) {//console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
                     const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
@@ -427,7 +442,7 @@ function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoar
         }
     }, [canMove]);
 
-    //rotate for black
+    //rotate for black (& color board?)
     useEffect(() => {
         // if (authInfo.color === "black") { console.log("rotating board");
         //     let board = document.querySelector('.board-grid-container');
@@ -472,7 +487,8 @@ function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoar
             fillBoardArrayWithPieces(e.val().user2.pieces);
             console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            //check for check & checkamte
+            // colorSquares();
+            //check for check & checkamte - this works in time?!🐉
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current); //console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithOpponentPieces);
             //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
@@ -539,7 +555,6 @@ function Board({db, authInfo, canMove, setCanMove, setUser2SignedIn, triggerBoar
             <div onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton}>Reveal possible squares clicked-on piece could land on {showingClickedOnPiecePotentialMoves ? <span>✅</span> : null}</div>
         </>
     )
-
 }
 
 export default Board;

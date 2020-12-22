@@ -26,16 +26,6 @@ function Game({params}) {
     let [winner, setWinner] = useState('');
     let [askForRematch, setAskForRematch] = useState('');
     let [waitingForOpponentToConfirmRematch, setWaitingForOpponentToConfirmRematch] = useState('');
-
-    //retrigger useEffects
-    let [arbitrary, setArbitrary] = useState(false);  
-    let [triggerBoardUseEffect, setTriggerBoardUseEffect] = useState(``);
-    
-    //info
-    let authInfo = useRef({url: params.slice(1)});
-    const [auth, setAuth] = useState(firebase.auth()); //refactor to be useRef? Then put the function in useEffect?🐉 
-    const [db, setDb] = useState(firebase.database());
-
     function turnAllPresentationalStateOnOrOffApartFrom(boolean, ...exceptions) { //as a string  
         const allSetStates = {setInvalidRoute, setPlaying, setCanMove, setUser2SignedIn, setWaiting, setOnForeignMatch, setOpponentQuits, setWinner, setAskForRematch, setWaitingForOpponentToConfirmRematch};
         const positiveArray = [];
@@ -52,6 +42,16 @@ function Game({params}) {
         positiveArray.forEach((item) => item.call(null, boolean)); //console.log(positiveArray, negativeArray);
         negativeArray.forEach((item) => item.call(null, !boolean)); //console.log(negativeArray);
     }
+
+    //retrigger useEffects
+    let [arbitrary, setArbitrary] = useState(false);  
+    let [triggerBoardUseEffect, setTriggerBoardUseEffect] = useState(``);
+    
+    //info
+    let authInfo = useRef({url: params.slice(1)});
+    const [auth, setAuth] = useState(firebase.auth()); //refactor to be useRef? Then put the function in useEffect?🐉 
+    const [db, setDb] = useState(firebase.database());
+
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
@@ -92,13 +92,17 @@ function Game({params}) {
         }
         db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', endGame);
     }
-    async function endGame(game, user, winner) { console.log("endGame reached");
-        //game.orderByKey().equalTo(`winner`).off();//remove listener
-        setWinner(winner);
-        setCanMove(false);
-        setUser2SignedIn(false); setWaiting(false);//stops TurnNotifier showing
-        setAskForRematch(true);
-        // game.child(`${user}`).update({canMove: false});
+    function isAWinnerDeclared(match, userObj) {
+        if (match.winner) { console.log("mount recognises winner");
+            setWinner(match.winner);
+            setCanMove(false);
+            setUser2SignedIn(false); setWaiting(false);//stops TurnNotifier showing
+            setAskForRematch(true);
+            if (userObj.rematch) {
+                setWaitingForOpponentToConfirmRematch(true);
+                setAskForRematch(false);
+            }
+        }    
     }
     async function indicateInterestInRematch() { console.log(`${authInfo.current.user} indicating interest in rematch`);
         await db.ref(`matches/${authInfo.current.url}/${authInfo.current.user}`).update({rematch: true});
@@ -137,14 +141,14 @@ function Game({params}) {
                 await game.child(`user2`).update({white: false});
             }
             await game.child(`user1`).update({signedIn: true});
-            listenerForOpponentQuitting(game, "user1", "user2");//do we need this?🐉
+            listenerForOpponentQuitting(game, "user1", "user2");
             listenerForOpponentMoving(game, "user1", "user2");
             listenerForWinner(game, "user1");
             listenerForRematch(game, "user1", "user2");
             setWinner(false); setWaitingForOpponentToConfirmRematch(false);
             setArbitrary(Math.random());//neccessary? Get user2 to arbitrarily refresh?
             setTriggerBoardUseEffect(Math.random());
-            await game.child(`user2`).update({signedIn: true, recentlyReset: true});//listener for user2 signing in IS retriggering mount?🐉
+            await game.child(`user2`).update({signedIn: true, recentlyReset: true});
         }
         game.child(`user1`).orderByKey().on(`value`, next); 
     }
@@ -157,13 +161,6 @@ function Game({params}) {
         }
         game.child(`${you}`).orderByKey().equalTo(`recentlyReset`).on(`child_changed`, refresh);
     }
-    // if (match.winner) { console.log("mount recognises winner");//🐉Abstract into function?
-        // endGame(game, "user1", match.winner);
-        // if (user1.rematch) {
-        //     setWaitingForOpponentToConfirmRematch(true);
-        //     setAskForRematch(false);
-        // }
-    // }   
 
     useEffect(() => { console.log("useEffect getting run");
         let game = db.ref(`matches/${authInfo.current.url}`);
@@ -185,7 +182,7 @@ function Game({params}) {
                                 if (user1.signedIn) {
                                     //USER1 RETURNING
                                     console.log("user1 returning");
-                                    listenerForUser2SigningIn(game);//✅
+                                    listenerForUser2SigningIn(game);//🐉refactor as set up listeners
                                     listenerForOpponentQuitting(game, "user1", "user2");
                                     listenerForOpponentMoving(game, "user1", "user2");
                                     listenerForWinner(game, "user1");
@@ -201,14 +198,7 @@ function Game({params}) {
                                         setWaiting(true); console.log("user2 not signed in");
                                         setUser2SignedIn(false);
                                     }
-                                    // isAWinnerDeclared();
-                                    if (match.winner) { console.log("mount recognises winner");//🐉Abstract into function?
-                                        endGame(game, "user1", match.winner);
-                                        if (user1.rematch) {
-                                            setWaitingForOpponentToConfirmRematch(true);
-                                            setAskForRematch(false);
-                                        }
-                                    }       
+                                    isAWinnerDeclared(match, user1);      
                                 } else {
                                     //USER1 1ST TIME
                                     console.log("user1 own game first-time");
@@ -223,7 +213,7 @@ function Game({params}) {
                                     })();
                                 }
                             } else { 
-                                //USER2 RETURNING🐉
+                                //USER2 RETURNING
                                 console.log("user2 returning");
                                 listenerForOpponentQuitting(game, "user2", "user1");//✅
                                 listenerForOpponentMoving(game, "user2", "user1");//✅
@@ -234,13 +224,7 @@ function Game({params}) {
                                 setPlaying(true); //BOARD IS RENDERED HERE
                                 setUser2SignedIn(true);
                                 setWaiting(false);
-                                if (match.winner) { console.log("mount recognises winner");
-                                    endGame(game, "user2", match.winner);
-                                    if (user2.rematch) {
-                                        setWaitingForOpponentToConfirmRematch(true);
-                                        setAskForRematch(false);
-                                    }
-                                }
+                                isAWinnerDeclared(match, user2);
                             }  
                         } else { 
                             //SIGNED IN USER1|2 INTRUDING 
@@ -303,7 +287,7 @@ function Game({params}) {
             {playing && <Exit/>}
             {waiting && <Waiting/>}
             {user2SignedIn && <TurnNotifier canMove={canMove}/>}
-            {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} setUser2SignedIn={setUser2SignedIn} triggerBoardUseEffect={triggerBoardUseEffect}/>}
+            {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect}/>}
             {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
         </>

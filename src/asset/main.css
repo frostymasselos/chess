@@ -69,11 +69,14 @@ body {
 
 .board-grid-container > div {
   background-color: grey;
-  border: solid 1px grey;
 }
 
-.board-grid-container > div > div {
-  height: 100%;
+.board-grid-container > div {
+  background-color: white;
+}
+
+.board-grid-container > .black-square {
+  background-color: black;
 }
 
 .board-grid-container > div.potentialUserSquare {
@@ -88,6 +91,10 @@ body {
 
 .board-grid-container > div.potentialClickedOnPieceSquare {
   background-color: pink;
+}
+
+.board-grid-container > div > div {
+  height: 100%;
 }
 
 .pawn-promotion-grid-container {

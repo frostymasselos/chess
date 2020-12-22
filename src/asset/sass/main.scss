@@ -74,12 +74,31 @@ div {
     // border-right-color: blue;
     // border-right-width: 1px;
     // border-right-style: solid;
-    border: solid 1px grey;
+    // border: solid 1px grey;
 }
 
-.board-grid-container > div > div {
-    // color: pink;
-    height: 100%;
+//make white squares
+// .board-grid-container > div:nth-child(n+2):nth-child(-n+8):nth-child(even),
+// .board-grid-container > div:nth-child(n+9):nth-child(-n+15):nth-child(odd),
+// .board-grid-container > div:nth-child(n+18):nth-child(-n+24):nth-child(even),
+// .board-grid-container > div:nth-child(n+25):nth-child(-n+31):nth-child(odd),
+// .board-grid-container > div:nth-child(n+34):nth-child(-n+40):nth-child(even),
+// .board-grid-container > div:nth-child(n+41):nth-child(-n+47):nth-child(odd),
+// .board-grid-container > div:nth-child(n+50):nth-child(-n+56):nth-child(even),
+// .board-grid-container > div:nth-child(n+57):nth-child(-n+63):nth-child(odd) {
+//     background-color: white;
+// }
+
+$light-square: white;
+$dark-square: black;
+
+//WHITE SQUARES
+.board-grid-container > div {
+    background-color: $light-square;
+}
+//BLACK SQUARES
+.board-grid-container > .black-square {
+    background-color: $dark-square;
 }
 
 .board-grid-container > div.potentialUserSquare {
@@ -93,6 +112,11 @@ div {
 
 .board-grid-container > div.potentialClickedOnPieceSquare {
     background-color: pink;
+}
+
+.board-grid-container > div > div {
+    // color: pink;
+    height: 100%;
 }
 
 .pawn-promotion-grid-container {

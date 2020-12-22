@@ -639,8 +639,8 @@ const directionConverterObj = {
 
             //calculate squares it can hop before it reaches left-edge of board
             let counter = 0;
-            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
-                if (potentialSquare % 8 === 0) {
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0) && !(originalSquareIndex - 1) % 8 === 0; counter++, potentialSquare--) {
+                if (potentialSquare % 8 === 0 || (potentialSquare - 1) % 8 === 0) {
                     counter++;
                     break;
                 }
@@ -675,8 +675,8 @@ const directionConverterObj = {
 
             //calculate squares it can hop before it reaches left-edge of board
             let counter = 0;
-            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0); counter++, potentialSquare--) {
-                if (potentialSquare % 8 === 0) {
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0) && !(originalSquareIndex - 1) % 8 === 0; counter++, potentialSquare--) {
+                if (potentialSquare % 8 === 0 || (potentialSquare - 1) % 8 === 0) {
                     counter++;
                     break;
                 }
@@ -712,8 +712,8 @@ const directionConverterObj = {
 
             //calculate squares before it reaches right-edge of board
             let counter = 0;
-            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
-                if ((potentialSquare - 7) % 8 === 0) {
+            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0) && !((originalSquareIndex - 6) % 8 === 0); counter++, potentialSquare++) {
+                if ((potentialSquare - 7) % 8 === 0 || (potentialSquare - 6) % 8 === 0) {
                     counter++;
                     break;
                 }
@@ -748,8 +748,8 @@ const directionConverterObj = {
 
             //calculate squares before it reaches right-edge of board
             let counter = 0;
-            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
-                if ((potentialSquare - 7) % 8 === 0) {
+            for (let potentialSquare = originalSquareIndex + valueRight; !((originalSquareIndex - 7) % 8 === 0) && !((originalSquareIndex - 6) % 8 === 0); counter++, potentialSquare++) {
+                if ((potentialSquare - 7) % 8 === 0 || (potentialSquare - 6) % 8 === 0) {
                     counter++;
                     break;
                 }
