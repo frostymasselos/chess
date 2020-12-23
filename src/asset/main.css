@@ -1,9 +1,11 @@
 * {
   margin-top: 0;
   margin-right: 0;
+  padding: 0;
+  margin: 0;
 }
 
-:not(head, span, a, section) {
+:not(head):not(span):not(a):not(section) {
   display: flow-root;
 }
 
@@ -38,24 +40,46 @@ body {
           transform: rotate(180deg);
 }
 
-@media screen and (max-width: 600px) {
+.board-template, .board-grid-container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[8];
+      grid-template-columns: repeat(8, 1fr);
+  -ms-grid-rows: (1fr)[8];
+      grid-template-rows: repeat(8, 1fr);
+}
+
+@media screen and (max-width: 500px) {
   .board-grid-container {
     width: 100vw;
     height: 100vw;
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: (1fr)[8];
-        grid-template-columns: repeat(8, 1fr);
-    -ms-grid-rows: (1fr)[8];
-        grid-template-rows: repeat(8, 1fr);
   }
 }
 
-.board-grid-container > div {
+@media screen and (min-width: 500px) {
+  .board-grid-container {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+.square-template, .board-grid-container > div {
   background-color: grey;
   text-align: center;
-  line-height: 12.5vw;
-  font-size: 18.75vw;
+}
+
+@media screen and (max-width: 500px) {
+  .board-grid-container > div {
+    font-size: 18.75vw;
+    line-height: 12.5vw;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .board-grid-container > div {
+    font-size: calc(0.1875 * 500px);
+    line-height: calc(0.125 * 500px);
+  }
 }
 
 .board-grid-container > .black-square {
@@ -76,11 +100,15 @@ body {
   background-image: linear-gradient(to bottom right, transparent 75%, #FF4136 75% 100%);
 }
 
-.white {
+.board-grid-container > div > div {
+  height: 100%;
+}
+
+.white-piece {
   color: white;
 }
 
-.black {
+.black-piece {
   color: black;
 }
 
@@ -88,8 +116,20 @@ body {
   color: #85144b;
 }
 
-.board-grid-container > div > div {
-  height: 100%;
+.pawn {
+  font-size: 16.5vw;
+}
+
+@media screen and (max-width: 500px) {
+  .pawn {
+    font-size: 16.5vw;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .pawn {
+    font-size: calc(0.165 * 500px);
+  }
 }
 
 .pawn-promotion-grid-container {

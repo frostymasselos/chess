@@ -42,9 +42,14 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 let styleVal = {
                     gridRow: `${square.piece.rowPosition}`,
                     gridColumn:`${square.piece.columnPosition}`,
-                };
+                }; //see if you can just make whole attribute
+                let classVal = ``;
+                (function fillClassVal() {
+                    classVal += square.piece.white ? "white-piece " : "black-piece ";
+                    classVal += square.piece.name.includes("pawn") ? "pawn " : "";
+                })();
                 let piece = (
-                    <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={square.piece.white ? "white" : "black"} data-color={square.piece.white ? "white" : "black"} style={styleVal} key={Math.random()}>
+                    <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={classVal} data-color={square.piece.white ? "white" : "black"} data-pawn={square.piece.name.includes("pawn") ? "true" : "false"} style={styleVal} key={Math.random()}> 
                         {returnPieceEmoji(square.piece.name.replace(/\d/, ''))}
                         {/* {square.piece.name} */}
                     </div>
@@ -96,13 +101,13 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 }
             } 
         })();
-        //180 rotate squares if black
+        //if black, 180 rotate squares 
         if (authInfo.color === "black") {
             let board = document.querySelector('.board-grid-container');
             let squares = board.children;//Array.from()
-            // for (const square of squares) { console.log("rotating black squares");
-            //     square.classList.add(`rotate180`);
-            // }
+            for (const square of squares) { console.log("rotating black squares");
+                square.classList.add(`rotate180`);
+            }
         }
     }
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton() {
@@ -454,11 +459,11 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
 
     //rotate for black (& color board?)
     useEffect(() => { 
-        // if (authInfo.color === "black") { console.log("rotating board");
-        //     let board = document.querySelector('.board-grid-container');
-        //     board.classList.add(`rotate180`);//board.style.setProperty("transform", "rotate(180deg)");
-        // } else { console.log("not rotating board");
-        // }
+        if (authInfo.color === "black") { console.log("rotating board");
+            let board = document.querySelector('.board-grid-container');
+            board.classList.add(`rotate180`);//board.style.setProperty("transform", "rotate(180deg)");
+        } else { console.log("not rotating board");
+        }
     }, []);
     
     //1.populate boardArray & ui
@@ -518,7 +523,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 db.ref(`matches/${authInfo.url}`).update({winner: `${opponentColor.current} (${opponent.current})`});
             }
         });
-    }, [triggerBoardUseEffect]);
+    }, [triggerBoardUseEffect]); //canMove
 
     //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
     useEffect(() => {

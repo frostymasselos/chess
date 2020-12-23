@@ -1,6 +1,8 @@
 * {
     margin-top: 0;
     margin-right: 0;
+    padding: 0;
+    margin: 0;
 }
 // CONSIDRER PUTTING ALL BAR HEAD & INLINE (INLINE-BLOCK?) DISPLAY: FLOW-ROOT  */
     // EL WITH DISPLAY INLINE-BLOCK SET DISPLAY: REVERT
@@ -38,15 +40,22 @@ div {
     transform: rotate(180deg);
 }
 
-//`SECTION` WILL BE FOR GRID-CONTAINER
+//BOARD
+.board-template {
+    // transform: rotate(180deg);
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr); 
+}
 .board-grid-container {
-    @media screen and (max-width: 600px) {
+    @extend .board-template;
+    @media screen and (max-width: 500px) {
         width: 100vw;
         height: 100vw;
-        // transform: rotate(180deg);
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        grid-template-rows: repeat(8, 1fr); 
+    }
+    @media screen and (min-width: 500px) {
+        width: 500px;
+        height: 500px;
     }
 }
 
@@ -60,16 +69,20 @@ $black-piece: black;
 $clicked-on-piece: #85144b;
 
 //ALL SQUARES
-.board-grid-container > div {
+.square-template {
     background-color: $light-square;
     text-align: center;
-    line-height: 12.5vw;
-    font-size: 18.75vw;
-    //use a google-font-size🐉
-    // display: flex;
-    // justify-content: center;
-    // align-content: center;
-    // align-items: center;
+}
+.board-grid-container > div {
+    @extend .square-template;
+    @media screen and (max-width: 500px) {
+        font-size: 18.75vw;//use a google-font-size🐉
+        line-height: 12.5vw;
+    }
+    @media screen and (min-width: 500px) {
+        font-size: calc(0.1875 * 500px);
+        line-height: calc(0.125 * 500px);
+    }
 }
 //BLACK SQUARES
 .board-grid-container > .black-square {
@@ -95,14 +108,14 @@ $clicked-on-piece: #85144b;
 }
 //ALL PIECES
 .board-grid-container > div > div {
-
+    height: 100%;//🐉why did we need this? (we do)
 }
 //WHITE PIECE
-.white {
+.white-piece {
     color: $white-piece;
 }
 //BLACK PIECE
-.black {
+.black-piece {
     color: $black-piece;
 }
 //CLICKED-ON|HIGHLIGHTED PIECE
@@ -111,12 +124,13 @@ $clicked-on-piece: #85144b;
 }
 //PAWN
 .pawn {
-    //smaller font-size🐉
-}
-
-.board-grid-container > div > div {
-    // color: pink;
-    height: 100%;
+    @media screen and (max-width: 500px) {
+        font-size: 16.5vw;//use a google-font-size🐉
+    }
+    @media screen and (min-width: 500px) {
+        font-size: calc(0.165 * 500px);
+    }
+    font-size: 16.5vw;
 }
 
 .pawn-promotion-grid-container {
