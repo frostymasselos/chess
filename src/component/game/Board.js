@@ -523,7 +523,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 db.ref(`matches/${authInfo.url}`).update({winner: `${opponentColor.current} (${opponent.current})`});
             }
         });
-    }, [triggerBoardUseEffect]); //canMove
+    }, [canMove]); //triggerBoardUseEffect
 
     //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
     useEffect(() => {
