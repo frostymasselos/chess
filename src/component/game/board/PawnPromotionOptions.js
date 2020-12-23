@@ -1,3 +1,5 @@
+import {returnPieceEmoji} from '../../../helper/boardHelp.js';
+
 export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion}) {
 
     function choosePiece(e) {
@@ -18,7 +20,7 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
         console.log(pawnPromotionGraveyardFilteredOutDuplicateNames);
         //each item of filtered made into GI, 2x2.
         for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) { 
-            const tag = <div onClick={choosePiece} data-name={piece.name} key={Math.random()}>{piece.name.replace(/\d/, '')}</div>;
+            const tag = <div onClick={choosePiece} data-name={piece.name} key={Math.random()}>{returnPieceEmoji(piece.name.replace(/\d/, ''))}</div>;//piece.name.replace(/\d/, '')
             optionTags.push(tag);
         }
         return optionTags;

@@ -639,7 +639,7 @@ const directionConverterObj = {
 
             //calculate squares it can hop before it reaches left-edge of board
             let counter = 0;
-            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0) && !(originalSquareIndex - 1) % 8 === 0; counter++, potentialSquare--) {
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0) && !((originalSquareIndex - 1) % 8 === 0); counter++, potentialSquare--) {
                 if (potentialSquare % 8 === 0 || (potentialSquare - 1) % 8 === 0) {
                     counter++;
                     break;
@@ -675,12 +675,14 @@ const directionConverterObj = {
 
             //calculate squares it can hop before it reaches left-edge of board
             let counter = 0;
-            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0) && !(originalSquareIndex - 1) % 8 === 0; counter++, potentialSquare--) {
+            for (let potentialSquare = originalSquareIndex + valueLeft; !(originalSquareIndex % 8 === 0) && !((originalSquareIndex - 1) % 8 === 0); counter++, potentialSquare--) {
                 if (potentialSquare % 8 === 0 || (potentialSquare - 1) % 8 === 0) {
                     counter++;
                     break;
                 }
             }
+
+            console.log(counter);
 
             parent: for (let potentialSquare = originalSquareIndex + valueDown + valueLeft, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; potentialSquare = potentialSquare + valueDown + valueLeft, currentCounter++, currentTotal++) {
                 const potentialSquare = originalSquareIndex + ((valueDown + valueLeft) * currentTotal);
@@ -780,4 +782,24 @@ const directionConverterObj = {
     }
 };
 
-export {pieceMoveObj, directionConverterObj};
+function returnPieceEmoji(name) {//console.log(name);
+    name = name.replace(/\d/, '');
+    switch (name) {
+        case "pawn":
+            return "♟";
+        case "rook":
+            return "♜"
+        case "knight":
+            return "♞"
+        case "bishop":
+            return "♝"
+        case "queen":
+            return "♛"
+        case "king":
+            return "♚"
+        default:
+            console.log("no match found!");
+    }
+}
+
+export {pieceMoveObj, directionConverterObj, returnPieceEmoji};

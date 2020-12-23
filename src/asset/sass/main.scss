@@ -2,37 +2,21 @@
     margin-top: 0;
     margin-right: 0;
 }
-
 // CONSIDRER PUTTING ALL BAR HEAD & INLINE (INLINE-BLOCK?) DISPLAY: FLOW-ROOT  */
     // EL WITH DISPLAY INLINE-BLOCK SET DISPLAY: REVERT
 :not(head, span, a, section) {
     display: flow-root;
 }
-
 body {
     margin: 0;
 }
-
 #root {
-    height: 100vh;
+    // height: 100vh;
     // pointer-events: none;
 }
-
 div {
     // font-family: 'Ranchers';
     // color: green;
-}
-
-.black {
-    color: black;
-}
-
-.white {
-    color: white;
-}
-
-.highlighted {
-    color: pink;
 }
 .z-index-1 {
     z-index: 1;
@@ -66,52 +50,68 @@ div {
     }
 }
 
-.board-grid-container > div { //refactor🐉
-    background-color: grey;
-    // border-top-color: blue;
-    // border-top-width: 1px;
-    // border-top-style: solid;
-    // border-right-color: blue;
-    // border-right-width: 1px;
-    // border-right-style: solid;
-    // border: solid 1px grey;
-}
+$light-square: grey;
+$dark-square: #FF851B;
+$potential-user-square: #0074D9;
+$potential-opponent-square: #FF4136;
+$potential-clicked-on-piece-square: #85144b;
+$white-piece: white;
+$black-piece: black;
+$clicked-on-piece: #85144b;
 
-//make white squares
-// .board-grid-container > div:nth-child(n+2):nth-child(-n+8):nth-child(even),
-// .board-grid-container > div:nth-child(n+9):nth-child(-n+15):nth-child(odd),
-// .board-grid-container > div:nth-child(n+18):nth-child(-n+24):nth-child(even),
-// .board-grid-container > div:nth-child(n+25):nth-child(-n+31):nth-child(odd),
-// .board-grid-container > div:nth-child(n+34):nth-child(-n+40):nth-child(even),
-// .board-grid-container > div:nth-child(n+41):nth-child(-n+47):nth-child(odd),
-// .board-grid-container > div:nth-child(n+50):nth-child(-n+56):nth-child(even),
-// .board-grid-container > div:nth-child(n+57):nth-child(-n+63):nth-child(odd) {
-//     background-color: white;
-// }
-
-$light-square: white;
-$dark-square: black;
-
-//WHITE SQUARES
+//ALL SQUARES
 .board-grid-container > div {
     background-color: $light-square;
+    text-align: center;
+    line-height: 12.5vw;
+    font-size: 18.75vw;
+    //use a google-font-size🐉
+    // display: flex;
+    // justify-content: center;
+    // align-content: center;
+    // align-items: center;
 }
 //BLACK SQUARES
 .board-grid-container > .black-square {
     background-color: $dark-square;
 }
-
+//POTENTIAL USER SQUARE
 .board-grid-container > div.potentialUserSquare {
-    border-top-color: yellow;
-    border-left-color: yellow;
+    background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%);
+    // background-color: yellow;
+    // border-top-color: yellow;
+    // border-left-color: yellow;
 }
-.board-grid-container > div.potentialOpponentSquare {
-    border-right-color: brown;
-    border-bottom-color: brown;
-}
-
+//POTENTIAL CLICKED-ON-PIECE SQUARE
 .board-grid-container > div.potentialClickedOnPieceSquare {
-    background-color: pink;
+    background-color: $potential-clicked-on-piece-square;
+}
+//POTENTIAL OPPONENT SQUARE
+.board-grid-container > div.potentialOpponentSquare {
+    background-image: linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);
+    // background-color: brown;
+    // border-right-color: brown;
+    // border-bottom-color: brown;
+}
+//ALL PIECES
+.board-grid-container > div > div {
+
+}
+//WHITE PIECE
+.white {
+    color: $white-piece;
+}
+//BLACK PIECE
+.black {
+    color: $black-piece;
+}
+//CLICKED-ON|HIGHLIGHTED PIECE
+.highlighted {
+    color: $clicked-on-piece;
+}
+//PAWN
+.pawn {
+    //smaller font-size🐉
 }
 
 .board-grid-container > div > div {
@@ -127,3 +127,17 @@ $dark-square: black;
     grid-template-columns: repeat(1fr 1fr);
     grid-template-rows: repeat(1fr 1fr); 
 }
+
+////////////////////////////////////////////////////////////////////////////////////
+
+//make white squares
+// .board-grid-container > div:nth-child(n+2):nth-child(-n+8):nth-child(even),
+// .board-grid-container > div:nth-child(n+9):nth-child(-n+15):nth-child(odd),
+// .board-grid-container > div:nth-child(n+18):nth-child(-n+24):nth-child(even),
+// .board-grid-container > div:nth-child(n+25):nth-child(-n+31):nth-child(odd),
+// .board-grid-container > div:nth-child(n+34):nth-child(-n+40):nth-child(even),
+// .board-grid-container > div:nth-child(n+41):nth-child(-n+47):nth-child(odd),
+// .board-grid-container > div:nth-child(n+50):nth-child(-n+56):nth-child(even),
+// .board-grid-container > div:nth-child(n+57):nth-child(-n+63):nth-child(odd) {
+//     background-color: white;
+// }

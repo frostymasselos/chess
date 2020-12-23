@@ -49,7 +49,7 @@ function Game({params}) {
     
     //info
     let authInfo = useRef({url: params.slice(1)});
-    const [auth, setAuth] = useState(firebase.auth()); //refactor to be useRef? Then put the function in useEffect?🐉 
+    const [auth, setAuth] = useState(firebase.auth());//only recalculate when canMove changes?
     const [db, setDb] = useState(firebase.database());
 
     function listenerForUser2SigningIn(game) {

@@ -1,4 +1,4 @@
-import {pieceMoveObj, directionConverterObj} from '../../helper/boardHelp.js'; 
+import {pieceMoveObj, directionConverterObj, returnPieceEmoji} from '../../helper/boardHelp.js';
 import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
@@ -42,10 +42,11 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 let styleVal = {
                     gridRow: `${square.piece.rowPosition}`,
                     gridColumn:`${square.piece.columnPosition}`,
-                }
+                };
                 let piece = (
                     <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={square.piece.white ? "white" : "black"} data-color={square.piece.white ? "white" : "black"} style={styleVal} key={Math.random()}>
-                        {square.piece.name}
+                        {returnPieceEmoji(square.piece.name.replace(/\d/, ''))}
+                        {/* {square.piece.name} */}
                     </div>
                 );
                 arrayOfJSXPieces.push(piece);
@@ -95,8 +96,16 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 }
             } 
         })();
+        //180 rotate squares if black
+        if (authInfo.color === "black") {
+            let board = document.querySelector('.board-grid-container');
+            let squares = board.children;//Array.from()
+            // for (const square of squares) { console.log("rotating black squares");
+            //     square.classList.add(`rotate180`);
+            // }
+        }
     }
-    function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton(params) {
+    function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton() {
         if (showingClickedOnPiecePotentialMoves) {
             setShowingClickedOnPiecePotentialMoves(false);
             if (clickedOnPiece.current) { //if clicked onPiece true, remove its highlighting.
@@ -123,7 +132,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
         const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
         const arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, authInfo.color); //console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces);
-        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
+        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current);//console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         
         if (showingUserPiecesPotentialMoves && player === "user") {
             for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces) {
@@ -299,6 +308,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             //EXECUTING USER'S CLICK.
             console.log(`executing user's click`);
             originalPiece.classList.remove(`highlighted`);
+            decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
             clickedOnPiece.current = false;
             setCanMove(false); //boardTag.classList.add(`unclickable`);
             function secondarySquareIndexIsAtEndOfBoard(color, secondarySquareIndex) {
@@ -443,7 +453,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     }, [canMove]);
 
     //rotate for black (& color board?)
-    useEffect(() => {
+    useEffect(() => { 
         // if (authInfo.color === "black") { console.log("rotating board");
         //     let board = document.querySelector('.board-grid-container');
         //     board.classList.add(`rotate180`);//board.style.setProperty("transform", "rotate(180deg)");
