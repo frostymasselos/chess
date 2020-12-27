@@ -1,10 +1,14 @@
 // import Test from '../component/Test.js';
 import bigObj from '../helper/secondDb';
-import Instructions from '../element/instructions.js';
+import Header from '../component/home/Header';
+import Instructions from '../component/home/Instructions';
+import StartNewGame from '../component/home/StartNewGame';
+import ResumeGame from '../component/home/ResumeGame';
+import TerminateGame from '../component/home/TerminateGame';
 import firebase from '../helper/firebase.js'; 
 import "firebase/auth";
 import {Link} from 'react-router-dom';
-import {useState, useEffect} from 'react'; 
+import {useState, useEffect} from 'react';
 
 function Home() {
 
@@ -76,12 +80,13 @@ function Home() {
     
     return ( 
         <>
-            <h4>HomeContainer</h4>
-            {Instructions()}
-            {notSignedIn && <div onClick={startNewGame}>Start new game</div>}
-            {url && <div>Match url: {window.location.origin}/{url}</div>} 
-            {url && <Link to={`/${url}`}>Resume Game</Link>}
-            {url && <button onClick={terminateGame}>Terminate Game</button>}
+            <div className="home-grid-container">
+                <Header/>
+                <Instructions url={url}/>
+                {notSignedIn && <StartNewGame startNewGame={startNewGame}/>}
+                {url && <ResumeGame url={url}/>}
+                {url && <TerminateGame terminateGame={terminateGame}/>}
+            </div>
         </> 
     )
   

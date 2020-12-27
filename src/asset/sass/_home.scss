@@ -1,0 +1,66 @@
+.home-grid-container {
+    @include grid-container-template(1fr, 12.5vh 30vh repeat(auto-fit, 20vh));
+}
+///////////////////////////////////////////HEADER//////////////////////////////////////////////////////////////////
+.header {
+    @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+    font-size: 60px;
+    background-color: #DDDDDD;
+}
+.header > div > a {
+    color: black;
+}
+.header > div > a:nth-child(1) {
+    // transform: rotate(20deg);
+    // color: brown
+    // border: 1px solid #FF4136;
+    // border-radius: 20px/20px;
+    // border-radius: 47% 53% 48% 52% / 100% 100% 0% 0% ;
+}
+.header > div > a:nth-child(2) {
+    display: inline-block;
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+}
+///////////////////////////////////////////INSTRUCTIONS//////////////////////////////////////////////////////////////////
+.instructions {
+    @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+    // align-items: initial;
+    font-size: 20px;
+}
+.instructions > * {
+    text-align: center;
+}
+.instructions > :nth-child(1) {
+
+}
+.instructions > :nth-child(1) {
+    
+}
+///////////////////////////////////////////NEW-GAME//////////////////////////////////////////////////////////////////
+.new-game {
+    @include grid-container-horizontally-and-vertically-center-GIs();
+    // font-size: 40px;
+    > div {
+        @include button;
+    }
+    > div:hover {
+        background-color: $button-hover;
+    }
+    // > div:active {
+    //     background-color: $light-square;
+    // }
+}
+.resume-game {
+    @include grid-container-horizontally-and-vertically-center-GIs();
+    > * {
+        @include button;
+    }
+}
+.home-terminate-game {
+    @include grid-container-horizontally-and-vertically-center-GIs();
+    @include button;
+    justify-self: center;
+    align-self: center;
+}

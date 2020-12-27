@@ -1,13 +1,51 @@
+$footer-color: #001f3f;
+$light-square: grey;
+$dark-square: #FF851B;
+$button-hover: brown;
+$potential-user-square: #0074D9;
+$potential-opponent-square: #FF4136;
+$potential-clicked-on-piece-square: #85144b;
+$white-piece: white;
+$black-piece: black;
+$clicked-on-piece: #85144b;
+@mixin grid-container-template($column-value: 1fr, $row-value: 1fr) {
+    display: grid;
+    grid-template-columns: $column-value;
+    grid-template-rows: $row-value;
+}
+@mixin grid-container-horizontally-and-vertically-center-GIs($column-value: 1fr, $row-value: 1fr) {
+    @include grid-container-template($column-value, $row-value);
+    justify-items: center;
+    align-items: center;
+}
+@mixin button {
+    background-color: $dark-square;
+    border: solid 5px black;
+    border-radius: 10%/20%;
+    width: 90%; 
+    height: 90%;
+    @include grid-container-horizontally-and-vertically-center-GIs();
+}
+/////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
 * {
     margin-top: 0;
     margin-right: 0;
-    padding: 0;
+    // padding: 0;
     margin: 0;
 }
+a {
+    all: unset;
+}
+img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+/////////////////////////////////////////////////GENERAL///////////////////////////////////////////////////////////
 // CONSIDRER PUTTING ALL BAR HEAD & INLINE (INLINE-BLOCK?) DISPLAY: FLOW-ROOT  */
     // EL WITH DISPLAY INLINE-BLOCK SET DISPLAY: REVERT
 :not(head, span, a, section) {
-    display: flow-root;
+    // display: flow-root;
 }
 body {
     margin: 0;
@@ -15,143 +53,32 @@ body {
 #root {
     // height: 100vh;
     // pointer-events: none;
+    // background-color: #0074D9;
 }
 div {
     // font-family: 'Ranchers';
     // color: green;
 }
-.z-index-1 {
-    z-index: 1;
-}
-.fizzle {
-    transition: opacity 2s;
-    opacity: 0;
-}
-.dead {
-    display: none;
-}
-.unclickable {
-    pointer-events: none;
-}
-.clickable {
-    pointer-events: auto;
-}
-.rotate180 {
-    transform: rotate(180deg);
-}
-
-//BOARD
-.board-template {
-    // transform: rotate(180deg);
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr); 
-}
-.board-grid-container {
-    @extend .board-template;
-    @media screen and (max-width: 500px) {
-        width: 100vw;
-        height: 100vw;
-    }
-    @media screen and (min-width: 500px) {
-        width: 500px;
-        height: 500px;
-    }
-}
-
-$light-square: grey;
-$dark-square: #FF851B;
-$potential-user-square: #0074D9;
-$potential-opponent-square: #FF4136;
-$potential-clicked-on-piece-square: #85144b;
-$white-piece: white;
-$black-piece: black;
-$clicked-on-piece: #85144b;
-
-//ALL SQUARES
-.square-template {
-    background-color: $light-square;
-    text-align: center;
-}
-.board-grid-container > div {
-    @extend .square-template;
-    @media screen and (max-width: 500px) {
-        font-size: 18.75vw;//use a google-font-size🐉
-        line-height: 12.5vw;
-    }
-    @media screen and (min-width: 500px) {
-        font-size: calc(0.1875 * 500px);
-        line-height: calc(0.125 * 500px);
-    }
-}
-//BLACK SQUARES
-.board-grid-container > .black-square {
-    background-color: $dark-square;
-}
-//POTENTIAL USER SQUARE
-.board-grid-container > div.potentialUserSquare {
-    background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%);
-    // background-color: yellow;
-    // border-top-color: yellow;
-    // border-left-color: yellow;
-}
-//POTENTIAL CLICKED-ON-PIECE SQUARE
-.board-grid-container > div.potentialClickedOnPieceSquare {
-    background-color: $potential-clicked-on-piece-square;
-}
-//POTENTIAL OPPONENT SQUARE
-.board-grid-container > div.potentialOpponentSquare {
-    background-image: linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);
-    // background-color: brown;
-    // border-right-color: brown;
-    // border-bottom-color: brown;
-}
-//ALL PIECES
-.board-grid-container > div > div {
-    height: 100%;//🐉why did we need this? (we do)
-}
-//WHITE PIECE
-.white-piece {
-    color: $white-piece;
-}
-//BLACK PIECE
-.black-piece {
-    color: $black-piece;
-}
-//CLICKED-ON|HIGHLIGHTED PIECE
-.highlighted {
-    color: $clicked-on-piece;
-}
-//PAWN
-.pawn {
-    @media screen and (max-width: 500px) {
-        font-size: 16.5vw;//use a google-font-size🐉
-    }
-    @media screen and (min-width: 500px) {
-        font-size: calc(0.165 * 500px);
-    }
-    font-size: 16.5vw;
-}
-
-.pawn-promotion-grid-container {
+.footer {
+    position: fixed;
+    bottom: 0px;
     width: 100vw;
-    height: 100vw;
-    // transform: rotate(180deg);
-    display: grid;
-    grid-template-columns: repeat(1fr 1fr);
-    grid-template-rows: repeat(1fr 1fr); 
+    height: 17.5vh;
+    background-color: $footer-color;
+    color: darkorchid;
+    @include grid-container-template(1fr, 1fr 50% 1fr);
+    > :first-child {
+        text-align: center; 
+    }
+    .icons {
+        @include grid-container-template(repeat(3, 1fr), 100%);
+        justify-content: space-evenly;
+    }
+    > :last-child {
+        justify-self: center; align-self: end;
+    }
 }
-
-////////////////////////////////////////////////////////////////////////////////////
-
-//make white squares
-// .board-grid-container > div:nth-child(n+2):nth-child(-n+8):nth-child(even),
-// .board-grid-container > div:nth-child(n+9):nth-child(-n+15):nth-child(odd),
-// .board-grid-container > div:nth-child(n+18):nth-child(-n+24):nth-child(even),
-// .board-grid-container > div:nth-child(n+25):nth-child(-n+31):nth-child(odd),
-// .board-grid-container > div:nth-child(n+34):nth-child(-n+40):nth-child(even),
-// .board-grid-container > div:nth-child(n+41):nth-child(-n+47):nth-child(odd),
-// .board-grid-container > div:nth-child(n+50):nth-child(-n+56):nth-child(even),
-// .board-grid-container > div:nth-child(n+57):nth-child(-n+63):nth-child(odd) {
-//     background-color: white;
-// }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+@import './home.scss';
+@import './game.scss';
+@import './board.scss';

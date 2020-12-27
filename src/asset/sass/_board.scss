@@ -1,0 +1,120 @@
+
+.z-index-1 {
+    z-index: 1;
+}
+.fizzle {
+    transition: opacity 2s;
+    opacity: 0;
+}
+.dead {
+    display: none;
+}
+.unclickable {
+    pointer-events: none;
+}
+.clickable {
+    pointer-events: auto;
+}
+.rotate180 {
+    transform: rotate(180deg);
+}
+///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
+.board-template {
+    // transform: rotate(180deg);
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr); 
+}
+.board-grid-container {
+    @extend .board-template;
+    @media screen and (max-width: 500px) {
+        width: 100vw;
+        height: 100vw;
+    }
+    @media screen and (min-width: 500px) {
+        width: 500px;
+        height: 500px;
+    }
+}
+///////////////////////////////////////////SQUARES//////////////////////////////////////////////////////////////////
+.square-template {
+    background-color: $light-square;
+    text-align: center;
+    // outline: 5px dashed $orange;
+}
+.board-grid-container > div {
+    @extend .square-template;
+    @media screen and (max-width: 500px) {
+        line-height: 12.5vw;
+        font-size: 18.75vw;//use a google-font-size🐉
+    }
+    @media screen and (min-width: 500px) {
+        line-height: calc(0.125 * 500px);
+        font-size: calc(0.1875 * 500px);
+    }
+}
+//BLACK SQUARES
+.board-grid-container > .black-square {
+    background-color: $dark-square;
+}
+//POTENTIAL USER SQUARE
+.board-grid-container > div.potentialUserSquare {
+    background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%);
+}
+//POTENTIAL CLICKED-ON-PIECE SQUARE
+.board-grid-container > div.potentialClickedOnPieceSquare {
+    background-color: $potential-clicked-on-piece-square;
+}
+//POTENTIAL OPPONENT SQUARE
+.board-grid-container > div.potentialOpponentSquare {
+    background-image: linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);
+}
+///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
+//ALL PIECES
+.board-grid-container > div > div {
+    height: 100%;//🐉why did we need this? (we do)
+}
+//WHITE PIECE
+.white-piece {
+    color: $white-piece;
+}
+//BLACK PIECE
+.black-piece {
+    color: $black-piece;
+}
+//CLICKED-ON|HIGHLIGHTED PIECE
+.highlighted {
+    color: $clicked-on-piece;
+}
+//PAWN
+.pawn {
+    @media screen and (max-width: 500px) {
+        font-size: 15vw;//use a google-font-size🐉
+    }
+    @media screen and (min-width: 500px) {
+        font-size: calc(0.15 * 500px);
+    }
+    // font-size: 16.5vw;
+}
+
+.pawn-promotion-grid-container {
+    width: 100vw;
+    height: 100vw;
+    // transform: rotate(180deg);
+    display: grid;
+    grid-template-columns: repeat(1fr 1fr);
+    grid-template-rows: repeat(1fr 1fr); 
+}
+
+///////////////////////////////////////////TRASH|MISC//////////////////////////////////////////////////////////////////
+//make white squares
+// .board-grid-container > div:nth-child(n+2):nth-child(-n+8):nth-child(even),
+// .board-grid-container > div:nth-child(n+9):nth-child(-n+15):nth-child(odd),
+// .board-grid-container > div:nth-child(n+18):nth-child(-n+24):nth-child(even),
+// .board-grid-container > div:nth-child(n+25):nth-child(-n+31):nth-child(odd),
+// .board-grid-container > div:nth-child(n+34):nth-child(-n+40):nth-child(even),
+// .board-grid-container > div:nth-child(n+41):nth-child(-n+47):nth-child(odd),
+// .board-grid-container > div:nth-child(n+50):nth-child(-n+56):nth-child(even),
+// .board-grid-container > div:nth-child(n+57):nth-child(-n+63):nth-child(odd) {
+//     background-color: white;
+// }
