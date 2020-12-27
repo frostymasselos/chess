@@ -21,17 +21,18 @@ $clicked-on-piece: #85144b;
 @mixin button {
     background-color: $dark-square;
     border: solid 5px black;
-    border-radius: 10%/20%;
-    width: 90%; 
-    height: 90%;
+    // border-radius: 16.6%/50%;
+    // width: 100%;
+    // height: 100%;
     @include grid-container-horizontally-and-vertically-center-GIs();
 }
 /////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
-* {
+*, ::before, ::after {
     margin-top: 0;
     margin-right: 0;
     // padding: 0;
     margin: 0;
+    box-sizing: inherit;
 }
 a {
     all: unset;
@@ -51,9 +52,7 @@ body {
     margin: 0;
 }
 #root {
-    // height: 100vh;
-    // pointer-events: none;
-    // background-color: #0074D9;
+    box-sizing: border-box;
 }
 div {
     // font-family: 'Ranchers';

@@ -1,5 +1,6 @@
 .home-grid-container {
-    @include grid-container-template(1fr, 12.5vh 30vh repeat(auto-fit, 20vh));
+    @include grid-container-template(100vw, 12.5vh 30vh repeat(auto-fit, 20vh));
+    height: 82.5vh;//🐉test that we don't need this
 }
 ///////////////////////////////////////////HEADER//////////////////////////////////////////////////////////////////
 .header {
@@ -40,14 +41,10 @@
 }
 ///////////////////////////////////////////NEW-GAME//////////////////////////////////////////////////////////////////
 .new-game {
-    @include grid-container-horizontally-and-vertically-center-GIs();
-    // font-size: 40px;
-    > div {
-        @include button;
-    }
-    > div:hover {
-        background-color: $button-hover;
-    }
+    @include button;
+    // > div:hover { //🐉use of ampersand thing
+    //     background-color: $button-hover;
+    // }
     // > div:active {
     //     background-color: $light-square;
     // }

@@ -1,10 +1,8 @@
 function StartNewGame({startNewGame}) {
     return (
         <>
-            <div className="new-game">
-                <div onClick={startNewGame}>
-                    <span>Start new game</span>
-                </div>
+            <div className="new-game" onClick={startNewGame}>
+                Start new game  
             </div>
         </>
     )
