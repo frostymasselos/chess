@@ -562,7 +562,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
             {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion}/>}
             <div className="game-text">
                 {check && <p>You are in check</p>}
-                {checkMate && <p>Checkmate</p>}
+                {/* {checkMate && <p>Checkmate</p>} */}
             </div>
             <div className="board-grid-container unclickable">
                 {squareTags}

@@ -11,5 +11,5 @@
 }
 .game-terminate-game {
     @include button;
-    // border-radius: calc(var(--game-terminate-game-button-height) * 0.25);
+    border-radius: calc(var(--game-terminate-game-button-height) * 0.25);
 }

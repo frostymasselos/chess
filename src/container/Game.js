@@ -54,13 +54,14 @@ function Game({params}) {
     // let cssUseEffectFirstTime = useRef(true);
 
     //CSS
-    function roundCornersOfButtons() { console.log("here1");
-        console.log(window.document.querySelector(`.button`));
-        return;
-        const buttons = Array.from(window.document.querySelectorAll(`.button`)); console.log(buttons);
-        for (let index = 0; index < buttons.length; index++) { console.log("here2");
+    function cssFunctions() {
+        roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
+    }
+    function roundCornersOfButtons() { 
+        const buttons = Array.from(window.document.querySelectorAll(`.button`)); 
+        for (let index = 0; index < buttons.length; index++) { 
             const button = buttons[index];
-            const theClassName = Array.from(button.classList)[0];
+            const theClassName = Array.from(button.classList)[0]; console.log(theClassName);
             window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
@@ -210,7 +211,9 @@ function Game({params}) {
                                         setWaiting(true); console.log("user2 not signed in");
                                         setUser2SignedIn(false);
                                     }
-                                    isAWinnerDeclared(match, user1);      
+                                    isAWinnerDeclared(match, user1); 
+                                    cssFunctions();
+
                                 } else {
                                     //USER1 1ST TIME
                                     console.log("user1 own game first-time");
@@ -237,6 +240,7 @@ function Game({params}) {
                                 setUser2SignedIn(true);
                                 setWaiting(false);
                                 isAWinnerDeclared(match, user2);
+                                cssFunctions();
                             }  
                         } else { 
                             //SIGNED IN USER1|2 INTRUDING 
@@ -287,14 +291,6 @@ function Game({params}) {
             } 
         });
     }, [arbitrary]);
-    //CSS
-    useEffect(() => {
-        // if (cssUseEffectFirstTime.current) {
-        //     cssUseEffectFirstTime.current = false; return;
-        // }
-        //consistently round corners of buttons
-        roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
-    }, []);
 
     return ( 
         <>
