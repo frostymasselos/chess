@@ -73,9 +73,9 @@ function Home() {
     function roundCornersOfButtons() {
         const buttons = Array.from(window.document.querySelectorAll(`.button`)); 
         for (let index = 0; index < buttons.length; index++) {
-            const button = buttons[index]; 
+            const button = buttons[index];
             const theClassName = Array.from(button.classList)[0];
-            button.style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
+            window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
 

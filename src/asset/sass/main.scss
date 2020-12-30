@@ -1,7 +1,10 @@
 /////////////////////////////////////////////////CSS VARIABLES///////////////////////////////////////////////////////////
 //not here but present on inline: button-radius; 
 /////////////////////////////////////////////////SASS///////////////////////////////////////////////////////////
+$header-height: 12.5vh;//10
+$footer-height: 17.5vh;//16 ( = golden ratio w/title?)
 $lh: 1.4rem; //(28px)
+
 $footer-color: #001f3f;
 $light-square: grey;
 $dark-square: #FF851B;
@@ -64,7 +67,7 @@ html {
     }
 }
 .header {
-    height: 12.5vh;//10
+    height: $header-height;
     font-size: 60px;
     background-color: #DDDDDD;
     @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
@@ -76,33 +79,31 @@ html {
     }
 }
 .footer {
-    position: fixed;
-    bottom: 0px;
+    font-size: 15px; 
+    $li: 1.2em;
+    line-height: $li;
+    // position: fixed;
+    // bottom: 0px;
     width: 100vw;
-    height: 17.5vh;//16 ( = golden ratio w/title?)
+    height: $footer-height;
     background-color: $footer-color;
     color: darkorchid;
-    font-size: 15px; line-height: 1.2;
     @include grid-container-template(1fr, 38% 62%);
-    > :first-child {
-        text-align: center; 
+    .footer-info {
+        @include grid-container-horizontally-and-vertically-center-GIs();
+        text-align: center;
+        // margin-top: $li * 0.5;
     }
     .icons {
         @include grid-container-template(repeat(3, 1fr), 100%);
         justify-content: space-evenly;
     }
-    // > :last-child {
-    //     justify-self: center; align-self: end;
-    // }
-    .footer-info {
-        // @include grid-container-horizontally-and-vertically-center-GIs();
-    }
 }
 .button { 
-    &:hover, &:active {
-        background-image: linear-gradient($dark-square, brown);
-        // background-image: linear-gradient($dark-square, pink);
-    }
+    // &:hover, &:active { 🐉comment-in
+    //     background-image: linear-gradient($dark-square, brown);
+    //     // background-image: linear-gradient($dark-square, pink);
+    // }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @import './home.scss';

@@ -51,7 +51,19 @@ function Game({params}) {
     let authInfo = useRef({url: params.slice(1)});
     const [auth, setAuth] = useState(firebase.auth());//only recalculate when canMove changes?
     const [db, setDb] = useState(firebase.database());
+    // let cssUseEffectFirstTime = useRef(true);
 
+    //CSS
+    function roundCornersOfButtons() { console.log("here1");
+        console.log(window.document.querySelector(`.button`));
+        return;
+        const buttons = Array.from(window.document.querySelectorAll(`.button`)); console.log(buttons);
+        for (let index = 0; index < buttons.length; index++) { console.log("here2");
+            const button = buttons[index];
+            const theClassName = Array.from(button.classList)[0];
+            window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
+        }
+    };
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
@@ -275,21 +287,40 @@ function Game({params}) {
             } 
         });
     }, [arbitrary]);
+    //CSS
+    useEffect(() => {
+        // if (cssUseEffectFirstTime.current) {
+        //     cssUseEffectFirstTime.current = false; return;
+        // }
+        //consistently round corners of buttons
+        roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
+    }, []);
 
     return ( 
         <>
-            <h4>GameContainer</h4>
-            {waitingForOpponentToConfirmRematch && <div>Waiting for opponnent to confirm rematch</div>}
-            {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch}/>}
-            {winner && <div>{winner} wins</div>}
-            {opponentQuits && <OpponentQuits/>}
-            {invalidRoute && <ErrorPage/>}
-            {playing && <Exit/>}
-            {waiting && <Waiting/>}
-            {user2SignedIn && <TurnNotifier canMove={canMove}/>}
-            {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect}/>}
-            {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
-            {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
+            <div className="game-grid-container">
+                
+                {invalidRoute && <ErrorPage/>}
+                
+                {waitingForOpponentToConfirmRematch && <div>Waiting for opponnent to confirm rematch</div>}
+                {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch}/>}
+                {winner && <div>{winner} wins</div>}
+
+                {opponentQuits && <OpponentQuits/>}
+
+                {/* {playing && <Exit/>} */}
+
+                <div className="game-text">
+                    {waiting && <Waiting/>}
+                    {user2SignedIn && <TurnNotifier canMove={canMove}/>}
+                </div>
+
+                {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect}/>}
+                
+                {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
+
+                {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
+            </div>
         </>
     )
 }

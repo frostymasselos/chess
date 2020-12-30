@@ -3,7 +3,7 @@
     align-content: start;
     grid-auto-rows: auto;
     // row-gap: calc(var(--lh) * 1);
-    // height: 82.5vh;//why we need this🐉(with question recently asked)
+    height: 100vh - $header-height - $footer-height;//82.5vh
 }
 .instructions {
     align-self: start;
@@ -15,21 +15,11 @@
     }
     > :first-child {
         margin-top: $lh * 1;//0.5
-        margin-bottom: $lh * 0.5;//1
-    }
-    > :last-child {
-        margin-bottom: $lh * 0.5//0;
     }
 }
 .new-game {
     @include button;
     border-radius: calc(var(--new-game-button-height) * 0.25);
-    // > div:hover { //🐉use of ampersand thing
-    //     background-color: $button-hover;
-    // }
-    // > div:active {
-    //     background-color: $light-square;
-    // }
 }
 .resume-game {
     @include button;

@@ -57,14 +57,12 @@ html {
 }
 
 .footer {
-  position: fixed;
-  bottom: 0px;
+  font-size: 15px;
+  line-height: 1.2em;
   width: 100vw;
   height: 17.5vh;
   background-color: #001f3f;
   color: darkorchid;
-  font-size: 15px;
-  line-height: 1.2;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -73,7 +71,14 @@ html {
       grid-template-rows: 38% 62%;
 }
 
-.footer > :first-child {
+.footer .footer-info {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
   text-align: center;
 }
 
@@ -89,11 +94,6 @@ html {
           justify-content: space-evenly;
 }
 
-.button:hover, .button:active {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
-}
-
 .home-grid-container {
   display: -ms-grid;
   display: grid;
@@ -104,6 +104,7 @@ html {
   -ms-flex-line-pack: start;
       align-content: start;
   grid-auto-rows: auto;
+  height: 70vh;
 }
 
 .instructions {
@@ -122,11 +123,6 @@ html {
 
 .instructions > :first-child {
   margin-top: 1.4rem;
-  margin-bottom: 0.7rem;
-}
-
-.instructions > :last-child {
-  margin-bottom: 0.7rem;
 }
 
 .new-game {
@@ -181,6 +177,31 @@ html {
       grid-template-rows: 1fr;
   place-items: center;
   border-radius: calc(var(--home-terminate-game-button-height) * 0.25);
+}
+
+.game-text > * {
+  text-align: center;
+}
+
+.game-text p {
+  margin: 0.7rem 0;
+}
+
+.game-terminate-game {
+  background-color: #FF851B;
+  border: solid 3px brown;
+  width: 90%;
+  height: 4.2rem;
+  -ms-grid-column-align: center;
+      justify-self: center;
+  margin-top: 0.7rem;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
 }
 
 .z-index-1 {

@@ -559,15 +559,19 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
 
     return (
         <>
-            {check && <div>You are in check</div>}
-            {checkMate && <div>Checkmate</div>}
             {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion}/>}
+            <div className="game-text">
+                {check && <p>You are in check</p>}
+                {checkMate && <p>Checkmate</p>}
+            </div>
             <div className="board-grid-container unclickable">
                 {squareTags}
             </div>
-            <div onClick={highlightSquares.bind(null, "user")}>Reveal possible squares you can land on {showingUserPiecesPotentialMoves ? <span>✅</span> : null}</div>
-            <div onClick={highlightSquares.bind(null, "opponent")}>Reveal possible squares opponent can land on {showingOpponentPiecesPotentialMoves ? <span>✅</span> : null}</div>
-            <div onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton}>Reveal possible squares clicked-on piece could land on {showingClickedOnPiecePotentialMoves ? <span>✅</span> : null}</div>
+            <div className="game-buttons">
+                <div onClick={highlightSquares.bind(null, "user")}>Reveal possible squares you can land on {showingUserPiecesPotentialMoves ? <span>✅</span> : null}</div>
+                <div onClick={highlightSquares.bind(null, "opponent")}>Reveal possible squares opponent can land on {showingOpponentPiecesPotentialMoves ? <span>✅</span> : null}</div>
+                <div onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton}>Reveal possible squares clicked-on piece could land on {showingClickedOnPiecePotentialMoves ? <span>✅</span> : null}</div>
+            </div>
         </>
     )
 }
