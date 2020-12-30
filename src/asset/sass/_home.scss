@@ -1,30 +1,24 @@
 .home-grid-container {
     @include grid-container-template(100vw, auto);
     align-content: start;
-    grid-auto-rows: 20vh;
-    // row-gap: calc(var(--line-height) * 1);
+    grid-auto-rows: auto;
+    // row-gap: calc(var(--lh) * 1);
     // height: 82.5vh;//why we need this🐉(with question recently asked)
 }
 .instructions {
     align-self: start;
-    // align-content: start;
-    // align-items: start;
-    // height: calc(var(--font-size) * 5);
-    // @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
-    // align-items: initial;
-    // font-size: 20px;
-    // height: calc(var(--line-height) * 5);
     > * {
         text-align: center;
     }
     p {
-        margin-bottom: calc(var(--line-height) * 1)
+        margin-bottom: $lh * 0.5//calc(var(--lh) * 1)
     }
     > :first-child {
-        // margin-top: calc(var(--line-height) * 0.5);
+        margin-top: $lh * 1;//0.5
+        margin-bottom: $lh * 0.5;//1
     }
     > :last-child {
-        margin-bottom: 0;//calc(var(--line-height) * 0.5);
+        margin-bottom: $lh * 0.5//0;
     }
 }
 .new-game {

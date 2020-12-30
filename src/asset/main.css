@@ -24,7 +24,6 @@ img {
 
 html {
   font-size: 20px;
-  --line-height: 1.5rem;
 }
 
 #root {
@@ -34,7 +33,7 @@ html {
 
 @media screen and (max-width: 500px) {
   #root {
-    line-height: var(--line-height);
+    line-height: 1.4rem;
   }
 }
 
@@ -64,6 +63,8 @@ html {
   height: 17.5vh;
   background-color: #001f3f;
   color: darkorchid;
+  font-size: 15px;
+  line-height: 1.2;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -102,7 +103,7 @@ html {
       grid-template-rows: auto;
   -ms-flex-line-pack: start;
       align-content: start;
-  grid-auto-rows: 20vh;
+  grid-auto-rows: auto;
 }
 
 .instructions {
@@ -116,22 +117,26 @@ html {
 }
 
 .instructions p {
-  margin-bottom: calc(var(--line-height) * 1);
+  margin-bottom: 0.7rem;
+}
+
+.instructions > :first-child {
+  margin-top: 1.4rem;
+  margin-bottom: 0.7rem;
 }
 
 .instructions > :last-child {
-  margin-bottom: 0;
+  margin-bottom: 0.7rem;
 }
 
 .new-game {
   background-color: #FF851B;
-  border: solid 5px black;
+  border: solid 3px brown;
   width: 90%;
-  height: 90%;
+  height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  -ms-grid-row-align: center;
-      align-self: center;
+  margin-top: 0.7rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -144,13 +149,12 @@ html {
 
 .resume-game {
   background-color: #FF851B;
-  border: solid 5px black;
+  border: solid 3px brown;
   width: 90%;
-  height: 90%;
+  height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  -ms-grid-row-align: center;
-      align-self: center;
+  margin-top: 0.7rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -163,13 +167,12 @@ html {
 
 .home-terminate-game {
   background-color: #FF851B;
-  border: solid 5px black;
+  border: solid 3px brown;
   width: 90%;
-  height: 90%;
+  height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  -ms-grid-row-align: center;
-      align-self: center;
+  margin-top: 0.7rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;

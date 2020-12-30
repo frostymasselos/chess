@@ -61,9 +61,11 @@ function Home() {
             // delete db
             await db.ref(`matches/${url}`).remove();
             await auth.currentUser.delete();
-            // change state
+            //#1 stay on same page & change state
             setNotSignedIn(true);
             setUrl('');
+            //#2 manually refresh page
+            // window.location.reload();
         }
         let authListener = auth.onAuthStateChanged(next);
     }
@@ -76,9 +78,10 @@ function Home() {
             button.style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
+
     useEffect(() => {
-        let eventListener = auth.onAuthStateChanged(() => {
-            eventListener();//removes listener
+        let authListener = auth.onAuthStateChanged(() => {
+            authListener();//removes listener
             if (auth.currentUser) { 
                 setUser(auth.currentUser.email.slice(7, 12));
                 setUrl(auth.currentUser.email.slice(0, 6));
@@ -100,7 +103,7 @@ function Home() {
     return ( 
         <>
             <div className="home-grid-container">
-                <Instructions url={url}/>
+                {notSignedIn && <Instructions url={url}/>}
                 {notSignedIn && <StartNewGame startNewGame={startNewGame}/>}
                 {url && <ResumeGame url={url}/>}
                 {url && <TerminateGame terminateGame={terminateGame}/>}

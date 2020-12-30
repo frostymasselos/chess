@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////CSS VARIABLES///////////////////////////////////////////////////////////
 //not here but present on inline: button-radius; 
 /////////////////////////////////////////////////SASS///////////////////////////////////////////////////////////
-// $line-height: 
+$lh: 1.4rem; //(28px)
 $footer-color: #001f3f;
 $light-square: grey;
 $dark-square: #FF851B;
@@ -12,6 +12,7 @@ $potential-clicked-on-piece-square: #85144b;
 $white-piece: white;
 $black-piece: black;
 $clicked-on-piece: #85144b;
+$yellow: #FFDC00;
 
 @mixin grid-container-template($column-value: 1fr, $row-value: 1fr) {
     display: grid;
@@ -24,10 +25,12 @@ $clicked-on-piece: #85144b;
 }
 @mixin button {
     background-color: $dark-square;
-    border: solid 5px black;
+    border: solid 3px brown;
     width: 90%;
-    height: 90%;
-    justify-self: center; align-self: center;
+    height: $lh * 3;//100%
+    justify-self: center;//align-self: start;
+    margin-top: $lh / 2;
+    // margin-bottom: $lh / 2;
     @include grid-container-horizontally-and-vertically-center-GIs();
 }
 /////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
@@ -53,16 +56,15 @@ img {
 /////////////////////////////////////////////////GENERAL///////////////////////////////////////////////////////////
 html {
     font-size: 20px;
-    --line-height: 1.5rem;
 }
 #root {
     box-sizing: border-box;
     @media screen and (max-width: 500px) {
-        line-height: var(--line-height);
+        line-height: $lh;
     }
 }
 .header {
-    height: 12.5vh;
+    height: 12.5vh;//10
     font-size: 60px;
     background-color: #DDDDDD;
     @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
@@ -77,9 +79,10 @@ html {
     position: fixed;
     bottom: 0px;
     width: 100vw;
-    height: 17.5vh;
+    height: 17.5vh;//16 ( = golden ratio w/title?)
     background-color: $footer-color;
     color: darkorchid;
+    font-size: 15px; line-height: 1.2;
     @include grid-container-template(1fr, 38% 62%);
     > :first-child {
         text-align: center; 
