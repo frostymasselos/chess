@@ -1,3 +1,7 @@
+/////////////////////////////////////////////////CSS VARIABLES///////////////////////////////////////////////////////////
+//not here but present on inline: button-radius; 
+/////////////////////////////////////////////////SASS///////////////////////////////////////////////////////////
+// $line-height: 
 $footer-color: #001f3f;
 $light-square: grey;
 $dark-square: #FF851B;
@@ -8,6 +12,7 @@ $potential-clicked-on-piece-square: #85144b;
 $white-piece: white;
 $black-piece: black;
 $clicked-on-piece: #85144b;
+
 @mixin grid-container-template($column-value: 1fr, $row-value: 1fr) {
     display: grid;
     grid-template-columns: $column-value;
@@ -15,15 +20,14 @@ $clicked-on-piece: #85144b;
 }
 @mixin grid-container-horizontally-and-vertically-center-GIs($column-value: 1fr, $row-value: 1fr) {
     @include grid-container-template($column-value, $row-value);
-    justify-items: center;
-    align-items: center;
+    place-items: center;
 }
 @mixin button {
     background-color: $dark-square;
     border: solid 5px black;
-    // border-radius: 16.6%/50%;
-    // width: 100%;
-    // height: 100%;
+    width: 90%;
+    height: 90%;
+    justify-self: center; align-self: center;
     @include grid-container-horizontally-and-vertically-center-GIs();
 }
 /////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
@@ -34,8 +38,12 @@ $clicked-on-piece: #85144b;
     margin: 0;
     box-sizing: inherit;
 }
+body {
+    margin: 0;
+}
 a {
     all: unset;
+    color: unset;//don't know why we need this for color to not be purple(🧨)
 }
 img {
     object-fit: contain;
@@ -43,20 +51,27 @@ img {
     height: 100%;
 }
 /////////////////////////////////////////////////GENERAL///////////////////////////////////////////////////////////
-// CONSIDRER PUTTING ALL BAR HEAD & INLINE (INLINE-BLOCK?) DISPLAY: FLOW-ROOT  */
-    // EL WITH DISPLAY INLINE-BLOCK SET DISPLAY: REVERT
-:not(head, span, a, section) {
-    // display: flow-root;
-}
-body {
-    margin: 0;
+html {
+    font-size: 20px;
+    --line-height: 1.5rem;
 }
 #root {
     box-sizing: border-box;
+    @media screen and (max-width: 500px) {
+        line-height: var(--line-height);
+    }
 }
-div {
-    // font-family: 'Ranchers';
-    // color: green;
+.header {
+    height: 12.5vh;
+    font-size: 60px;
+    background-color: #DDDDDD;
+    @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+    > a > span:nth-child(2) {
+        display: inline-block;
+        -moz-transform: scale(-1, 1);
+        -webkit-transform: scale(-1, 1);
+        transform: scale(-1, 1);
+    }
 }
 .footer {
     position: fixed;
@@ -65,7 +80,7 @@ div {
     height: 17.5vh;
     background-color: $footer-color;
     color: darkorchid;
-    @include grid-container-template(1fr, 1fr 50% 1fr);
+    @include grid-container-template(1fr, 38% 62%);
     > :first-child {
         text-align: center; 
     }
@@ -73,11 +88,21 @@ div {
         @include grid-container-template(repeat(3, 1fr), 100%);
         justify-content: space-evenly;
     }
-    > :last-child {
-        justify-self: center; align-self: end;
+    // > :last-child {
+    //     justify-self: center; align-self: end;
+    // }
+    .footer-info {
+        // @include grid-container-horizontally-and-vertically-center-GIs();
+    }
+}
+.button { 
+    &:hover, &:active {
+        background-image: linear-gradient($dark-square, brown);
+        // background-image: linear-gradient($dark-square, pink);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @import './home.scss';
 @import './game.scss';
 @import './board.scss';
+

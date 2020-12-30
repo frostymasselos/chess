@@ -1,3 +1,4 @@
+import Header from './component/home/Header.js';
 import Footer from './component/home/Footer.js';
 import Home from './container/Home.js';
 import Game from './container/Game.js'
@@ -8,6 +9,7 @@ function App() {
     return (
         <Router> 
             <> 
+                <Header/>
                 <Switch>
                     <Route exact path="/" render={(arg) => <Home/>} />
                     <Route path="/:code" render={(url) => <Game params={url.match.url}/>}/> 

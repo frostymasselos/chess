@@ -7,8 +7,8 @@ function Footer(params) {
     return (
         <>
             <div className="footer">
-                <div>
-                    Author: Ryan Frost
+                <div className="footer-info">
+                    Author: Ryan Frost. e: ryanfrost2015@gmail.com.
                 </div> 
                 <div className="icons">
                     <a href="https://github.com/frostymasselos" target="_blank">
@@ -20,9 +20,6 @@ function Footer(params) {
                     <a href="https://rhcp.com" target="_blank">
                         <img src={LinkedInPNG} className="linked-image"/>
                     </a>
-                </div>
-                <div>
-                    <div>e: ryanfrost2015@gmail.com</div>
                 </div>
             </div>
         </>

@@ -1,12 +1,13 @@
 import {Link} from 'react-router-dom';
 
 function Header() {//onClick={() => window.location.replace(``)
+
     return (
         <>
             <div className="header"> 
-                <div>
-                    <Link to="/">♛</Link><Link to="/">♘</Link>
-                </div>
+                <Link to="/">
+                    <span>♛</span><span>♘</span>
+                </Link>
                 {/* <span>♖♜</span> */}
             </div>
         </>

@@ -6,8 +6,13 @@
           box-sizing: inherit;
 }
 
+body {
+  margin: 0;
+}
+
 a {
   all: unset;
+  color: unset;
 }
 
 img {
@@ -17,13 +22,39 @@ img {
   height: 100%;
 }
 
-body {
-  margin: 0;
+html {
+  font-size: 20px;
+  --line-height: 1.5rem;
 }
 
 #root {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+@media screen and (max-width: 500px) {
+  #root {
+    line-height: var(--line-height);
+  }
+}
+
+.header {
+  height: 12.5vh;
+  font-size: 60px;
+  background-color: #DDDDDD;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+}
+
+.header > a > span:nth-child(2) {
+  display: inline-block;
+  -webkit-transform: scale(-1, 1);
+  transform: scale(-1, 1);
 }
 
 .footer {
@@ -37,8 +68,8 @@ body {
   display: grid;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr 50% 1fr;
-      grid-template-rows: 1fr 50% 1fr;
+  -ms-grid-rows: 38% 62%;
+      grid-template-rows: 38% 62%;
 }
 
 .footer > :first-child {
@@ -57,12 +88,9 @@ body {
           justify-content: space-evenly;
 }
 
-.footer > :last-child {
-  -ms-grid-column-align: center;
-      justify-self: center;
-  -ms-flex-item-align: end;
-      -ms-grid-row-align: end;
-      align-self: end;
+.button:hover, .button:active {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
+  background-image: linear-gradient(#FF851B, brown);
 }
 
 .home-grid-container {
@@ -70,119 +98,86 @@ body {
   display: grid;
   -ms-grid-columns: 100vw;
       grid-template-columns: 100vw;
-  -ms-grid-rows: 12.5vh 30vh (20vh)[auto-fit];
-      grid-template-rows: 12.5vh 30vh repeat(auto-fit, 20vh);
-  height: 82.5vh;
-}
-
-.header {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  justify-items: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  font-size: 60px;
-  background-color: #DDDDDD;
-}
-
-.header > div > a {
-  color: black;
-}
-
-.header > div > a:nth-child(2) {
-  display: inline-block;
-  -webkit-transform: scale(-1, 1);
-  transform: scale(-1, 1);
+  -ms-grid-rows: auto;
+      grid-template-rows: auto;
+  -ms-flex-line-pack: start;
+      align-content: start;
+  grid-auto-rows: 20vh;
 }
 
 .instructions {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  justify-items: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  font-size: 20px;
+  -ms-flex-item-align: start;
+      -ms-grid-row-align: start;
+      align-self: start;
 }
 
 .instructions > * {
   text-align: center;
 }
 
+.instructions p {
+  margin-bottom: calc(var(--line-height) * 1);
+}
+
+.instructions > :last-child {
+  margin-bottom: 0;
+}
+
 .new-game {
   background-color: #FF851B;
   border: solid 5px black;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  justify-items: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.resume-game {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  justify-items: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.resume-game > * {
-  background-color: #FF851B;
-  border: solid 5px black;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  justify-items: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.home-terminate-game {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  justify-items: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  background-color: #FF851B;
-  border: solid 5px black;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  justify-items: center;
-  align-items: center;
+  width: 90%;
+  height: 90%;
   -ms-grid-column-align: center;
       justify-self: center;
   -ms-grid-row-align: center;
       align-self: center;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+  border-radius: calc(var(--new-game-button-height) * 0.25);
+}
+
+.resume-game {
+  background-color: #FF851B;
+  border: solid 5px black;
+  width: 90%;
+  height: 90%;
+  -ms-grid-column-align: center;
+      justify-self: center;
+  -ms-grid-row-align: center;
+      align-self: center;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+  border-radius: calc(var(--resume-game-button-height) * 0.25);
+}
+
+.home-terminate-game {
+  background-color: #FF851B;
+  border: solid 5px black;
+  width: 90%;
+  height: 90%;
+  -ms-grid-column-align: center;
+      justify-self: center;
+  -ms-grid-row-align: center;
+      align-self: center;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+  border-radius: calc(var(--home-terminate-game-button-height) * 0.25);
 }
 
 .z-index-1 {

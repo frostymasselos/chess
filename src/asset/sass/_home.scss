@@ -1,47 +1,35 @@
 .home-grid-container {
-    @include grid-container-template(100vw, 12.5vh 30vh repeat(auto-fit, 20vh));
-    height: 82.5vh;//🐉test that we don't need this
+    @include grid-container-template(100vw, auto);
+    align-content: start;
+    grid-auto-rows: 20vh;
+    // row-gap: calc(var(--line-height) * 1);
+    // height: 82.5vh;//why we need this🐉(with question recently asked)
 }
-///////////////////////////////////////////HEADER//////////////////////////////////////////////////////////////////
-.header {
-    @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
-    font-size: 60px;
-    background-color: #DDDDDD;
-}
-.header > div > a {
-    color: black;
-}
-.header > div > a:nth-child(1) {
-    // transform: rotate(20deg);
-    // color: brown
-    // border: 1px solid #FF4136;
-    // border-radius: 20px/20px;
-    // border-radius: 47% 53% 48% 52% / 100% 100% 0% 0% ;
-}
-.header > div > a:nth-child(2) {
-    display: inline-block;
-    -moz-transform: scale(-1, 1);
-    -webkit-transform: scale(-1, 1);
-    transform: scale(-1, 1);
-}
-///////////////////////////////////////////INSTRUCTIONS//////////////////////////////////////////////////////////////////
 .instructions {
-    @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+    align-self: start;
+    // align-content: start;
+    // align-items: start;
+    // height: calc(var(--font-size) * 5);
+    // @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
     // align-items: initial;
-    font-size: 20px;
+    // font-size: 20px;
+    // height: calc(var(--line-height) * 5);
+    > * {
+        text-align: center;
+    }
+    p {
+        margin-bottom: calc(var(--line-height) * 1)
+    }
+    > :first-child {
+        // margin-top: calc(var(--line-height) * 0.5);
+    }
+    > :last-child {
+        margin-bottom: 0;//calc(var(--line-height) * 0.5);
+    }
 }
-.instructions > * {
-    text-align: center;
-}
-.instructions > :nth-child(1) {
-
-}
-.instructions > :nth-child(1) {
-    
-}
-///////////////////////////////////////////NEW-GAME//////////////////////////////////////////////////////////////////
 .new-game {
     @include button;
+    border-radius: calc(var(--new-game-button-height) * 0.25);
     // > div:hover { //🐉use of ampersand thing
     //     background-color: $button-hover;
     // }
@@ -50,14 +38,10 @@
     // }
 }
 .resume-game {
-    @include grid-container-horizontally-and-vertically-center-GIs();
-    > * {
-        @include button;
-    }
+    @include button;
+    border-radius: calc(var(--resume-game-button-height) * 0.25);
 }
 .home-terminate-game {
-    @include grid-container-horizontally-and-vertically-center-GIs();
     @include button;
-    justify-self: center;
-    align-self: center;
+    border-radius: calc(var(--home-terminate-game-button-height) * 0.25);
 }

@@ -8,7 +8,7 @@ import TerminateGame from '../component/home/TerminateGame';
 import firebase from '../helper/firebase.js'; 
 import "firebase/auth";
 import {Link} from 'react-router-dom';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
 function Home() {
 
@@ -17,6 +17,8 @@ function Home() {
     let [notSignedIn, setNotSignedIn] = useState(false);
     let [url, setUrl] = useState('');
     let [user, setUser] = useState('');
+
+    let cssUseEffectFirstTime = useRef(true);
 
     async function startNewGame() {
         let url = '';
@@ -65,6 +67,15 @@ function Home() {
         }
         let authListener = auth.onAuthStateChanged(next);
     }
+    //CSS
+    function roundCornersOfButtons() {
+        const buttons = Array.from(window.document.querySelectorAll(`.button`)); 
+        for (let index = 0; index < buttons.length; index++) {
+            const button = buttons[index]; 
+            const theClassName = Array.from(button.classList)[0];
+            button.style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
+        }
+    };
     useEffect(() => {
         let eventListener = auth.onAuthStateChanged(() => {
             eventListener();//removes listener
@@ -77,11 +88,18 @@ function Home() {
             }
         });
     }, []);
+    //CSS
+    useEffect(() => {
+        if (cssUseEffectFirstTime.current) {
+            cssUseEffectFirstTime.current = false; return;
+        }
+        //consistently round corners of buttons
+        roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
+    }, [notSignedIn, url]);
     
     return ( 
         <>
             <div className="home-grid-container">
-                <Header/>
                 <Instructions url={url}/>
                 {notSignedIn && <StartNewGame startNewGame={startNewGame}/>}
                 {url && <ResumeGame url={url}/>}
@@ -93,3 +111,19 @@ function Home() {
 }
 
 export default Home;
+
+// useEffect(() => {
+//     //creating CSS variables
+//     const root = window.document.querySelector(`#root`);
+//     //#1 
+//     // root.style.setProperty(`--line-height`, `${window.getComputedStyle(root).getPropertyValue(`line-height`)}`);
+//     //#2
+//     var style = document.createElement('style');
+//     style.innerHTML = `
+//         #root {
+//             --line-height: ${window.getComputedStyle(root).getPropertyValue(`line-height`)};
+//         }
+//     `;
+//     var ref = document.querySelector('script');
+//     ref.parentNode.insertBefore(style, ref);
+// }, []);

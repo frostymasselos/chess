@@ -3,11 +3,9 @@ import {Link} from 'react-router-dom';
 export default function ResumeGame({url}) {
     return (
         <>
-            <div className="resume-game">
-                <Link to={`/${url}`}>
-                    Resume Game
-                </Link>
-            </div>
+            <Link className="resume-game button" to={`/${url}`}>
+                Resume Game
+            </Link>
         </>
     )
 }
