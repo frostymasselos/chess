@@ -238,6 +238,7 @@ html {
       grid-template-rows: 1fr;
   place-items: center;
   border-radius: calc(var(--game-terminate-game-button-height) * 0.25);
+  margin: 0.7rem auto;
 }
 
 .z-index-1 {

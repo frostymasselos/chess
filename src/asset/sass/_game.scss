@@ -43,4 +43,5 @@
 .game-terminate-game {
     @include button;
     border-radius: calc(var(--game-terminate-game-button-height) * 0.25);
+    margin: ($lh * 0.5) auto;
 }
