@@ -187,6 +187,41 @@ html {
   margin: 0.7rem 0;
 }
 
+.game-buttons {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+  -ms-grid-rows: auto;
+      grid-template-rows: auto;
+  place-items: center;
+}
+
+.game-buttons > div {
+  font-size: 18px;
+  height: 100%;
+  width: 90%;
+}
+
+.game-buttons .potential-square {
+  border-radius: calc(var(--potential-square-button-height) * 0.25);
+}
+
+.game-buttons .opponent-potential-square {
+  border-radius: calc(var(--opponent-potential-square-button-height) * 0.25);
+}
+
+.game-buttons .selected-potential-square {
+  border-radius: calc(var(--selected-potential-square-button-height) * 0.25);
+}
+
+.game-buttons .switch {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: black solid 1px;
+}
+
 .game-terminate-game {
   background-color: #FF851B;
   border: solid 3px brown;

@@ -26,8 +26,9 @@ function Game({params}) {
     let [winner, setWinner] = useState('');
     let [askForRematch, setAskForRematch] = useState('');
     let [waitingForOpponentToConfirmRematch, setWaitingForOpponentToConfirmRematch] = useState('');
+    let [check, setCheck] = useState(false);
     function turnAllPresentationalStateOnOrOffApartFrom(boolean, ...exceptions) { //as a string  
-        const allSetStates = {setInvalidRoute, setPlaying, setCanMove, setUser2SignedIn, setWaiting, setOnForeignMatch, setOpponentQuits, setWinner, setAskForRematch, setWaitingForOpponentToConfirmRematch};
+        const allSetStates = {setInvalidRoute, setPlaying, setCanMove, setUser2SignedIn, setWaiting, setOnForeignMatch, setOpponentQuits, setWinner, setAskForRematch, setWaitingForOpponentToConfirmRematch, setCheck};
         const positiveArray = [];
         const negativeArray = [];
         for (const key in allSetStates) {
@@ -39,8 +40,8 @@ function Game({params}) {
                 }
             }
         };
-        positiveArray.forEach((item) => item.call(null, boolean)); //console.log(positiveArray, negativeArray);
-        negativeArray.forEach((item) => item.call(null, !boolean)); //console.log(negativeArray);
+        positiveArray.forEach((item) => item.call(null, boolean));//console.log(positiveArray, negativeArray);
+        negativeArray.forEach((item) => item.call(null, !boolean));//console.log(negativeArray);
     }
 
     //retrigger useEffects
@@ -295,27 +296,23 @@ function Game({params}) {
     return ( 
         <>
             <div className="game-grid-container">
-                
                 {invalidRoute && <ErrorPage/>}
+                {opponentQuits && <OpponentQuits/>}
+                {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
                 
                 {waitingForOpponentToConfirmRematch && <div>Waiting for opponnent to confirm rematch</div>}
                 {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch}/>}
                 {winner && <div>{winner} wins</div>}
 
-                {opponentQuits && <OpponentQuits/>}
-
-                {/* {playing && <Exit/>} */}
-
                 <div className="game-text">
+                    {/* {playing && <Exit/>} */}
                     {waiting && <Waiting/>}
-                    {user2SignedIn && <TurnNotifier canMove={canMove}/>}
+                    {user2SignedIn && <TurnNotifier canMove={canMove} check={check}/>}
                 </div>
-
-                {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect}/>}
+                {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect} setCheck={setCheck}/>}
                 
                 {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
 
-                {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
             </div>
         </>
     )

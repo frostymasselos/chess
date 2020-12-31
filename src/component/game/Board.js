@@ -3,10 +3,8 @@ import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';  
 
-function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
+function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffect}) {
 
-    let [check, setCheck] = useState(false);
-    let [checkMate, setCheckMate] = useState(false);
     let [squareTags, setSquareTags] = useState([]); //could add it directly to DOM w/vanilla
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
     let [showingOpponentPiecesPotentialMoves, setShowingOpponentPiecesPotentialMoves] = useState(false);
@@ -457,7 +455,7 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
         }
     }, [canMove]);
 
-    //rotate for black (& color board?)
+    //rotate for black
     useEffect(() => { 
         if (authInfo.color === "black") { console.log("rotating board");
             let board = document.querySelector('.board-grid-container');
@@ -519,7 +517,6 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
                 endGame();
             }
             function endGame(params) {
-                setCheckMate(true);
                 db.ref(`matches/${authInfo.url}`).update({winner: `${opponentColor.current} (${opponent.current})`});
             }
         });
@@ -560,17 +557,28 @@ function Board({db, authInfo, canMove, setCanMove, triggerBoardUseEffect}) {
     return (
         <>
             {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion}/>}
-            <div className="game-text">
-                {check && <p>You are in check</p>}
-                {/* {checkMate && <p>Checkmate</p>} */}
-            </div>
             <div className="board-grid-container unclickable">
                 {squareTags}
             </div>
             <div className="game-buttons">
-                <div onClick={highlightSquares.bind(null, "user")}>Reveal possible squares you can land on {showingUserPiecesPotentialMoves ? <span>✅</span> : null}</div>
-                <div onClick={highlightSquares.bind(null, "opponent")}>Reveal possible squares opponent can land on {showingOpponentPiecesPotentialMoves ? <span>✅</span> : null}</div>
-                <div onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton}>Reveal possible squares clicked-on piece could land on {showingClickedOnPiecePotentialMoves ? <span>✅</span> : null}</div>
+                <div onClick={highlightSquares.bind(null, "user")} className="potential-square button">
+                    {/* <div> */}
+                        P squares {showingUserPiecesPotentialMoves ? <span>✅</span> : null}
+                        <div className="switch"></div>
+                    {/* </div> */}
+                </div>
+                <div onClick={highlightSquares.bind(null, "opponent")} className="opponent-potential-square button">
+                    {/* <div> */}
+                        Opponent's potential squares {showingOpponentPiecesPotentialMoves ? <span>✅</span> : null}
+                        <div className="switch"></div>
+                    {/* </div> */}
+                </div>
+                <div onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton} className="selected-potential-square button">
+                    {/* <div> */}
+                        Selected's potential squares {showingClickedOnPiecePotentialMoves ? <span>✅</span> : null}
+                        <div className="switch"></div>
+                    {/* </div> */}
+                </div>
             </div>
         </>
     )

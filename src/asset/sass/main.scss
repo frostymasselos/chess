@@ -36,6 +36,9 @@ $yellow: #FFDC00;
     // margin-bottom: $lh / 2;
     @include grid-container-horizontally-and-vertically-center-GIs();
 }
+@mixin board-info-button {
+    @include grid-container-horizontally-and-vertically-center-GIs();
+}
 /////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
 *, ::before, ::after {
     margin-top: 0;

@@ -1,6 +1,8 @@
-function TurnNotifier({canMove}) {
+function TurnNotifier({canMove, check}) {
     return (
-        <p>{canMove? "Your" : "Opponent's"} Turn</p>
+        <>
+            <p>{check ? "You are in check" : canMove ? "Your Turn" : "Opponent's Turn"} </p>
+        </>
     )
 }
 
