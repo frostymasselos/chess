@@ -21,7 +21,7 @@ function TerminateMatch({authInfo, db, auth}) {
 
     return (
         <>
-            <div onClick={terminateMatch} className="game-terminate-game button">
+            <div onClick={terminateMatch} className="game-terminate-game button warning-button">
                 End Game
             </div>
         </>

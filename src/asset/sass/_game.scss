@@ -10,38 +10,91 @@
     }
 }
 .game-buttons {
-    // padding-top: $lh * 0.25;
-    @include grid-container-horizontally-and-vertically-center-GIs(1fr 1fr 1fr, auto);
+    margin-top: $lh * 0.25;
+    @include grid-container-template(repeat(3, 30%), auto); justify-content: space-evenly;
+    // align-content: start;
+    // column-gap: ($lh * 0.5);
+    line-height: $lh * 0.8;
+    
     > div {
+        //#1
+        // text-align: center;
+        // #2
+        @include grid-container-template(1fr, 1fr auto);
+        // align-content: start; 
+        align-items: center;
+        // justify-items: center;
+        text-align: center;   
+
         font-size: 18px;
         height: 100%;
-        width: 90%;
-        // @include grid-container-horizontally-and-vertically-center-GIs();       
-        // background-color: gold;
+        // width: 90%;
+        background-color: #dddddd;
+        color: black;//$dark-square;
+        border: solid grey 2px;//inset
         > div {
             // background-color: gold;
             // @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr 1fr); 
-            // text-align: center;      
         }
     }
-    .potential-square {
-        border-radius: calc(var(--potential-square-button-height) * 0.25);
-    }
-    .opponent-potential-square {
-        border-radius: calc(var(--opponent-potential-square-button-height) * 0.25);
-    }
-    .selected-potential-square {
-        border-radius: calc(var(--selected-potential-square-button-height) * 0.25);
-    }
+
     .switch {
         height: 20px;    
         width: 20px;
         border-radius: 50%;
         border: black solid 1px;
+        margin: 0 auto;//($lh * 0.125)
+        // margin-bottom: ($lh * 0.125)
+        // color: white;
+        border: solid 1px black;
+    }
+
+    .potential-square {
+        border-radius: calc(var(--potential-square-button-height) * 0.10);
+        // background-color: grey;
+        &-switch-color {
+            background-color: $potential-user-square;
+            border-color: $potential-user-square;
+        }
+    }
+    .opponent-potential-square {
+        border-radius: calc(var(--opponent-potential-square-button-height) * 0.10);
+        &-switch-color {
+            background-color: $potential-opponent-square;
+            border-color: $potential-opponent-square;
+        }
+    }
+    .selected-potential-square {
+        border-radius: calc(var(--selected-potential-square-button-height) * 0.10);
+        &-switch-color {
+            background-color: $potential-clicked-on-piece-square;
+            border-color: $potential-clicked-on-piece-square;
+        }
+    }
+
+}
+
+.exit-game {
+    @include button;
+    border-radius: calc(var(--exit-game-button-height) * 0.25);
+    margin: ($lh * 0.5) auto;
+    > a {
+        @include grid-container-horizontally-and-vertically-center-GIs();
     }
 }
+
 .game-terminate-game {
     @include button;
     border-radius: calc(var(--game-terminate-game-button-height) * 0.25);
+    margin: ($lh * 0.5) auto;
+}
+
+.error-page-container {
+    height: 100vh - $header-height - $footer-height;
+    text-align: center;
+}
+.exit-error-page {
+    @include button;
+    border-radius: calc(var(--exit-error-page-button-height) * 0.25);
     margin: ($lh * 0.5) auto;
 }

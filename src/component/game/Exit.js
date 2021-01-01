@@ -3,7 +3,9 @@ import {Link} from 'react-router-dom';
 function Exit(params) {
     return (
         <>
-            <Link to="/">Exit (link)</Link>
+            <Link className="exit-game button" to="/">
+                Exit
+            </Link>
         </>
     )
 }

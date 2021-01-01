@@ -1,12 +1,28 @@
 import {Link} from 'react-router-dom';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
-function ErrorPage(params) {
+function ErrorPage({cssFunctions, unmountCSSFunctions, roundCornersOfButtons}) {
+
+    useEffect(() => {
+        cssFunctions();
+        return () => {
+            console.log("unmounting");
+            unmountCSSFunctions();
+            // window.removeEventListener('resize', roundCornersOfButtons);✅
+        };
+            
+            
+    }, []);
 
     return (
         <>
-            <div>ErrorPage. The match does not exist.</div>
-            <Link to="/">Return to Homepage</Link>
+            <div className="error-page-container">
+                <h1>404 Error</h1>
+                <div>The match does not exist or is in use.</div>
+                <Link className="exit-error-page button" to="/">
+                    Return Home
+                </Link>
+            </div>
         </>
     ) 
 }

@@ -109,14 +109,17 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         }
     }
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton() {
+        const selectedPiecePiecesSwitch = window.document.querySelector(`.selected-potential-square-switch`);
         if (showingClickedOnPiecePotentialMoves) {
             setShowingClickedOnPiecePotentialMoves(false);
+            selectedPiecePiecesSwitch.classList.remove(`selected-potential-square-switch-color`);
             if (clickedOnPiece.current) { //if clicked onPiece true, remove its highlighting.
                 const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`));
                 allSquareTags.forEach((squareTag) => squareTag.classList.remove(`potentialClickedOnPieceSquare`));
             }
         } else {
             setShowingClickedOnPiecePotentialMoves(true);
+            selectedPiecePiecesSwitch.classList.add(`selected-potential-square-switch-color`);
             if (clickedOnPiece.current) { //if clicked onPiece true, add its highlighting.
                 const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(); console.log(squaresWithUserAndOpponentPieces);
                 const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
@@ -134,15 +137,19 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
     function highlightSquares(player) {
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
         const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
-        const arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, authInfo.color); //console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces);
+        const arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, authInfo.color);//console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces);
         const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current);//console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
-        
+        const userPiecesSwitch = window.document.querySelector(`.potential-square-switch`);
+        const opponentPiecesSwitch = window.document.querySelector(`.opponent-potential-square-switch`);
+
         if (showingUserPiecesPotentialMoves && player === "user") {
             for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces) {
                 const square = window.document.querySelector(`#i${squareIndex}`);
                 square.classList.remove(`potentialUserSquare`);
             }
             setShowingUserPiecesPotentialMoves(false);
+            //switch off switch
+            userPiecesSwitch.classList.remove(`potential-square-switch-color`);
             return;
         } 
         
@@ -152,6 +159,8 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 square.classList.remove(`potentialOpponentSquare`);
             }
             setShowingOpponentPiecesPotentialMoves(false);
+            //switch off switch
+            opponentPiecesSwitch.classList.remove(`opponent-potential-square-switch-color`);
             return;
         }
         
@@ -159,9 +168,13 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         if (player === "user") {
             squareIndices = arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces;
             setShowingUserPiecesPotentialMoves(true);
+            //switch on switch
+            userPiecesSwitch.classList.add(`potential-square-switch-color`);
         } else {
             squareIndices = arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces;
             setShowingOpponentPiecesPotentialMoves(true);
+            //switch on switch
+            opponentPiecesSwitch.classList.add(`opponent-potential-square-switch-color`);
         }
         
         for (const potentialSquareIndex of squareIndices) {
@@ -271,6 +284,9 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             let boardArrayOriginalPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex).piece; //console.log(boardArrayOriginalPiece);
             const geographicallyLegalSecondarySquareIndices = arrayOfGeographicallyLegalSquares(originalSquareId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); console.log("geographicallyLegalSecondarySquareIndices:", geographicallyLegalSecondarySquareIndices);
             // const geographicallyLegalSecondarySquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current); console.log("geographicallyLegalSecondarySquareIndicesOfAllPieces:", geographicallyLegalSecondarySquareIndicesOfAllUserPieces);
+            const board2 = JSON.parse(JSON.stringify(boardArray.current));
+            board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
+            board2[originalSquareIndex].piece = null;
             if (e.target.id === clickedOnPiece.current.id) {
                 //clicked on same square 
                 console.log("piece deselected");
@@ -300,9 +316,6 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 return;
             }
             //check for check. imagine original piece has successfully moved to secondary square.
-            const board2 = JSON.parse(JSON.stringify(boardArray.current));
-            board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
-            board2[originalSquareIndex].piece = null;
             if (isUserKingInCheck(board2)) {
                 console.log("illegal move - king is in check");
                 e.preventDefault();
@@ -311,7 +324,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             //EXECUTING USER'S CLICK.
             console.log(`executing user's click`);
             originalPiece.classList.remove(`highlighted`);
-            decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
+            // decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
             clickedOnPiece.current = false;
             setCanMove(false); //boardTag.classList.add(`unclickable`);
             function secondarySquareIndexIsAtEndOfBoard(color, secondarySquareIndex) {
@@ -561,23 +574,17 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 {squareTags}
             </div>
             <div className="game-buttons">
-                <div onClick={highlightSquares.bind(null, "user")} className="potential-square button">
-                    {/* <div> */}
-                        P squares {showingUserPiecesPotentialMoves ? <span>✅</span> : null}
-                        <div className="switch"></div>
-                    {/* </div> */}
+                <div className="potential-square button" onClick={highlightSquares.bind(null, "user")}>
+                    P squares
+                    <div className="potential-square-switch switch"></div>
                 </div>
-                <div onClick={highlightSquares.bind(null, "opponent")} className="opponent-potential-square button">
-                    {/* <div> */}
-                        Opponent's potential squares {showingOpponentPiecesPotentialMoves ? <span>✅</span> : null}
-                        <div className="switch"></div>
-                    {/* </div> */}
+                <div className="opponent-potential-square button" onClick={highlightSquares.bind(null, "opponent")}>
+                    Opponent's potential squares
+                    <div className="opponent-potential-square-switch switch"></div>
                 </div>
-                <div onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton} className="selected-potential-square button">
-                    {/* <div> */}
-                        Selected's potential squares {showingClickedOnPiecePotentialMoves ? <span>✅</span> : null}
-                        <div className="switch"></div>
-                    {/* </div> */}
+                <div className="selected-potential-square button" onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton}>
+                    Selected's potential squares
+                    <div className="selected-potential-square-switch switch"></div>
                 </div>
             </div>
         </>

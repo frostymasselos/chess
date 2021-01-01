@@ -58,7 +58,7 @@ function Game({params}) {
     function cssFunctions() {
         roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
     }
-    function roundCornersOfButtons() { 
+    function roundCornersOfButtons() { console.log("here");
         const buttons = Array.from(window.document.querySelectorAll(`.button`)); 
         for (let index = 0; index < buttons.length; index++) { 
             const button = buttons[index];
@@ -66,6 +66,10 @@ function Game({params}) {
             window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
+    function unmountCSSFunctions() {
+        window.removeEventListener('resize', roundCornersOfButtons);
+    }
+    //normal
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
@@ -295,8 +299,8 @@ function Game({params}) {
 
     return ( 
         <>
+            {invalidRoute && <ErrorPage cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} roundCornersOfButtons={roundCornersOfButtons}/>}
             <div className="game-grid-container">
-                {invalidRoute && <ErrorPage/>}
                 {opponentQuits && <OpponentQuits/>}
                 {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
                 
@@ -305,12 +309,12 @@ function Game({params}) {
                 {winner && <div>{winner} wins</div>}
 
                 <div className="game-text">
-                    {/* {playing && <Exit/>} */}
                     {waiting && <Waiting/>}
                     {user2SignedIn && <TurnNotifier canMove={canMove} check={check}/>}
                 </div>
                 {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect} setCheck={setCheck}/>}
                 
+                {playing && <Exit/>}
                 {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
 
             </div>

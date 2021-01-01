@@ -30,11 +30,14 @@ $yellow: #FFDC00;
     background-color: $dark-square;
     border: solid 3px brown;
     width: 90%;
-    height: $lh * 3;//100%
+    height: $lh * 3 ;//100%
     justify-self: center;//align-self: start;
     margin-top: $lh / 2;
     // margin-bottom: $lh / 2;
     @include grid-container-horizontally-and-vertically-center-GIs();
+    &:hover {
+        background-image: linear-gradient($dark-square, brown);
+    }
 }
 @mixin board-info-button {
     @include grid-container-horizontally-and-vertically-center-GIs();
@@ -49,6 +52,11 @@ $yellow: #FFDC00;
 }
 body {
     margin: 0;
+}
+h1 {
+    // font-size: $lh * 2;
+    margin-top: $lh * 0.5;
+    margin-bottom: $lh * 1;
 }
 a {
     all: unset;
@@ -102,14 +110,15 @@ html {
         justify-content: space-evenly;
     }
 }
-.button { 
-    // &:hover, &:active { 🐉comment-in
-    //     background-image: linear-gradient($dark-square, brown);
-    //     // background-image: linear-gradient($dark-square, pink);
-    // }
-}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @import './home.scss';
 @import './game.scss';
 @import './board.scss';
+////////////////////////////////////////////////////////////////////////////////////////////////////
+.warning-button { 
+    background-color: $potential-opponent-square;
+    &:hover {
+        background-image: linear-gradient($potential-opponent-square, brown);
+    }
+}   
 

@@ -22,6 +22,5 @@ function App() {
 }
 
 export default App
-
 // would vanilla JS've captured params?
 
