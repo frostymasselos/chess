@@ -1,12 +1,12 @@
 import {Link} from 'react-router-dom';
 import {useState, useEffect, useRef} from 'react';
 
-function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebase}) { 
+function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebase, cssFunctions, unmountCSSFunctions}) { 
 
     const intruderUrl = useRef(intruderInfo.email.slice(0, 6));
     
-    async function backToIntrudersGame() { //console.log(intruderInfo.url);
-        window.location.replace(`/${intruderUrl.current}`); //using `Link` to nav to new url doesn't 'update' Game. Try arbitrarily refresh?🐉
+    async function backToIntrudersGame() {//console.log(intruderInfo.url);
+        window.location.replace(`/${intruderUrl.current}`);//even though you nav to a different url, using `Link` to nav doesn't 'update' Game. Try arbitrarily refresh?🐉
     }
     function terminateMatchForNewGame() { //same as TerminateMatch except don't nav home: update page.
         async function next() {
@@ -21,11 +21,27 @@ function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebas
         }
         let authListener = auth.onAuthStateChanged(next);
     }
+
+    useEffect(() => {
+        cssFunctions();
+        return () => {
+            console.log("unmounting");
+            unmountCSSFunctions();
+            // window.removeEventListener('resize', roundCornersOfButtons);✅
+        }; 
+    }, []);
+
     return (
         <>
-            <div>You are currently signed in...A user can only...Would you like to?...</div>
-            <button onClick={backToIntrudersGame}>Go back to your game</button>
-            <button onClick={terminateMatchForNewGame}>Join this game</button>
+            <div className="quit-match-for-new-game-container">
+                <p>You have navigated to a new game. A user can only play in one game. Would you like to:</p>
+                <div className="floating-home-button button" onClick={backToIntrudersGame}>
+                    Go back to your game
+                </div>
+                <div className="floating-home-button button significant-button" onClick={terminateMatchForNewGame}>
+                    Join this game<br></br>(WARNING: this deletes current game)
+                </div>
+            </div>
         </>
     )
 }

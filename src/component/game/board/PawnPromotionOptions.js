@@ -6,7 +6,6 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
         updatePieceToPromotePawnTo(e.target.dataset.name);
         resolvePawnPromotion();
     }
-    
     function options() {
         //filter out duplicates
         const optionTags = [];
@@ -18,9 +17,12 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
             pawnPromotionGraveyardFilteredOutDuplicateNames.push(deadPiece);
         }
         console.log(pawnPromotionGraveyardFilteredOutDuplicateNames);
-        //each item of filtered made into GI, 2x2.
+        //each item of filtered made into GI, 2x2. class="promotion-piece"
         for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) { 
-            const tag = <div onClick={choosePiece} data-name={piece.name} key={Math.random()}>{returnPieceEmoji(piece.name.replace(/\d/, ''))}</div>;//piece.name.replace(/\d/, '')
+            const tag = 
+                <div data-name={piece.name} key={Math.random()} onClick={choosePiece}>
+                    {returnPieceEmoji(piece.name.replace(/\d/, ''))}
+                </div>;
             optionTags.push(tag);
         }
         return optionTags;
@@ -28,10 +30,13 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
 
     return (
         <>
+            <div className='pawn-promotion-exit-button'>
+                <div onClick={resolvePawnPromotion}>X</div>
+            </div>
             <div className='pawn-promotion-grid-container'>
                 {options()}
-                <a onClick={resolvePawnPromotion}>Exit</a>
             </div>
+            {/* <div className='pawn-promotion-title'>Promote pawn</div> */}
         </>
     )
 }

@@ -62,7 +62,7 @@ html {
 }
 
 .footer {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.2em;
   width: 100vw;
   height: 17.5vh;
@@ -207,7 +207,7 @@ html {
   margin: 0.7rem 0;
 }
 
-.game-buttons {
+.game-metric-buttons {
   margin-top: 0.35rem;
   display: -ms-grid;
   display: grid;
@@ -221,7 +221,7 @@ html {
   line-height: 1.12rem;
 }
 
-.game-buttons > div {
+.game-metric-buttons > div {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -239,7 +239,7 @@ html {
   border: solid grey 2px;
 }
 
-.game-buttons .switch {
+.game-metric-buttons .switch {
   height: 20px;
   width: 20px;
   border-radius: 50%;
@@ -248,34 +248,34 @@ html {
   border: solid 1px black;
 }
 
-.game-buttons .potential-square {
+.game-metric-buttons .potential-square {
   border-radius: calc(var(--potential-square-button-height) * 0.10);
 }
 
-.game-buttons .potential-square-switch-color {
+.game-metric-buttons .potential-square-switch-color {
   background-color: #0074D9;
   border-color: #0074D9;
 }
 
-.game-buttons .opponent-potential-square {
+.game-metric-buttons .opponent-potential-square {
   border-radius: calc(var(--opponent-potential-square-button-height) * 0.10);
 }
 
-.game-buttons .opponent-potential-square-switch-color {
+.game-metric-buttons .opponent-potential-square-switch-color {
   background-color: #FF4136;
   border-color: #FF4136;
 }
 
-.game-buttons .selected-potential-square {
+.game-metric-buttons .selected-potential-square {
   border-radius: calc(var(--selected-potential-square-button-height) * 0.10);
 }
 
-.game-buttons .selected-potential-square-switch-color {
+.game-metric-buttons .selected-potential-square-switch-color {
   background-color: #85144b;
   border-color: #85144b;
 }
 
-.exit-game {
+.floating-home-button {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
@@ -290,26 +290,16 @@ html {
   -ms-grid-rows: 1fr;
       grid-template-rows: 1fr;
   place-items: center;
-  border-radius: calc(var(--exit-game-button-height) * 0.25);
+  border-radius: calc(var(--floating-home-button-button-height) * 0.25);
   margin: 0.7rem auto;
 }
 
-.exit-game:hover {
+.floating-home-button:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
   background-image: linear-gradient(#FF851B, brown);
 }
 
-.exit-game > a {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  place-items: center;
-}
-
-.game-terminate-game {
+.exit-game-button {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
@@ -324,42 +314,89 @@ html {
   -ms-grid-rows: 1fr;
       grid-template-rows: 1fr;
   place-items: center;
-  border-radius: calc(var(--game-terminate-game-button-height) * 0.25);
+  border-radius: calc(var(--exit-game-button-button-height) * 0.25);
   margin: 0.7rem auto;
 }
 
-.game-terminate-game:hover {
+.exit-game-button:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
   background-image: linear-gradient(#FF851B, brown);
+}
+
+.exit-game-button > a {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+}
+
+.game-terminate-game-button {
+  background-color: #FF851B;
+  border: solid 3px brown;
+  width: 90%;
+  height: 4.2rem;
+  -ms-grid-column-align: center;
+      justify-self: center;
+  margin-top: 0.7rem;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+  border-radius: calc(var(--game-terminate-game-button-button-height) * 0.25);
+  margin: 0.7rem auto;
+}
+
+.game-terminate-game-button:hover {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
+  background-image: linear-gradient(#FF851B, brown);
+}
+
+.opponent-quits-page-container {
+  height: 70vh;
+  text-align: center;
+  display: flow-root;
+}
+
+.opponent-quits-page-container p {
+  margin-bottom: 0.7rem;
+}
+
+.opponent-quits-page-container p:nth-child(1) {
+  margin-top: 0.7rem;
+}
+
+.quit-match-for-new-game-container {
+  height: 70vh;
+  text-align: center;
+  display: flow-root;
+}
+
+.quit-match-for-new-game-container p {
+  margin-bottom: 0.7rem;
+}
+
+.quit-match-for-new-game-container p:nth-child(1) {
+  margin-top: 0.7rem;
 }
 
 .error-page-container {
   height: 70vh;
   text-align: center;
+  display: flow-root;
 }
 
-.exit-error-page {
-  background-color: #FF851B;
-  border: solid 3px brown;
-  width: 90%;
-  height: 4.2rem;
-  -ms-grid-column-align: center;
-      justify-self: center;
+.error-page-container p {
+  margin-bottom: 0.7rem;
+}
+
+.error-page-container p:nth-child(1) {
   margin-top: 0.7rem;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  place-items: center;
-  border-radius: calc(var(--exit-error-page-button-height) * 0.25);
-  margin: 0.7rem auto;
-}
-
-.exit-error-page:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
 }
 
 .z-index-1 {
@@ -477,15 +514,40 @@ html {
   }
 }
 
-.pawn-promotion-grid-container {
-  width: 100vw;
-  height: 100vw;
+@media screen and (max-width: 500px) {
+  .pawn-promotion-grid-container {
+    width: 100vw;
+    height: auto;
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: (minmax(33.3%, 1fr))[auto-fit];
+        grid-template-columns: repeat(auto-fit, minmax(33.3%, 1fr));
+    -ms-grid-rows: (minmax(80px, 1fr))[auto-fit];
+        grid-template-rows: repeat(auto-fit, minmax(80px, 1fr));
+    place-items: center;
+  }
+}
+
+.pawn-promotion-title {
+  height: 80px;
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[1fr];
-      grid-template-columns: repeat(1fr 1fr);
-  -ms-grid-rows: (1fr)[1fr];
-      grid-template-rows: repeat(1fr 1fr);
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+}
+
+.pawn-promotion-exit-button {
+  height: 80px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
 }
 
 .warning-button {
@@ -495,5 +557,14 @@ html {
 .warning-button:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#FF4136), to(brown));
   background-image: linear-gradient(#FF4136, brown);
+}
+
+.significant-button {
+  background-color: #FFDC00;
+}
+
+.significant-button:hover {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#FFDC00), to(brown));
+  background-image: linear-gradient(#FFDC00, brown);
 }
 /*# sourceMappingURL=main.css.map */

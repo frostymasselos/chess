@@ -119,12 +119,13 @@ function Game({params}) {
             if (userObj.rematch) {
                 setWaitingForOpponentToConfirmRematch(true);
                 setAskForRematch(false);
+                setWinner('');
             }
         }    
     }
     async function indicateInterestInRematch() { console.log(`${authInfo.current.user} indicating interest in rematch`);
         await db.ref(`matches/${authInfo.current.url}/${authInfo.current.user}`).update({rematch: true});
-        setAskForRematch(false); setWaitingForOpponentToConfirmRematch(true);
+        setAskForRematch(false); setWinner(''); setWaitingForOpponentToConfirmRematch(true);
     }
     function listenerForRematch(game, you, opponent) { 
         console.log(`${you} listening for rematch`);
@@ -300,23 +301,21 @@ function Game({params}) {
     return ( 
         <>
             {invalidRoute && <ErrorPage cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} roundCornersOfButtons={roundCornersOfButtons}/>}
+            {opponentQuits && <OpponentQuits cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions}/>}
+            {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase} cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions}/>}
             <div className="game-grid-container">
-                {opponentQuits && <OpponentQuits/>}
-                {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase}/>}
                 
-                {waitingForOpponentToConfirmRematch && <div>Waiting for opponnent to confirm rematch</div>}
-                {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch}/>}
-                {winner && <div>{winner} wins</div>}
 
                 <div className="game-text">
+                    {winner && <p className="winner-declaration-line">{winner} wins</p>}
+                    {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch}/>}
+                    {waitingForOpponentToConfirmRematch && <p>Waiting for opponnent to confirm rematch</p>}
                     {waiting && <Waiting/>}
                     {user2SignedIn && <TurnNotifier canMove={canMove} check={check}/>}
                 </div>
                 {playing && <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect} setCheck={setCheck}/>}
-                
                 {playing && <Exit/>}
                 {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth}/>}
-
             </div>
         </>
     )

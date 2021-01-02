@@ -1,11 +1,12 @@
 /////////////////////////////////////////////////CSS VARIABLES///////////////////////////////////////////////////////////
-//not here but present on inline: button-radius; 
+//not here but present on: #root inline: button-radius; 
 /////////////////////////////////////////////////SASS///////////////////////////////////////////////////////////
 $header-height: 12.5vh;//10
 $footer-height: 17.5vh;//16 ( = golden ratio w/title?)
 $lh: 1.4rem; //(28px)
 
 $footer-color: #001f3f;
+$footer-info-color: darkorchid;
 $light-square: grey;
 $dark-square: #FF851B;
 $button-hover: brown;
@@ -15,7 +16,7 @@ $potential-clicked-on-piece-square: #85144b;
 $white-piece: white;
 $black-piece: black;
 $clicked-on-piece: #85144b;
-$yellow: #FFDC00;
+$significant-button: #FFDC00;
 
 @mixin grid-container-template($column-value: 1fr, $row-value: 1fr) {
     display: grid;
@@ -41,6 +42,17 @@ $yellow: #FFDC00;
 }
 @mixin board-info-button {
     @include grid-container-horizontally-and-vertically-center-GIs();
+}
+@mixin fresh-page-container {
+    height: 100vh - $header-height - $footer-height;
+    text-align: center;
+    display: flow-root;//padding-top: 55px;stops it from doing parental MC. 
+    p {
+        margin-bottom: ($lh * 0.5);
+    }
+    p:nth-child(1) {
+        margin-top: ($lh * 0.5);
+    }
 }
 /////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
 *, ::before, ::after {
@@ -90,7 +102,7 @@ html {
     }
 }
 .footer {
-    font-size: 15px; 
+    font-size: 16px; 
     $li: 1.2em;
     line-height: $li;
     // position: fixed;
@@ -98,7 +110,7 @@ html {
     width: 100vw;
     height: $footer-height;
     background-color: $footer-color;
-    color: darkorchid;
+    color: $footer-info-color;
     @include grid-container-template(1fr, 38% 62%);
     .footer-info {
         @include grid-container-horizontally-and-vertically-center-GIs();
@@ -109,7 +121,7 @@ html {
         @include grid-container-template(repeat(3, 1fr), 100%);
         justify-content: space-evenly;
     }
-}
+}  
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @import './home.scss';
 @import './game.scss';
@@ -120,5 +132,11 @@ html {
     &:hover {
         background-image: linear-gradient($potential-opponent-square, brown);
     }
-}   
+}
+.significant-button { 
+    background-color: $significant-button;
+    &:hover {
+        background-image: linear-gradient($significant-button, brown);
+    }
+} 
 

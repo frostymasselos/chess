@@ -193,9 +193,9 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
     function updatePieceToPromotePawnTo(piece) {
         pieceToPromotePawnTo.current = piece;//console.log(piece, pieceToPromotePawnTo.current);
     }
-    function resolvePawnPromotion() {
-        pawnPromotionResolveFunction.current.call(null, 5);
+    function resolvePawnPromotion() { console.log("1");
         setOpportunityForPawnToPromote(false);
+        pawnPromotionResolveFunction.current.call(null, 5);
     }
 
     //legal-move-logic helper functions
@@ -277,7 +277,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             const originalPiece = clickedOnPiece.current.piece; //console.log(originalPiece);
             const originalSquareId = clickedOnPiece.current.id; 
             const originalSquareIndex = Number.parseFloat(clickedOnPiece.current.square.id.slice(1)); //console.log(originalSquareIndex);
-            const secondarySquareTag = e.currentTarget;
+            const secondarySquareTag = e.currentTarget; console.log(secondarySquareTag);
             const secondarySquareIndex = Number.parseFloat(e.currentTarget.id.slice(1)); //console.log(secondarySquareIndex);
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
@@ -326,7 +326,6 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             originalPiece.classList.remove(`highlighted`);
             // decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
             clickedOnPiece.current = false;
-            setCanMove(false); //boardTag.classList.add(`unclickable`);
             function secondarySquareIndexIsAtEndOfBoard(color, secondarySquareIndex) {
                 const endSquaresWhite = [56, 57, 58, 59, 60, 61, 62, 63];
                 const endSquaresBlack = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -335,26 +334,27 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             if (e.target.dataset.square) {
                 //second square is an empty square
                 let emptySquare = e.target;
-                emptySquare.append(originalPiece);
+                emptySquare.append(originalPiece);//console.log(emptySquare, originalPiece, secondarySquareTag);
                 console.log("secondaryEl is an empty square:", e.target);
-                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { //console.log("here");
+                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) {//console.log("here");
+                    window.document.querySelector(`.board-grid-container`).classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
                     await new Promise((resolve) => { console.log("waiting to resolve"); 
                         pawnPromotionResolveFunction.current = resolve;
-                    }); 
-                    if (pieceToPromotePawnTo.current) { 
+                    });
+                    if (pieceToPromotePawnTo.current) {  
                         //change UI
                         emptySquare.firstElementChild.remove();
-                        const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;  //add class & data-color
+                        const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;//add class & data-color
                         newTag.append(`${pieceToPromotePawnTo.current}`);
                         emptySquare.append(newTag);
                         //change dB
                         const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                         //kill pawn
-                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({alive: false}); //originalSquareId.slice(5).replace(/\d/, '')
+                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({alive: false});//originalSquareId.slice(5).replace(/\d/, '')
                         //revive
                         await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({alive: true,});
-                        boardArrayOriginalPiece = {name: pieceToPromotePawnTo.current}; // console.log(pieceToPromotePawnTo.current); console.log(boardArrayOriginalPiece);
+                        boardArrayOriginalPiece = {name: pieceToPromotePawnTo.current};//console.log(pieceToPromotePawnTo.current); console.log(boardArrayOriginalPiece);
                     }
                 }
                 publishMoveToDb(); console.log("finished onClick handler");
@@ -368,6 +368,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 // }, 2000);
                 enemyPieceSquare.append(originalPiece);
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { //console.log("here");
+                    window.document.querySelector(`.board-grid-container`).classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
                     await new Promise((resolve) => { console.log("waiting to resolve"); 
                         pawnPromotionResolveFunction.current = resolve;
@@ -394,8 +395,14 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 //update user piece's coordinates
                 let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                 let opponentDb = db.ref(`matches/${authInfo.url}/${opponent.current}`);
-                const updatedRowPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue(`grid-row`).slice(0, 1);
-                const updatedColumnPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue('grid-column').slice(0, 1);
+                let updatedRowPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue(`grid-row`).slice(0, 1); console.log(secondarySquareTag, updatedRowPosition, window.getComputedStyle(secondarySquareTag)); console.log(secondarySquareTag.style.gridRow);
+                if (!updatedRowPosition) { console.log('here');
+                    updatedRowPosition = secondarySquareTag.style.gridRow.slice(0, 1);
+                }
+                let updatedColumnPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue('grid-column').slice(0, 1);
+                if (!updatedColumnPosition) {
+                    updatedColumnPosition = secondarySquareTag.style.gridColumn.slice(0, 1);
+                }
                 await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({
                     rowPosition: `${updatedRowPosition}/${String(Number.parseInt(updatedRowPosition) + 1)}`,
                     columnPosition: `${updatedColumnPosition}/${String(Number.parseInt(updatedColumnPosition) + 1)}`,
@@ -408,6 +415,9 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 if (boardArrayOriginalPiece.name.includes(`pawn`) && !boardArrayOriginalPiece.moved) { console.log("updating pawn");
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({moved: true}); 
                 }
+                //updateUI
+                setCanMove(false);//boardTag.classList.add(`unclickable`);
+                //updateDb
                 await userDb.update({canMove: false, moved: Math.random()});
             } 
             function checkIfOpponentIsInCheckOrCheckmate() {
@@ -533,7 +543,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 db.ref(`matches/${authInfo.url}`).update({winner: `${opponentColor.current} (${opponent.current})`});
             }
         });
-    }, [canMove]); //triggerBoardUseEffect
+    }, [canMove]);
 
     //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
     useEffect(() => {
@@ -573,7 +583,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             <div className="board-grid-container unclickable">
                 {squareTags}
             </div>
-            <div className="game-buttons">
+            <div className="game-metric-buttons">
                 <div className="potential-square button" onClick={highlightSquares.bind(null, "user")}>
                     P squares
                     <div className="potential-square-switch switch"></div>

@@ -98,16 +98,23 @@
 }
 
 .pawn-promotion-grid-container {
-    width: 100vw;
-    height: 100vw;
-    // transform: rotate(180deg);
-    display: grid;
-    grid-template-columns: repeat(1fr 1fr);
-    grid-template-rows: repeat(1fr 1fr); 
+    @media screen and (max-width: 500px) {
+        width: 100vw;
+        height: auto;
+        @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(33.3%, 1fr)), repeat(auto-fit, minmax(80px, 1fr)));
+        // display: grid;
+        // grid-template-columns: repeat(1fr 1fr);
+        // grid-template-rows: repeat(1fr 1fr);
+    }
 }
-
-
-
+.pawn-promotion-title {
+    height: 80px;
+    @include grid-container-horizontally-and-vertically-center-GIs();
+}
+.pawn-promotion-exit-button {
+    height: 80px;
+    @include grid-container-horizontally-and-vertically-center-GIs();
+}
 ///////////////////////////////////////////TRASH|MISC//////////////////////////////////////////////////////////////////
 //make white squares
 // .board-grid-container > div:nth-child(n+2):nth-child(-n+8):nth-child(even),
