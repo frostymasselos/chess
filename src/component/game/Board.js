@@ -35,7 +35,6 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         //make pieces
         let arrayOfJSXPieces = [];
         for (const square of boardArray.current) {
-            // if square has piece 
             if (square.piece) {
                 let styleVal = {
                     gridRow: `${square.piece.rowPosition}`,
@@ -269,8 +268,10 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         return true;
     }
     async function onClickHandler(e) {
+        
         if (clickedOnPiece.current) { 
             console.log("2nd stage");
+            const boardTag = window.document.querySelector(`.board-grid-container`);
             const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`));
             const originalPiece = clickedOnPiece.current.piece; //console.log(originalPiece);
             const originalSquareId = clickedOnPiece.current.id; 
@@ -335,7 +336,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 emptySquare.append(originalPiece);//console.log(emptySquare, originalPiece, secondarySquareTag);
                 console.log("secondaryEl is an empty square:", e.target);
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) {//console.log("here");
-                    window.document.querySelector(`.board-grid-container`).classList.add(`unclickable`);//console.log("board:", board);
+                    boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
                     await new Promise((resolve) => { console.log("waiting to resolve"); 
                         pawnPromotionResolveFunction.current = resolve;
@@ -366,7 +367,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                 // }, 2000);
                 enemyPieceSquare.append(originalPiece);
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { //console.log("here");
-                    window.document.querySelector(`.board-grid-container`).classList.add(`unclickable`);//console.log("board:", board);
+                    boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
                     await new Promise((resolve) => { console.log("waiting to resolve"); 
                         pawnPromotionResolveFunction.current = resolve;
@@ -543,7 +544,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
 
     //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
     useEffect(() => {
-        const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`)); //console.log(allSquareTags);
+        const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`));//console.log(allSquareTags);
         for (const squareTag of allSquareTags) {
             squareTag.onclick = null;
             squareTag.onclick = onClickHandler;

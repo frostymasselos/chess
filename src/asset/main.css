@@ -435,11 +435,6 @@ html {
       grid-template-rows: repeat(8, 1fr);
 }
 
-.board-grid-container > div {
-  background-color: grey;
-  text-align: center;
-}
-
 @media screen and (max-width: 500px) {
   .board-grid-container {
     width: 100vw;
@@ -460,6 +455,11 @@ html {
     line-height: calc(0.125 * 500px);
     font-size: calc(0.1875 * 500px);
   }
+}
+
+.board-grid-container > div {
+  background-color: grey;
+  text-align: center;
 }
 
 .board-grid-container > .black-square {

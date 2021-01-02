@@ -24,10 +24,6 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
-    > div {
-        background-color: $light-square;
-        text-align: center;
-    }
     @media screen and (max-width: 500px) {
         width: 100vw;
         height: 100vw;
@@ -45,6 +41,10 @@
         }
     }
     //////////////////////////////////////////SQUARES////////////////////////////////////////////////////////////////
+    > div {
+        background-color: $light-square;
+        text-align: center;
+    }
     > .black-square {
         background-color: $dark-square;
     }
