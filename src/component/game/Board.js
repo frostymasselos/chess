@@ -5,7 +5,7 @@ import React from 'react';
 
 function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffect}) {
 
-    let [squareTags, setSquareTags] = useState([]); //could add it directly to DOM w/vanilla
+    let [squareTags, setSquareTags] = useState([]);//could add it directly to DOM w/vanilla
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
     let [showingOpponentPiecesPotentialMoves, setShowingOpponentPiecesPotentialMoves] = useState(false);
     let [showingClickedOnPiecePotentialMoves, setShowingClickedOnPiecePotentialMoves] = useState(false);
@@ -84,21 +84,19 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         }
         //return arrayOfJSXSquares;
         setSquareTags(arrayOfJSXSquares);
-        //color in black squares🐉no clue how its able to see the square-tags here.
-        (function colorInBlackSquares(params) {
-            let arrayOfSquares = Array.from(document.querySelectorAll(`.board-grid-container > div`));//console.log(arrayOfSquares);
-            for (let index = 0, total = 1; index <= 63; total++) {
-                arrayOfSquares[index].classList.add(`black-square`);
-                if (total === 4) {
-                    index = index + 3;
-                } else if (total === 8) {
-                    index = index + 1;
-                    total = 0;
-                } else {
-                    index = index + 2;
-                }
-            } 
-        })();
+        //color in black squares🧙‍♂️no clue how its able to see the square-tags here.
+        let arrayOfSquares = Array.from(document.querySelectorAll(`.board-grid-container > div`));//console.log(arrayOfSquares);
+        for (let index = 0, total = 1; index <= 63; total++) {
+            arrayOfSquares[index].classList.add(`black-square`);
+            if (total === 4) {
+                index = index + 3;
+            } else if (total === 8) {
+                index = index + 1;
+                total = 0;
+            } else {
+                index = index + 2;
+            }
+        } 
         //if black, 180 rotate squares 
         if (authInfo.color === "black") {
             let board = document.querySelector('.board-grid-container');
@@ -343,14 +341,14 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                         pawnPromotionResolveFunction.current = resolve;
                     });
                     if (pieceToPromotePawnTo.current) {  
-                        //change UI
-                        emptySquare.firstElementChild.remove();
-                        const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;//add class & data-color
-                        newTag.append(`${pieceToPromotePawnTo.current}`);
-                        emptySquare.append(newTag);
+                        // //change UI
+                        // emptySquare.firstElementChild.remove();
+                        // const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;//add class & data-color
+                        // newTag.append(`${pieceToPromotePawnTo.current}`);
+                        // emptySquare.append(newTag);
                         //change dB
-                        const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                         //kill pawn
+                        const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                         await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({alive: false});//originalSquareId.slice(5).replace(/\d/, '')
                         //revive
                         await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({alive: true,});
@@ -375,10 +373,10 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                     }); 
                     if (pieceToPromotePawnTo.current) { 
                         //change UI
-                        enemyPieceSquare.firstElementChild.remove();
-                        const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;  //add class & data-color
-                        newTag.append(`${pieceToPromotePawnTo.current}`);
-                        enemyPieceSquare.append(newTag);
+                        // enemyPieceSquare.firstElementChild.remove();
+                        // const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;  //add class & data-color
+                        // newTag.append(`${pieceToPromotePawnTo.current}`);
+                        // enemyPieceSquare.append(newTag);
                         //change dB
                         const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                         //kill pawn
@@ -493,7 +491,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         //fill board array with pieces
         let game = db.ref(`matches/${authInfo.url}`);
         game.on('value', function listener(e) {
-            game.off('value', listener); //remove listener
+            game.off('value', listener);//remove listener
             function fillBoardArrayWithPieces(objOfPieces) {
                 for (let key in objOfPieces) {
                     //if piece is alive
@@ -523,10 +521,8 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             fillBoardArrayWithPieces(e.val().user2.pieces);
             console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            // colorSquares();
-            //check for check & checkamte - this works in time?!🐉
-            const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current); //console.log(squaresWithUserAndOpponentPieces);
-            const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithOpponentPieces);
+            const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
+            const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
             //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
             if (isUserKingInCheck()) {
                 if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {

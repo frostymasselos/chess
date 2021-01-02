@@ -52,7 +52,6 @@ function Game({params}) {
     let authInfo = useRef({url: params.slice(1)});
     const [auth, setAuth] = useState(firebase.auth());//only recalculate when canMove changes?
     const [db, setDb] = useState(firebase.database());
-    // let cssUseEffectFirstTime = useRef(true);
 
     //CSS
     function cssFunctions() {
@@ -69,7 +68,7 @@ function Game({params}) {
     function unmountCSSFunctions() {
         window.removeEventListener('resize', roundCornersOfButtons);
     }
-    //normal
+    //NON-CSS
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
@@ -207,7 +206,7 @@ function Game({params}) {
                                     listenerForWinner(game, "user1");
                                     listenerForRematch(game, "user1", "user2");
                                     authInfo.current = {...authInfo.current, color: user1.white ? "white" : "black"};
-                                    setCanMove(user1.canMove ? true : false); setPlaying(true); //BOARD IS RENDERED HERE
+                                    setCanMove(user1.canMove ? true : false); setPlaying(true);//BOARD IS RENDERED HERE
                                     if (user2.signedIn) { 
                                         //USER2 SIGNED IN
                                         setUser2SignedIn(true); console.log("user2 is signed in");
@@ -242,7 +241,7 @@ function Game({params}) {
                                 listenerForUser1RestartingGame(game, "user2", "user1");
                                 authInfo.current = {...authInfo.current, color: user2.white ? "white" : "black"};
                                 setCanMove(user2.canMove ? true : false);
-                                setPlaying(true); //BOARD IS RENDERED HERE
+                                setPlaying(true);//BOARD IS RENDERED HERE
                                 setUser2SignedIn(true);
                                 setWaiting(false);
                                 isAWinnerDeclared(match, user2);
@@ -304,8 +303,6 @@ function Game({params}) {
             {opponentQuits && <OpponentQuits cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions}/>}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase} cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions}/>}
             <div className="game-grid-container">
-                
-
                 <div className="game-text">
                     {winner && <p className="winner-declaration-line">{winner} wins</p>}
                     {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch}/>}
