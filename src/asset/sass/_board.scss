@@ -9,6 +9,7 @@
 .dead {
     display: none;
 }
+
 .unclickable {
     pointer-events: none;
 }
@@ -19,82 +20,65 @@
     transform: rotate(180deg);
 }
 ///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
-.board-template {
-    // transform: rotate(180deg);
+.board-grid-container {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr); 
-}
-.board-grid-container {
-    @extend .board-template;
+    grid-template-rows: repeat(8, 1fr);
+    > div {
+        background-color: $light-square;
+        text-align: center;
+    }
     @media screen and (max-width: 500px) {
         width: 100vw;
         height: 100vw;
+        > div {
+            line-height: 12.5vw;
+            font-size: 18.75vw;//use a google-font-size🐉
+        }
     }
     @media screen and (min-width: 500px) {
         width: 500px;
         height: 500px;
+        > div {
+            line-height: calc(0.125 * 500px);
+            font-size: calc(0.1875 * 500px);
+        }
     }
-}
-///////////////////////////////////////////SQUARES//////////////////////////////////////////////////////////////////
-.square-template {
-    background-color: $light-square;
-    text-align: center;
-    // outline: 5px dashed $orange;
-}
-.board-grid-container > div {
-    @extend .square-template;
-    @media screen and (max-width: 500px) {
-        line-height: 12.5vw;
-        font-size: 18.75vw;//use a google-font-size🐉
+    //////////////////////////////////////////SQUARES////////////////////////////////////////////////////////////////
+    > .black-square {
+        background-color: $dark-square;
     }
-    @media screen and (min-width: 500px) {
-        line-height: calc(0.125 * 500px);
-        font-size: calc(0.1875 * 500px);
+    > .potentialUserSquare {
+        background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%);
     }
-}
-//BLACK SQUARES
-.board-grid-container > .black-square {
-    background-color: $dark-square;
-}
-//POTENTIAL USER SQUARE
-.board-grid-container > div.potentialUserSquare {
-    background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%);
-}
-//POTENTIAL CLICKED-ON-PIECE SQUARE
-.board-grid-container > div.potentialClickedOnPieceSquare {
-    background-color: $potential-clicked-on-piece-square;
-}
-//POTENTIAL OPPONENT SQUARE
-.board-grid-container > div.potentialOpponentSquare {
-    background-image: linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);
-}
-///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
-//ALL PIECES
-.board-grid-container > div > div {
-    height: 100%;//🐉why did we need this? (we do)
-}
-//WHITE PIECE
-.white-piece {
-    color: $white-piece;
-}
-//BLACK PIECE
-.black-piece {
-    color: $black-piece;
-}
-//CLICKED-ON|HIGHLIGHTED PIECE
-.highlighted {
-    color: $clicked-on-piece;
-}
-//PAWN
-.pawn {
-    @media screen and (max-width: 500px) {
-        font-size: 15vw;//use a google-font-size🐉
+    > .potentialClickedOnPiece {
+        background-color: $potential-clicked-on-piece-square;
     }
-    @media screen and (min-width: 500px) {
-        font-size: calc(0.15 * 500px);
+    > .potentialOpponentSquare {
+        background-image: linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);
     }
-    // font-size: 16.5vw;
+    ///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
+    > div > div {
+        height: 100%;//🐉why did we need this? (we do)
+    }
+    .white-piece {
+        color: $white-piece;
+    }
+    .black-piece {
+        color: $black-piece;
+    }
+    .highlighted {
+        color: $clicked-on-piece;
+    }
+    .pawn {
+        @media screen and (max-width: 500px) {
+            font-size: 15vw;//use a google-font-size🐉
+        }
+        @media screen and (min-width: 500px) {
+            font-size: calc(0.15 * 500px);
+        }
+        // font-size: 16.5vw;
+    }
 }
 
 .pawn-promotion-grid-container {
@@ -102,9 +86,6 @@
         width: 100vw;
         height: auto;
         @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(33.3%, 1fr)), repeat(auto-fit, minmax(80px, 1fr)));
-        // display: grid;
-        // grid-template-columns: repeat(1fr 1fr);
-        // grid-template-rows: repeat(1fr 1fr);
     }
 }
 .pawn-promotion-title {

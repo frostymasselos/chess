@@ -550,29 +550,6 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         }
     });
 
-    //2.execute when square tags're rendered
-    useEffect(() => { //console.log("checking for check/checkmate");
-        // is opponent in check? (if we get this code right, move it to onClick handler)
-        // if (isUserKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
-        //     console.log("opponent king in check");
-        // } else {
-        //     console.log("opponent king not in check");
-        // }
-        // checks if opponent in check|check-mate after move
-        // if (isUserKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
-        //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
-        //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
-        //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-        //     if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
-        //         // setCheckMate(true);
-        //         console.log("opponent is in checkmate");
-        //     } else {
-        //         // setCheck(true);
-        //         console.log("opponent is in check");
-        //     }
-        // }
-    }, [])
-
     return (
         <>
             {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion}/>}

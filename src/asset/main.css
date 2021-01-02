@@ -426,7 +426,7 @@ html {
           transform: rotate(180deg);
 }
 
-.board-template, .board-grid-container {
+.board-grid-container {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (1fr)[8];
@@ -435,10 +435,19 @@ html {
       grid-template-rows: repeat(8, 1fr);
 }
 
+.board-grid-container > div {
+  background-color: grey;
+  text-align: center;
+}
+
 @media screen and (max-width: 500px) {
   .board-grid-container {
     width: 100vw;
     height: 100vw;
+  }
+  .board-grid-container > div {
+    line-height: 12.5vw;
+    font-size: 18.75vw;
   }
 }
 
@@ -447,21 +456,6 @@ html {
     width: 500px;
     height: 500px;
   }
-}
-
-.square-template, .board-grid-container > div {
-  background-color: grey;
-  text-align: center;
-}
-
-@media screen and (max-width: 500px) {
-  .board-grid-container > div {
-    line-height: 12.5vw;
-    font-size: 18.75vw;
-  }
-}
-
-@media screen and (min-width: 500px) {
   .board-grid-container > div {
     line-height: calc(0.125 * 500px);
     font-size: calc(0.1875 * 500px);
@@ -472,16 +466,16 @@ html {
   background-color: #FF851B;
 }
 
-.board-grid-container > div.potentialUserSquare {
+.board-grid-container > .potentialUserSquare {
   background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074D9), color-stop(25%, transparent));
   background-image: linear-gradient(to bottom right, #0074D9 25%, transparent 25% 100%);
 }
 
-.board-grid-container > div.potentialClickedOnPieceSquare {
+.board-grid-container > .potentialClickedOnPiece {
   background-color: #85144b;
 }
 
-.board-grid-container > div.potentialOpponentSquare {
+.board-grid-container > .potentialOpponentSquare {
   background-image: -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #FF4136));
   background-image: linear-gradient(to bottom right, transparent 75%, #FF4136 75% 100%);
 }
@@ -490,26 +484,26 @@ html {
   height: 100%;
 }
 
-.white-piece {
+.board-grid-container .white-piece {
   color: white;
 }
 
-.black-piece {
+.board-grid-container .black-piece {
   color: black;
 }
 
-.highlighted {
+.board-grid-container .highlighted {
   color: #85144b;
 }
 
 @media screen and (max-width: 500px) {
-  .pawn {
+  .board-grid-container .pawn {
     font-size: 15vw;
   }
 }
 
 @media screen and (min-width: 500px) {
-  .pawn {
+  .board-grid-container .pawn {
     font-size: calc(0.15 * 500px);
   }
 }
