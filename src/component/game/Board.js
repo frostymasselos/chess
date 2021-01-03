@@ -142,7 +142,8 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         if (showingUserPiecesPotentialMoves && player === "user") {
             for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces) {
                 const square = window.document.querySelector(`#i${squareIndex}`);
-                square.classList.remove(`potentialUserSquare`);
+                square.classList.remove(`potentialUserSquare`); 
+                square.classList.remove(`potentialUserAndOpponentSquare`);
             }
             setShowingUserPiecesPotentialMoves(false);
             //switch off switch
@@ -153,7 +154,8 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
         if (showingOpponentPiecesPotentialMoves && player === "opponent") {
             for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces) {
                 const square = window.document.querySelector(`#i${squareIndex}`);
-                square.classList.remove(`potentialOpponentSquare`);
+                square.classList.remove(`potentialOpponentSquare`); 
+                square.classList.remove(`potentialUserAndOpponentSquare`);
             }
             setShowingOpponentPiecesPotentialMoves(false);
             //switch off switch
@@ -180,8 +182,14 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
                     let squareToHighlight = window.document.querySelector(`#i${potentialSquareIndex}`);
                     if (player === "user") {
                         squareToHighlight.classList.add(`potentialUserSquare`);
+                        if (squareToHighlight.classList.contains(`potentialOpponentSquare`)) {
+                            squareToHighlight.classList.add(`potentialUserAndOpponentSquare`);
+                        } 
                     } else {
                         squareToHighlight.classList.add(`potentialOpponentSquare`);
+                        if (squareToHighlight.classList.contains(`potentialUserSquare`)) {
+                            squareToHighlight.classList.add(`potentialUserAndOpponentSquare`);
+                        } 
                     }
                 }
             }

@@ -435,6 +435,11 @@ html {
       grid-template-rows: repeat(8, 1fr);
 }
 
+.board-grid-container > div {
+  background-color: grey;
+  text-align: center;
+}
+
 @media screen and (max-width: 500px) {
   .board-grid-container {
     width: 100vw;
@@ -457,11 +462,6 @@ html {
   }
 }
 
-.board-grid-container > div {
-  background-color: grey;
-  text-align: center;
-}
-
 .board-grid-container > .black-square {
   background-color: #FF851B;
 }
@@ -471,13 +471,18 @@ html {
   background-image: linear-gradient(to bottom right, #0074D9 25%, transparent 25% 100%);
 }
 
-.board-grid-container > .potentialClickedOnPiece {
+.board-grid-container > .potentialClickedOnPieceSquare {
   background-color: #85144b;
 }
 
 .board-grid-container > .potentialOpponentSquare {
   background-image: -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #FF4136));
   background-image: linear-gradient(to bottom right, transparent 75%, #FF4136 75% 100%);
+}
+
+.board-grid-container > .potentialUserAndOpponentSquare {
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074D9), color-stop(25%, transparent)), -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #FF4136));
+  background-image: linear-gradient(to bottom right, #0074D9 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, #FF4136 75% 100%);
 }
 
 .board-grid-container > div > div {

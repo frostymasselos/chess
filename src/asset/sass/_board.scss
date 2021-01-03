@@ -24,6 +24,10 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
+    > div {
+        background-color: $light-square;
+        text-align: center;
+    }
     @media screen and (max-width: 500px) {
         width: 100vw;
         height: 100vw;
@@ -40,22 +44,20 @@
             font-size: calc(0.1875 * 500px);
         }
     }
-    //////////////////////////////////////////SQUARES////////////////////////////////////////////////////////////////
-    > div {
-        background-color: $light-square;
-        text-align: center;
-    }
     > .black-square {
         background-color: $dark-square;
     }
     > .potentialUserSquare {
         background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%);
     }
-    > .potentialClickedOnPiece {
+    > .potentialClickedOnPieceSquare {
         background-color: $potential-clicked-on-piece-square;
     }
     > .potentialOpponentSquare {
         background-image: linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);
+    }
+    > .potentialUserAndOpponentSquare {
+        background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);//linear-gradient(to bottom right, white,yellow);
     }
     ///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
     > div > div {
@@ -86,6 +88,9 @@
         width: 100vw;
         height: auto;
         @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(33.3%, 1fr)), repeat(auto-fit, minmax(80px, 1fr)));
+        // display: grid;
+        // grid-template-columns: repeat(1fr 1fr);
+        // grid-template-rows: repeat(1fr 1fr);
     }
 }
 .pawn-promotion-title {
