@@ -17,6 +17,7 @@ $white-piece: white;
 $black-piece: black;
 $clicked-on-piece: #85144b;
 $significant-button: #FFDC00;
+$light-grey: #dddddd;
 
 @mixin grid-container-template($column-value: 1fr, $row-value: 1fr) {
     display: grid;

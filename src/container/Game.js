@@ -105,7 +105,7 @@ function Game({params}) {
             setCanMove(false); 
             setUser2SignedIn(false); setWaiting(false);//stops TurnNotifier showing
             await game.child(`${you}`).update({canMove: false});
-            setAskForRematch(true);
+            setAskForRematch(true); roundCornersOfButtons();//🐉make a useEffect that listens for setAskForRematch turning true?
         }
         db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', endGame);
     }

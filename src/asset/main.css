@@ -487,6 +487,7 @@ html {
 
 .board-grid-container > div > div {
   height: 100%;
+  overflow: hidden;
 }
 
 .board-grid-container .white-piece {
@@ -513,6 +514,10 @@ html {
   }
 }
 
+.pawn-promotion-grid-container {
+  background-color: #dddddd;
+}
+
 @media screen and (max-width: 500px) {
   .pawn-promotion-grid-container {
     width: 100vw;
@@ -525,6 +530,19 @@ html {
         grid-template-rows: repeat(auto-fit, minmax(80px, 1fr));
     place-items: center;
   }
+  .pawn-promotion-grid-container > * {
+    line-height: 12.5vw;
+    font-size: 18.75vw;
+    overflow: hidden;
+  }
+}
+
+.pawn-promotion-grid-container-color-white {
+  color: white;
+}
+
+.pawn-promotion-grid-container-color-black {
+  color: black;
 }
 
 .pawn-promotion-title {
@@ -547,6 +565,18 @@ html {
   -ms-grid-rows: 1fr;
       grid-template-rows: 1fr;
   place-items: center;
+}
+
+.pawn-promotion-exit-button > * {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+  height: 100%;
+  width: 10%;
 }
 
 .warning-button {

@@ -1,4 +1,14 @@
 
+// @media screen and (max-width: 500px) {
+//     $random: red;
+// }
+// @media screen and (min-width: 500px) {
+//     $random: orange;
+// }
+// #root {
+//     background-color: $random;
+// }
+
 .z-index-1 {
     z-index: 1;
 }
@@ -62,6 +72,7 @@
     ///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
     > div > div {
         height: 100%;//🐉why did we need this? (we do)
+        overflow: hidden;
     }
     .white-piece {
         color: $white-piece;
@@ -84,13 +95,22 @@
 }
 
 .pawn-promotion-grid-container {
+    background-color: $light-grey;
     @media screen and (max-width: 500px) {
         width: 100vw;
         height: auto;
         @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(33.3%, 1fr)), repeat(auto-fit, minmax(80px, 1fr)));
-        // display: grid;
-        // grid-template-columns: repeat(1fr 1fr);
-        // grid-template-rows: repeat(1fr 1fr);
+        > * {
+            line-height: 12.5vw;
+            font-size: 18.75vw;
+            overflow: hidden;
+        }
+    }
+    &-color-white {
+        color: white;
+    }
+    &-color-black {
+        color: black;
     }
 }
 .pawn-promotion-title {
@@ -99,7 +119,14 @@
 }
 .pawn-promotion-exit-button {
     height: 80px;
+    // border-top: dotted $light-square 1px;
+    // border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
     @include grid-container-horizontally-and-vertically-center-GIs();
+    > * {
+        @include grid-container-horizontally-and-vertically-center-GIs();
+        height: 100%;
+        width: 10%;
+    }
 }
 ///////////////////////////////////////////TRASH|MISC//////////////////////////////////////////////////////////////////
 //make white squares

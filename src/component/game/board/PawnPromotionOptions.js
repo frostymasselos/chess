@@ -1,6 +1,6 @@
 import {returnPieceEmoji} from '../../../helper/boardHelp.js';
 
-export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion}) {
+export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion, authInfo}) {
 
     function choosePiece(e) {
         updatePieceToPromotePawnTo(e.target.dataset.name);
@@ -33,7 +33,7 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
             <div className='pawn-promotion-exit-button'>
                 <div onClick={resolvePawnPromotion}>X</div>
             </div>
-            <div className='pawn-promotion-grid-container'>
+            <div className={`pawn-promotion-grid-container pawn-promotion-grid-container-color-${authInfo.color}`} >
                 {options()}
             </div>
             {/* <div className='pawn-promotion-title'>Promote pawn</div> */}

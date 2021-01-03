@@ -561,7 +561,7 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
 
     return (
         <>
-            {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion}/>}
+            {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion} authInfo={authInfo}/>}
             <div className="board-grid-container unclickable">
                 {squareTags}
             </div>
