@@ -6,7 +6,9 @@ function Header() {//onClick={() => window.location.replace(``)
         <>
             <div className="header"> 
                 <Link to="/">
-                    <span>♛</span><span>♘</span>
+                    <div>
+                        <span>♛</span><span>♘</span>
+                    </div>
                 </Link>
                 {/* <span>♖♜</span> */}
             </div>

@@ -1,30 +1,28 @@
+@media (max-width: 500px) {
+  html {
+    --color: blue;
+  }
+}
+
+@media (min-width: 500px) {
+  html {
+    --color: green;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    --random: pink;
+  }
+}
+
 *, ::before, ::after {
   margin-top: 0;
   margin-right: 0;
   margin: 0;
   -webkit-box-sizing: inherit;
           box-sizing: inherit;
-}
-
-body {
-  margin: 0;
-}
-
-h1 {
-  margin-top: 0.7rem;
-  margin-bottom: 1.4rem;
-}
-
-a {
-  all: unset;
   color: unset;
-}
-
-img {
-  -o-object-fit: contain;
-     object-fit: contain;
-  width: 100%;
-  height: 100%;
 }
 
 html {
@@ -42,10 +40,48 @@ html {
   }
 }
 
+body {
+  margin: 0;
+}
+
+h1 {
+  margin-top: 0.7rem;
+  margin-bottom: 1.4rem;
+}
+
+a {
+  all: unset;
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+  color: unset;
+  cursor: default;
+  text-decoration: initial;
+}
+
+img {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
 .header {
   height: 12.5vh;
-  font-size: 60px;
+  font-size: 9.375vh;
   background-color: #DDDDDD;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+}
+
+.header > a {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -55,7 +91,7 @@ html {
   place-items: center;
 }
 
-.header > a > span:nth-child(2) {
+.header > a > div > span:nth-child(2) {
   display: inline-block;
   -webkit-transform: scale(-1, 1);
   transform: scale(-1, 1);
@@ -94,9 +130,14 @@ html {
       grid-template-columns: repeat(3, 1fr);
   -ms-grid-rows: 100%;
       grid-template-rows: 100%;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+}
+
+@media screen and (min-width: 1024px) {
+  .footer .icons {
+    padding-left: 75%;
+    -webkit-column-gap: 5%;
+            column-gap: 5%;
+  }
 }
 
 .home-grid-container {
@@ -108,32 +149,32 @@ html {
       grid-template-rows: auto;
   -ms-flex-line-pack: start;
       align-content: start;
-  grid-auto-rows: auto;
+  justify-items: center;
   height: 70vh;
 }
 
-.instructions {
-  -ms-flex-item-align: start;
-      -ms-grid-row-align: start;
-      align-self: start;
+.home-grid-container > * {
+  width: 90%;
+  max-width: 500px;
 }
 
-.instructions > * {
+.home-grid-container .instructions {
   text-align: center;
 }
 
-.instructions p {
+.home-grid-container .instructions p {
   margin-bottom: 0.7rem;
 }
 
-.instructions > :first-child {
+.home-grid-container .instructions > :first-child {
   margin-top: 1.4rem;
 }
 
-.new-game {
+.home-grid-container .new-game {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
+  max-width: 400px;
   height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
@@ -148,15 +189,16 @@ html {
   border-radius: calc(var(--new-game-button-height) * 0.25);
 }
 
-.new-game:hover {
+.home-grid-container .new-game:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
   background-image: linear-gradient(#FF851B, brown);
 }
 
-.resume-game {
+.home-grid-container .resume-game {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
+  max-width: 400px;
   height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
@@ -171,15 +213,16 @@ html {
   border-radius: calc(var(--resume-game-button-height) * 0.25);
 }
 
-.resume-game:hover {
+.home-grid-container .resume-game:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
   background-image: linear-gradient(#FF851B, brown);
 }
 
-.home-terminate-game {
+.home-grid-container .home-terminate-game {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
+  max-width: 400px;
   height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
@@ -194,7 +237,7 @@ html {
   border-radius: calc(var(--home-terminate-game-button-height) * 0.25);
 }
 
-.home-terminate-game:hover {
+.home-grid-container .home-terminate-game:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
   background-image: linear-gradient(#FF851B, brown);
 }
@@ -226,8 +269,8 @@ html {
   display: grid;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr auto;
-      grid-template-rows: 1fr auto;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -279,6 +322,7 @@ html {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
+  max-width: 400px;
   height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
@@ -303,6 +347,7 @@ html {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
+  max-width: 400px;
   height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
@@ -337,6 +382,7 @@ html {
   background-color: #FF851B;
   border: solid 3px brown;
   width: 90%;
+  max-width: 400px;
   height: 4.2rem;
   -ms-grid-column-align: center;
       justify-self: center;
@@ -440,7 +486,7 @@ html {
   text-align: center;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
   .board-grid-container {
     width: 100vw;
     height: 100vw;
@@ -451,14 +497,14 @@ html {
   }
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 600px) {
   .board-grid-container {
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
   }
   .board-grid-container > div {
-    line-height: calc(0.125 * 500px);
-    font-size: calc(0.1875 * 500px);
+    line-height: 75px;
+    font-size: 112.5px;
   }
 }
 

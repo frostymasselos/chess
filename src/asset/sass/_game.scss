@@ -25,7 +25,7 @@
         //#1
         // text-align: center;
         // #2
-        @include grid-container-template(1fr, 1fr auto);
+        @include grid-container-template(1fr, 1fr);
         // align-content: start; 
         align-items: center;
         // justify-items: center;

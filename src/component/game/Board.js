@@ -567,16 +567,22 @@ function Board({db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffe
             </div>
             <div className="game-metric-buttons">
                 <div className="potential-square button" onClick={highlightSquares.bind(null, "user")}>
-                    P squares
-                    <div className="potential-square-switch switch"></div>
+                    <div>
+                        P squares
+                        <div className="potential-square-switch switch"></div>
+                    </div>
                 </div>
                 <div className="opponent-potential-square button" onClick={highlightSquares.bind(null, "opponent")}>
-                    Opponent's potential squares
-                    <div className="opponent-potential-square-switch switch"></div>
+                    <div>
+                        Opponent's potential squares
+                        <div className="opponent-potential-square-switch switch"></div>
+                    </div>
                 </div>
                 <div className="selected-potential-square button" onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton}>
-                    Selected's potential squares
-                    <div className="selected-potential-square-switch switch"></div>
+                    <div>
+                        Selected's potential squares
+                        <div className="selected-potential-square-switch switch"></div>
+                    </div>
                 </div>
             </div>
         </>
