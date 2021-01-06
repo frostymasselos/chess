@@ -1,6 +1,7 @@
 //not here but present on: #root inline: button-radius; 
 /////////////////////////////////////////////////CONSISTENT VARIABLES///////////////////////////////////////////////////////////
 $laptop: 1024px;
+$tablet: 768px;
 
 $lh: 1.4rem; //(28px)
 $footer-color: #001f3f;
@@ -132,26 +133,51 @@ img {
   
 }
 .footer {
-    font-size: 16px; 
-    $li: 1.2em;
-    line-height: $li;
+    font-size: 15px; 
+    $lh: 1.2em;
+    $distance-from-footer-top: $lh * 0.25;
+    line-height: $lh;
     // position: fixed;
     // bottom: 0px;
     width: 100vw;
     height: $footer-height;
     background-color: $footer-color;
     color: $footer-info-color;
-    @include grid-container-template(1fr, 38% 62%);
+    @include grid-container-template(1fr, 50% 50%);//38% 62%
     .footer-info {
         @include grid-container-horizontally-and-vertically-center-GIs();
         text-align: center;
-        // margin-top: $li * 0.5;
+        align-items: start;
+        @media screen and (min-width: $tablet) {
+            // padding-left: 0%;
+        }
+        > p {
+            margin-top: $distance-from-footer-top;
+        }
+        
     }
     .icons {
-        @include grid-container-template(repeat(3, 1fr), 100%);
-        @media screen and (min-width: $laptop) {
-            padding-left: 75%;
-            column-gap: 5%;
+        @include grid-container-template(repeat(3, 1fr), 100%);//🐉min-max here.
+        // @media screen and (min-width: $tablet) {
+        //     padding-left: 70%;//70%
+            // padding-right: 30%;//70%
+            // column-gap: 5%;
+        // }
+    }
+    @media screen and (min-width: $laptop) {
+        $cell-column-2: 25%;
+        $cell-column-1: 100% - ($cell-column-2 * 2);
+        justify-content: end;
+        grid-template-columns: $cell-column-1 $cell-column-2;
+        grid-template-rows: 100%;
+        > .icons {
+            // margin-top: $distance-from-footer-top;
+            // height: 50%;
+            // margin: 15% 0;
+            // column-gap: 5%;
+            a {
+                margin: 25% 0;
+            }
         }
     }
 }  

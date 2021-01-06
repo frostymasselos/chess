@@ -98,7 +98,7 @@ img {
 }
 
 .footer {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.2em;
   width: 100vw;
   height: 17.5vh;
@@ -108,8 +108,8 @@ img {
   display: grid;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
-  -ms-grid-rows: 38% 62%;
-      grid-template-rows: 38% 62%;
+  -ms-grid-rows: 50% 50%;
+      grid-template-rows: 50% 50%;
 }
 
 .footer .footer-info {
@@ -121,6 +121,13 @@ img {
       grid-template-rows: 1fr;
   place-items: center;
   text-align: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+}
+
+.footer .footer-info > p {
+  margin-top: 0.3em;
 }
 
 .footer .icons {
@@ -133,10 +140,17 @@ img {
 }
 
 @media screen and (min-width: 1024px) {
-  .footer .icons {
-    padding-left: 75%;
-    -webkit-column-gap: 5%;
-            column-gap: 5%;
+  .footer {
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: end;
+    -ms-grid-columns: 50% 25%;
+        grid-template-columns: 50% 25%;
+    -ms-grid-rows: 100%;
+        grid-template-rows: 100%;
+  }
+  .footer > .icons a {
+    margin: 25% 0;
   }
 }
 
@@ -486,7 +500,7 @@ img {
   text-align: center;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 520px) {
   .board-grid-container {
     width: 100vw;
     height: 100vw;
@@ -497,14 +511,14 @@ img {
   }
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 520px) {
   .board-grid-container {
-    width: 600px;
-    height: 600px;
+    width: 520px;
+    height: 520px;
   }
   .board-grid-container > div {
-    line-height: 75px;
-    font-size: 112.5px;
+    line-height: 65px;
+    font-size: 97.5px;
   }
 }
 
