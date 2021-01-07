@@ -1,3 +1,9 @@
+html {
+  font-size: 20px;
+  --header-height: 12.5vh;
+  --footer-height: 17.5vh;
+}
+
 @media (max-width: 500px) {
   html {
     --color: blue;
@@ -23,10 +29,6 @@
   -webkit-box-sizing: inherit;
           box-sizing: inherit;
   color: unset;
-}
-
-html {
-  font-size: 20px;
 }
 
 #root {
@@ -66,8 +68,8 @@ img {
 }
 
 .header {
-  height: 12.5vh;
-  font-size: 9.375vh;
+  height: var(--header-height);
+  font-size: calc(var(--header-height) * 0.75);
   background-color: #DDDDDD;
   display: -ms-grid;
   display: grid;
@@ -101,7 +103,7 @@ img {
   font-size: 15px;
   line-height: 1.2em;
   width: 100vw;
-  height: 17.5vh;
+  height: var(--footer-height);
   background-color: #001f3f;
   color: darkorchid;
   display: -ms-grid;
@@ -160,7 +162,7 @@ img {
             column-gap: 0%;
   }
   .footer > .icons a {
-    margin: 4.375vh 0;
+    margin: calc(0.25 * var(--footer-height)) 0;
   }
 }
 
@@ -174,7 +176,7 @@ img {
   -ms-flex-line-pack: start;
       align-content: start;
   justify-items: center;
-  height: 70vh;
+  height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 
 .home-grid-container > * {
@@ -264,6 +266,10 @@ img {
 .home-grid-container .home-terminate-game:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
   background-image: linear-gradient(#FF851B, brown);
+}
+
+.game-text {
+  display: flow-root;
 }
 
 .game-text > * {
@@ -428,7 +434,7 @@ img {
 }
 
 .opponent-quits-page-container {
-  height: 70vh;
+  height: calc(100vh - var(--header-height) - var(--footer-height));
   text-align: center;
   display: flow-root;
 }
@@ -442,7 +448,7 @@ img {
 }
 
 .quit-match-for-new-game-container {
-  height: 70vh;
+  height: calc(100vh - var(--header-height) - var(--footer-height));
   text-align: center;
   display: flow-root;
 }
@@ -456,7 +462,7 @@ img {
 }
 
 .error-page-container {
-  height: 70vh;
+  height: calc(100vh - var(--header-height) - var(--footer-height));
   text-align: center;
   display: flow-root;
 }
@@ -497,10 +503,11 @@ img {
 }
 
 .board-grid-container {
+  --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height));
   width: 100vw;
-  max-width: 540px;
+  max-width: var(--board-dimension-limit);
   height: 100vw;
-  max-height: 540px;
+  max-height: var(--board-dimension-limit);
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (1fr)[8];
@@ -510,17 +517,10 @@ img {
 }
 
 .board-grid-container > div {
-  line-height: 12.5vw;
-  font-size: 18.75vw;
+  line-height: calc(var(--board-height) * 0.125);
+  font-size: calc((var(--board-height) * 0.125) * 1.5);
   background-color: grey;
   text-align: center;
-}
-
-@media screen and (min-width: 540px) {
-  .board-grid-container > div {
-    line-height: 67.5px;
-    font-size: 101.25px;
-  }
 }
 
 .board-grid-container > .black-square {
@@ -563,16 +563,8 @@ img {
   color: #85144b;
 }
 
-@media screen and (max-width: 500px) {
-  .board-grid-container .pawn {
-    font-size: 15vw;
-  }
-}
-
-@media screen and (min-width: 500px) {
-  .board-grid-container .pawn {
-    font-size: calc(0.15 * 500px);
-  }
+.board-grid-container .pawn {
+  font-size: calc((var(--board-height) * 0.125) * 1.2);
 }
 
 .pawn-promotion-grid-container {

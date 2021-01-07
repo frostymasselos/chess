@@ -9,8 +9,6 @@
 //     background-color: $random;
 // }
 
-$board-width-limit: 540px;//520px //we're stopping it when board's bottom reaches 'fold'. So alternative way: 100vh - header - .game-text
-
 .z-index-1 {
     z-index: 1;
 }
@@ -33,23 +31,19 @@ $board-width-limit: 540px;//520px //we're stopping it when board's bottom reache
 }
 ///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
 .board-grid-container {
-    
-    width: 100vw; max-width: $board-width-limit;
-    height: 100vw; max-height: $board-width-limit;
+
+   --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height));//540px 520px //we're stopping it when board's bottom reaches 'fold'. 
+
+    width: 100vw; max-width: var(--board-dimension-limit);
+    height: 100vw; max-height: var(--board-dimension-limit);
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     > div {
-        line-height: 12.5vw;
-        font-size: 18.75vw;//use a google-font-size🐉
+        line-height: calc(var(--board-height) * 0.125);//12.5vw;
+        font-size: calc((var(--board-height) * 0.125) * 1.5);//18.75;
         background-color: $light-square;
         text-align: center;
-    }
-    @media screen and (min-width: $board-width-limit) {
-        > div {
-            line-height: 0.125 * $board-width-limit;
-            font-size: 0.1875 * $board-width-limit;
-        }
     }
     > .black-square {
         background-color: $dark-square;
@@ -81,13 +75,7 @@ $board-width-limit: 540px;//520px //we're stopping it when board's bottom reache
         color: $clicked-on-piece;
     }
     .pawn {
-        @media screen and (max-width: 500px) {
-            font-size: 15vw;//use a google-font-size🐉
-        }
-        @media screen and (min-width: 500px) {
-            font-size: calc(0.15 * 500px);
-        }
-        // font-size: 16.5vw;
+        font-size: calc((var(--board-height) * 0.125) * 1.2);//15vw
     }
 }
 

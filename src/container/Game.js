@@ -56,8 +56,10 @@ function Game({params}) {
     //CSS
     function cssFunctions() {
         roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
+        makeCSSVariableOfGameTextHeight(); window.addEventListener('resize', makeCSSVariableOfGameTextHeight);
+        makeCSSVariableOfBoardHeight(); window.addEventListener('resize', makeCSSVariableOfBoardHeight);
     }
-    function roundCornersOfButtons() { console.log("here");
+    function roundCornersOfButtons() { 
         const buttons = Array.from(window.document.querySelectorAll(`.button`)); 
         for (let index = 0; index < buttons.length; index++) { 
             const button = buttons[index];
@@ -65,8 +67,18 @@ function Game({params}) {
             window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
+    function makeCSSVariableOfGameTextHeight() {
+        const gameTextHeight = window.document.querySelector(`.game-text`).offsetHeight;//console.log(gameTextHeight);
+        window.document.querySelector(`#root`).style.setProperty(`--game-text-height`, `${gameTextHeight}px`);
+    }
+    function makeCSSVariableOfBoardHeight() {
+        const boardHeight = window.document.querySelector(`.board-grid-container`).offsetHeight;//console.log(gameTextHeight);
+        window.document.querySelector(`#root`).style.setProperty(`--board-height`, `${boardHeight}px`);
+    }
     function unmountCSSFunctions() {
         window.removeEventListener('resize', roundCornersOfButtons);
+        window.removeEventListener('resize', makeCSSVariableOfGameTextHeight);
+        window.removeEventListener('resize', makeCSSVariableOfBoardHeight);
     }
     //NON-CSS
     function listenerForUser2SigningIn(game) {

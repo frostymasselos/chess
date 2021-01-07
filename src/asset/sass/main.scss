@@ -18,9 +18,12 @@ $black-piece: black;
 $clicked-on-piece: #85144b;
 $significant-button: #FFDC00;
 $light-grey: #dddddd;
+html {
+    font-size: 20px;
+    --header-height: 12.5vh;//10
+    --footer-height: 17.5vh;//16 ( = golden ratio w/title?)
+}
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
-$header-height: 12.5vh;//10
-$footer-height: 17.5vh;//16 ( = golden ratio w/title?)
 @media (max-width: 500px) {
     html {
         --color: blue;
@@ -63,7 +66,7 @@ $footer-height: 17.5vh;//16 ( = golden ratio w/title?)
     @include grid-container-horizontally-and-vertically-center-GIs();
 }
 @mixin fresh-page-container {
-    height: 100vh - $header-height - $footer-height;
+    height: calc(100vh - var(--header-height) - var(--footer-height));
     text-align: center;
     display: flow-root;//padding-top: 55px;stops it from doing parental MC. 
     p {
@@ -84,9 +87,6 @@ $footer-height: 17.5vh;//16 ( = golden ratio w/title?)
     // padding: 0;
     margin: 0;
     @include copy-for-anchor();
-}
-html {
-    font-size: 20px;
 }
 #root {
     box-sizing: border-box;
@@ -115,8 +115,8 @@ img {
 }
 /////////////////////////////////////////////////GENERAL//////////////////////////////////////////////////////////
 .header {
-    height: $header-height;
-    font-size: $header-height * 0.75;//60px
+    height: var(--header-height);
+    font-size: calc(var(--header-height) * 0.75);//60px
     background-color: #DDDDDD;
     @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
     align-items: stretch;
@@ -141,7 +141,7 @@ img {
     // position: fixed;
     // bottom: 0px;
     width: 100vw;
-    height: $footer-height;
+    height: var(--footer-height);
     background-color: $footer-color;
     color: $footer-info-color;
     @include grid-container-template(1fr, 40% 60%);//38% 62%
@@ -184,7 +184,7 @@ img {
             // margin: 15% 0;
             column-gap: 0%;
             a {
-                margin: (0.25 * $footer-height) 0;
+                margin: calc(0.25 * var(--footer-height)) 0;
             }
         }
     }
