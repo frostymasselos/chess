@@ -8,16 +8,8 @@
 // #root {
 //     background-color: $random;
 // }
-@mixin viewport-dimension-dependent-variables() {
-    @media screen and (max-width: 500px) {
-        $random: blue;
-    }
-    @media screen and (min-width: 500px) {
-        $random: green;
-    }
-}
 
-$board-width-limit: 520px;
+$board-width-limit: 540px;//520px //we're stopping it when board's bottom reaches 'fold'. So alternative way: 100vh - header - .game-text
 
 .z-index-1 {
     z-index: 1;
@@ -42,24 +34,18 @@ $board-width-limit: 520px;
 ///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
 .board-grid-container {
     
+    width: 100vw; max-width: $board-width-limit;
+    height: 100vw; max-height: $board-width-limit;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     > div {
+        line-height: 12.5vw;
+        font-size: 18.75vw;//use a google-font-size🐉
         background-color: $light-square;
         text-align: center;
     }
-    @media screen and (max-width: $board-width-limit) {
-        width: 100vw;
-        height: 100vw;
-        > div {
-            line-height: 12.5vw;
-            font-size: 18.75vw;//use a google-font-size🐉
-        }
-    }
     @media screen and (min-width: $board-width-limit) {
-        width: $board-width-limit;
-        height: $board-width-limit;
         > div {
             line-height: 0.125 * $board-width-limit;
             font-size: 0.1875 * $board-width-limit;

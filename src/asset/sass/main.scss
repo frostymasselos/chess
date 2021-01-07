@@ -1,7 +1,8 @@
 //not here but present on: #root inline: button-radius; 
 /////////////////////////////////////////////////CONSISTENT VARIABLES///////////////////////////////////////////////////////////
-$laptop: 1024px;
 $tablet: 768px;
+$laptop: 1024px;
+$wide: 1440px;
 
 $lh: 1.4rem; //(28px)
 $footer-color: #001f3f;
@@ -48,7 +49,7 @@ $footer-height: 17.5vh;//16 ( = golden ratio w/title?)
 @mixin button {
     background-color: $dark-square;
     border: solid 3px brown;
-    width: 90%; max-width: 400px;
+    width: 90%; max-width: 380px;//400
     height: $lh * 3 ;//100%
     justify-self: center;//align-self: start;
     margin-top: $lh / 2;
@@ -143,7 +144,7 @@ img {
     height: $footer-height;
     background-color: $footer-color;
     color: $footer-info-color;
-    @include grid-container-template(1fr, 50% 50%);//38% 62%
+    @include grid-container-template(1fr, 40% 60%);//38% 62%
     .footer-info {
         @include grid-container-horizontally-and-vertically-center-GIs();
         text-align: center;
@@ -158,14 +159,21 @@ img {
     }
     .icons {
         @include grid-container-template(repeat(3, 1fr), 100%);//🐉min-max here.
+        max-width: 350px;
+        margin: 0 auto;
         // @media screen and (min-width: $tablet) {
         //     padding-left: 70%;//70%
             // padding-right: 30%;//70%
             // column-gap: 5%;
         // }
+        a {
+            margin-bottom: $distance-from-footer-top;
+            // min-width: 80px;
+            // max-width: 150px;
+        }
     }
     @media screen and (min-width: $laptop) {
-        $cell-column-2: 25%;
+        $cell-column-2: 30%;
         $cell-column-1: 100% - ($cell-column-2 * 2);
         justify-content: end;
         grid-template-columns: $cell-column-1 $cell-column-2;
@@ -174,10 +182,20 @@ img {
             // margin-top: $distance-from-footer-top;
             // height: 50%;
             // margin: 15% 0;
-            // column-gap: 5%;
+            column-gap: 0%;
             a {
-                margin: 25% 0;
+                margin: (0.25 * $footer-height) 0;
             }
+        }
+    }
+    @media screen and (min-width: $wide) {
+        // justify-content: end;
+        .icons {
+            // max-width: initial;
+            // margin: 0;
+            // justify-content: end;
+            // justify-items: end;
+            // justify-self: end;
         }
     }
 }  
