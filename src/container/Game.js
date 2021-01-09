@@ -307,6 +307,9 @@ function Game({params}) {
                 // //NOT BECAUSE OPPONENT QUIT
             } 
         });
+        return () => { console.log("cleanup");
+        unmountCSSFunctions();
+    }
     }, [arbitrary]);
 
     return ( 

@@ -78,6 +78,9 @@ function Home() {
             window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
+    function unmountCSSFunctions(params) {
+        window.removeEventListener('resize', roundCornersOfButtons);
+    }
 
     useEffect(() => {
         let authListener = auth.onAuthStateChanged(() => {
@@ -98,6 +101,9 @@ function Home() {
         }
         //consistently round corners of buttons
         roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
+        return () => {
+            unmountCSSFunctions();
+        }
     }, [notSignedIn, url]);
     
     return ( 

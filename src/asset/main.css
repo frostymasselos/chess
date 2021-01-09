@@ -504,6 +504,7 @@ img {
 
 .board-grid-container {
   --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height));
+  color: orange;
   width: 100vw;
   max-width: var(--board-dimension-limit);
   height: 100vw;
