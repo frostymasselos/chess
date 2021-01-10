@@ -1,4 +1,4 @@
-//not here but present on: #root inline: button-radius; 
+//not here but present on: #root inline: button-radius;
 /////////////////////////////////////////////////CONSISTENT VARIABLES///////////////////////////////////////////////////////////
 $tablet: 768px;
 $laptop: 1024px;
@@ -6,214 +6,184 @@ $wide: 1440px;
 
 $lh: 1.4rem; //(28px)
 $footer-color: #001f3f;
-$footer-info-color: darkorchid;
+$footer-info-color:darkorchid;
 $light-square: grey;
-$dark-square: #FF851B;
+$dark-square: #ff851b;
 $button-hover: brown;
-$potential-user-square: #0074D9;
-$potential-opponent-square: #FF4136;
+$potential-user-square: #0074d9;
+$potential-opponent-square: #ff4136;
 $potential-clicked-on-piece-square: #85144b;
 $white-piece: white;
 $black-piece: black;
 $clicked-on-piece: #85144b;
-$significant-button: #FFDC00;
+$significant-button: #ffdc00;
 $light-grey: #dddddd;
 html {
-    font-size: 20px;
-    --header-height: 12.5vh;//10
-    --footer-height: 17.5vh;//16 ( = golden ratio w/title?)
+  font-size: 20px;
+  --margin-from-containing-block: 20px;
+  --button-min-width: 100px;
+  --header-height: 12.5vh; //10
+  --footer-height: 17.5vh; //16 ( = golden ratio w/title?)
 }
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
-@media (max-width: 500px) {
-    html {
-        --color: blue;
-    }
-}
-@media (min-width: 500px) {
-    html {
-        --color: green;
-    }
-}
-@media (min-width: $laptop) {
-    html {
-        --random: pink;
-    }
-}
 /////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////
 @mixin grid-container-template($column-value: 1fr, $row-value: 1fr) {
-    display: grid;
-    grid-template-columns: $column-value;
-    grid-template-rows: $row-value;
+  display: grid;
+  grid-template-columns: $column-value;
+  grid-template-rows: $row-value;
 }
-@mixin grid-container-horizontally-and-vertically-center-GIs($column-value: 1fr, $row-value: 1fr) {
-    @include grid-container-template($column-value, $row-value);
-    place-items: center;
+@mixin grid-container-horizontally-and-vertically-center-GIs(
+  $column-value: 1fr,
+  $row-value: 1fr
+) {
+  @include grid-container-template($column-value, $row-value);
+  place-items: center;
 }
 @mixin button {
-    background-color: $dark-square;
-    border: solid 3px brown;
-    width: 90%; max-width: 380px;//400
-    height: $lh * 3 ;//100%
-    justify-self: center;//align-self: start;
-    margin-top: $lh / 2;
-    // margin-bottom: $lh / 2;
-    @include grid-container-horizontally-and-vertically-center-GIs();
-    &:hover {
-        background-image: linear-gradient($dark-square, brown);
-    }
+  background-color: $dark-square;
+  border: solid 3px brown;
+  width: 90%;
+  max-width: 380px; //400
+  height: $lh * 3; //100%
+  justify-self: center; //align-self: start;
+  margin-top: $lh / 2;
+  // margin-bottom: $lh / 2;
+  @include grid-container-horizontally-and-vertically-center-GIs();
+  &:hover {
+    background-image: linear-gradient($dark-square, brown);
+  }
 }
 @mixin board-info-button {
-    @include grid-container-horizontally-and-vertically-center-GIs();
+  @include grid-container-horizontally-and-vertically-center-GIs();
 }
 @mixin fresh-page-container {
-    height: calc(100vh - var(--header-height) - var(--footer-height));
-    text-align: center;
-    display: flow-root;//padding-top: 55px;stops it from doing parental MC. 
-    p {
-        margin-bottom: ($lh * 0.5);
-    }
-    p:nth-child(1) {
-        margin-top: ($lh * 0.5);
-    }
+  height: calc(100vh - var(--header-height) - var(--footer-height));
+  text-align: center;
+  display: flow-root; //padding-top: 55px;stops it from doing parental MC.
+  p {
+    margin-bottom: ($lh * 0.5);
+  }
+  p:nth-child(1) {
+    margin-top: ($lh * 0.5);
+  }
 }
 /////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
 @mixin copy-for-anchor {
-    box-sizing: inherit;
-    color: unset;//don't know why we need this for color to not be purple(🧨)
+  box-sizing: inherit;
+  color: unset; //don't know why we need this for color to not be purple(🧨)
 }
-*, ::before, ::after {
-    margin-top: 0;
-    margin-right: 0;
-    // padding: 0;
-    margin: 0;
-    @include copy-for-anchor();
+*,
+::before,
+::after {
+  margin-top: 0;
+  margin-right: 0;
+  // padding: 0;
+  margin: 0;
+  @include copy-for-anchor();
 }
 #root {
-    box-sizing: border-box;
-    @media screen and (max-width: 500px) {
-        line-height: $lh;
-    }
+  box-sizing: border-box;
+  @media screen and (max-width: 500px) {
+    line-height: $lh;
+  }
 }
 body {
-    margin: 0;
+  margin: 0;
 }
 h1 {
-    // font-size: $lh * 2;
-    margin-top: $lh * 0.5;
-    margin-bottom: $lh * 1;
+  // font-size: $lh * 2;
+  margin-top: $lh * 0.5;
+  margin-bottom: $lh * 1;
 }
 a {
-    all: unset;
-    @include copy-for-anchor();
-    cursor: default;
-    text-decoration: initial;
+  all: unset;
+  @include copy-for-anchor();
+  cursor: default;
+  text-decoration: initial;
 }
 img {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
 }
 /////////////////////////////////////////////////GENERAL//////////////////////////////////////////////////////////
 .header {
-    height: var(--header-height);
-    font-size: calc(var(--header-height) * 0.75);//60px
-    background-color: #DDDDDD;
+  height: var(--header-height);
+  font-size: calc(var(--header-height) * 0.75); //60px
+  background-color: #dddddd;
+  @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+  align-items: stretch;
+  > a {
     @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
-    align-items: stretch;
-    > a {
-        @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
-        > div {
-            > span:nth-child(2) {
-                display: inline-block;
-                -moz-transform: scale(-1, 1);
-                -webkit-transform: scale(-1, 1);
-                transform: scale(-1, 1);
-            }
-        }
+    > div {
+      > span:nth-child(2) {
+        display: inline-block;
+        -moz-transform: scale(-1, 1);
+        -webkit-transform: scale(-1, 1);
+        transform: scale(-1, 1);
+      }
     }
-  
+  }
 }
 .footer {
-    font-size: 15px; 
-    $lh: 1.2em;
-    $distance-from-footer-top: $lh * 0.25;
-    line-height: $lh;
-    // position: fixed;
-    // bottom: 0px;
-    width: 100vw;
-    height: var(--footer-height);
-    background-color: $footer-color;
-    color: $footer-info-color;
-    @include grid-container-template(1fr, 40% 60%);//38% 62%
-    .footer-info {
-        @include grid-container-horizontally-and-vertically-center-GIs();
-        text-align: center;
-        align-items: start;
-        @media screen and (min-width: $tablet) {
-            // padding-left: 0%;
-        }
-        > p {
-            margin-top: $distance-from-footer-top;
-        }
-        
+  font-size: 15px;
+  $lh: 1.2em;
+  $distance-from-footer-top: $lh * 0.25;
+  line-height: $lh;
+  width: 100vw;
+  height: var(--footer-height);
+  background-color: $footer-color;
+  color: $footer-info-color;
+  @include grid-container-template(1fr, 40% 60%); //38% 62%
+  .footer-info {
+    @include grid-container-horizontally-and-vertically-center-GIs();
+    text-align: center;
+    align-items: start;
+    @media screen and (min-width: $tablet) {
+      // padding-left: 0%;
     }
-    .icons {
-        @include grid-container-template(repeat(3, 1fr), 100%);//🐉min-max here.
-        max-width: 350px;
-        margin: 0 auto;
-        // @media screen and (min-width: $tablet) {
-        //     padding-left: 70%;//70%
-            // padding-right: 30%;//70%
-            // column-gap: 5%;
-        // }
-        a {
-            margin-bottom: $distance-from-footer-top;
-            // min-width: 80px;
-            // max-width: 150px;
-        }
+    > p {
+      margin-top: $distance-from-footer-top;
     }
-    @media screen and (min-width: $laptop) {
-        $cell-column-2: 30%;
-        $cell-column-1: 100% - ($cell-column-2 * 2);
-        justify-content: end;
-        grid-template-columns: $cell-column-1 $cell-column-2;
-        grid-template-rows: 100%;
-        > .icons {
-            // margin-top: $distance-from-footer-top;
-            // height: 50%;
-            // margin: 15% 0;
-            column-gap: 0%;
-            a {
-                margin: calc(0.25 * var(--footer-height)) 0;
-            }
-        }
+  }
+  .icons {
+    @include grid-container-template(repeat(3, 1fr), 100%); //🐉min-max here.
+    max-width: 350px;
+    margin: 0 auto;
+    a {
+      margin-bottom: $distance-from-footer-top;
     }
-    @media screen and (min-width: $wide) {
-        // justify-content: end;
-        .icons {
-            // max-width: initial;
-            // margin: 0;
-            // justify-content: end;
-            // justify-items: end;
-            // justify-self: end;
-        }
+  }
+  @media screen and (min-width: $tablet) {
+    $cell-column-2: 30%;
+    $cell-column-1: 100% - ($cell-column-2 * 2);
+    justify-content: end;
+    grid-template-columns: $cell-column-1 $cell-column-2;
+    grid-template-rows: 100%;
+    > .icons {
+      margin: 0;
+      margin-right: 2%;
+      justify-self: end;
+      a {
+        margin: calc(0.25 * var(--footer-height)) 0;
+      }
     }
-}  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@import './home.scss';
-@import './game.scss';
-@import './board.scss';
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-.warning-button { 
-    background-color: $potential-opponent-square;
-    &:hover {
-        background-image: linear-gradient($potential-opponent-square, brown);
-    }
+  }
 }
-.significant-button { 
-    background-color: $significant-button;
-    &:hover {
-        background-image: linear-gradient($significant-button, brown);
-    }
-} 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@import "./home.scss";
+@import "./game.scss";
+@import "./board.scss";
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#root .warning-button {
+  background-color: $potential-opponent-square;
+  &:hover {
+    background-image: linear-gradient($potential-opponent-square, brown);
+  }
+}
+#root .significant-button {
+  background-color: $significant-button;
+  &:hover {
+    background-image: linear-gradient($significant-button, brown);
+  }
+}

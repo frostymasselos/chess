@@ -1,28 +1,14 @@
 html {
   font-size: 20px;
+  --margin-from-containing-block: 20px;
+  --button-min-width: 100px;
   --header-height: 12.5vh;
   --footer-height: 17.5vh;
 }
 
-@media (max-width: 500px) {
-  html {
-    --color: blue;
-  }
-}
-
-@media (min-width: 500px) {
-  html {
-    --color: green;
-  }
-}
-
-@media (min-width: 1024px) {
-  html {
-    --random: pink;
-  }
-}
-
-*, ::before, ::after {
+*,
+::before,
+::after {
   margin-top: 0;
   margin-right: 0;
   margin: 0;
@@ -70,7 +56,7 @@ img {
 .header {
   height: var(--header-height);
   font-size: calc(var(--header-height) * 0.75);
-  background-color: #DDDDDD;
+  background-color: #dddddd;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -147,7 +133,7 @@ img {
   margin-bottom: 0.3em;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 768px) {
   .footer {
     -webkit-box-pack: end;
         -ms-flex-pack: end;
@@ -158,8 +144,10 @@ img {
         grid-template-rows: 100%;
   }
   .footer > .icons {
-    -webkit-column-gap: 0%;
-            column-gap: 0%;
+    margin: 0;
+    margin-right: 2%;
+    -ms-grid-column-align: end;
+        justify-self: end;
   }
   .footer > .icons a {
     margin: calc(0.25 * var(--footer-height)) 0;
@@ -197,7 +185,7 @@ img {
 }
 
 .home-grid-container .new-game {
-  background-color: #FF851B;
+  background-color: #ff851b;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -216,12 +204,12 @@ img {
 }
 
 .home-grid-container .new-game:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
+  background-image: linear-gradient(#ff851b, brown);
 }
 
 .home-grid-container .resume-game {
-  background-color: #FF851B;
+  background-color: #ff851b;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -240,12 +228,12 @@ img {
 }
 
 .home-grid-container .resume-game:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
+  background-image: linear-gradient(#ff851b, brown);
 }
 
 .home-grid-container .home-terminate-game {
-  background-color: #FF851B;
+  background-color: #ff851b;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -264,8 +252,12 @@ img {
 }
 
 .home-grid-container .home-terminate-game:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
+  background-image: linear-gradient(#ff851b, brown);
+}
+
+.game-grid-container {
+  margin-bottom: 0.7rem;
 }
 
 .game-text {
@@ -280,76 +272,8 @@ img {
   margin: 0.7rem 0;
 }
 
-.game-metric-buttons {
-  margin-top: 0.35rem;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: (30%)[3];
-      grid-template-columns: repeat(3, 30%);
-  -ms-grid-rows: auto;
-      grid-template-rows: auto;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
-  line-height: 1.12rem;
-}
-
-.game-metric-buttons > div {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  text-align: center;
-  font-size: 18px;
-  height: 100%;
-  background-color: #dddddd;
-  color: black;
-  border: solid grey 2px;
-}
-
-.game-metric-buttons .switch {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  border: black solid 1px;
-  margin: 0 auto;
-  border: solid 1px black;
-}
-
-.game-metric-buttons .potential-square {
-  border-radius: calc(var(--potential-square-button-height) * 0.10);
-}
-
-.game-metric-buttons .potential-square-switch-color {
-  background-color: #0074D9;
-  border-color: #0074D9;
-}
-
-.game-metric-buttons .opponent-potential-square {
-  border-radius: calc(var(--opponent-potential-square-button-height) * 0.10);
-}
-
-.game-metric-buttons .opponent-potential-square-switch-color {
-  background-color: #FF4136;
-  border-color: #FF4136;
-}
-
-.game-metric-buttons .selected-potential-square {
-  border-radius: calc(var(--selected-potential-square-button-height) * 0.10);
-}
-
-.game-metric-buttons .selected-potential-square-switch-color {
-  background-color: #85144b;
-  border-color: #85144b;
-}
-
 .floating-home-button {
-  background-color: #FF851B;
+  background-color: #ff851b;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -369,12 +293,12 @@ img {
 }
 
 .floating-home-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
+  background-image: linear-gradient(#ff851b, brown);
 }
 
 .exit-game-button {
-  background-color: #FF851B;
+  background-color: #ff851b;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -394,8 +318,8 @@ img {
 }
 
 .exit-game-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
+  background-image: linear-gradient(#ff851b, brown);
 }
 
 .exit-game-button > a {
@@ -409,7 +333,7 @@ img {
 }
 
 .game-terminate-game-button {
-  background-color: #FF851B;
+  background-color: #ff851b;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -429,8 +353,8 @@ img {
 }
 
 .game-terminate-game-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF851B), to(brown));
-  background-image: linear-gradient(#FF851B, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
+  background-image: linear-gradient(#ff851b, brown);
 }
 
 .opponent-quits-page-container {
@@ -502,9 +426,19 @@ img {
           transform: rotate(180deg);
 }
 
-.board-grid-container {
+.board-metric-buttons-nav-buttons-flex-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container {
   --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height));
-  color: orange;
   width: 100vw;
   max-width: var(--board-dimension-limit);
   height: 100vw;
@@ -517,55 +451,183 @@ img {
       grid-template-rows: repeat(8, 1fr);
 }
 
-.board-grid-container > div {
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > div {
   line-height: calc(var(--board-height) * 0.125);
   font-size: calc((var(--board-height) * 0.125) * 1.5);
   background-color: grey;
   text-align: center;
 }
 
-.board-grid-container > .black-square {
-  background-color: #FF851B;
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > .black-square {
+  background-color: #ff851b;
 }
 
-.board-grid-container > .potentialUserSquare {
-  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074D9), color-stop(25%, transparent));
-  background-image: linear-gradient(to bottom right, #0074D9 25%, transparent 25% 100%);
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserSquare {
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074d9), color-stop(25%, transparent));
+  background-image: linear-gradient(to bottom right, #0074d9 25%, transparent 25% 100%);
 }
 
-.board-grid-container > .potentialClickedOnPieceSquare {
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialClickedOnPieceSquare {
   background-color: #85144b;
 }
 
-.board-grid-container > .potentialOpponentSquare {
-  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #FF4136));
-  background-image: linear-gradient(to bottom right, transparent 75%, #FF4136 75% 100%);
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialOpponentSquare {
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #ff4136));
+  background-image: linear-gradient(to bottom right, transparent 75%, #ff4136 75% 100%);
 }
 
-.board-grid-container > .potentialUserAndOpponentSquare {
-  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074D9), color-stop(25%, transparent)), -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #FF4136));
-  background-image: linear-gradient(to bottom right, #0074D9 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, #FF4136 75% 100%);
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserAndOpponentSquare {
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074d9), color-stop(25%, transparent)), -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #ff4136));
+  background-image: linear-gradient(to bottom right, #0074d9 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, #ff4136 75% 100%);
 }
 
-.board-grid-container > div > div {
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > div > div {
   height: 100%;
   overflow: hidden;
 }
 
-.board-grid-container .white-piece {
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container .white-piece {
   color: white;
 }
 
-.board-grid-container .black-piece {
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container .black-piece {
   color: black;
 }
 
-.board-grid-container .highlighted {
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container .highlighted {
   color: #85144b;
 }
 
-.board-grid-container .pawn {
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container .pawn {
   font-size: calc((var(--board-height) * 0.125) * 1.2);
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
+  margin-bottom: 0.7rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  line-height: 1.12rem;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
+  width: var(--button-min-width);
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  -ms-flex-line-pack: start;
+      align-content: start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+  font-size: 18px;
+  background-color: #dddddd;
+  color: black;
+  border: solid grey 2px;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .switch {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: black solid 1px;
+  margin: 0 auto;
+  border: solid 1px black;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .potential-square {
+  border-radius: calc(var(--potential-square-button-height) * 0.1);
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .potential-square-switch-color {
+  background-color: #0074d9;
+  border-color: #0074d9;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .opponent-potential-square {
+  border-radius: calc(var(--opponent-potential-square-button-height) * 0.1);
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .opponent-potential-square-switch-color {
+  background-color: #ff4136;
+  border-color: #ff4136;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .selected-potential-square {
+  border-radius: calc(var(--selected-potential-square-button-height) * 0.1);
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .selected-potential-square-switch-color {
+  background-color: #85144b;
+  border-color: #85144b;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > * {
+  margin: 0;
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
+    width: var(--board-height);
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+    -webkit-column-gap: 0.7rem;
+            column-gap: 0.7rem;
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > * {
+    -ms-flex-preferred-size: 285px;
+        flex-basis: 285px;
+  }
 }
 
 .pawn-promotion-grid-container {
@@ -633,21 +695,21 @@ img {
   width: 10%;
 }
 
-.warning-button {
-  background-color: #FF4136;
+#root .warning-button {
+  background-color: #ff4136;
 }
 
-.warning-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FF4136), to(brown));
-  background-image: linear-gradient(#FF4136, brown);
+#root .warning-button:hover {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff4136), to(brown));
+  background-image: linear-gradient(#ff4136, brown);
 }
 
-.significant-button {
-  background-color: #FFDC00;
+#root .significant-button {
+  background-color: #ffdc00;
 }
 
-.significant-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#FFDC00), to(brown));
-  background-image: linear-gradient(#FFDC00, brown);
+#root .significant-button:hover {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(brown));
+  background-image: linear-gradient(#ffdc00, brown);
 }
 /*# sourceMappingURL=main.css.map */

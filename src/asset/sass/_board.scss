@@ -1,125 +1,227 @@
-
-// @media screen and (max-width: 500px) {
-//     $random: red;
-// }
-// @media screen and (min-width: 500px) {
-//     $random: orange;
-// }
-// #root {
-//     background-color: $random;
-// }
-
 .z-index-1 {
-    z-index: 1;
+  z-index: 1;
 }
 .fizzle {
-    transition: opacity 2s;
-    opacity: 0;
+  transition: opacity 2s;
+  opacity: 0;
 }
 .dead {
-    display: none;
+  display: none;
 }
 
 .unclickable {
-    pointer-events: none;
+  pointer-events: none;
 }
 .clickable {
-    pointer-events: auto;
+  pointer-events: auto;
 }
 .rotate180 {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 ///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
-.board-grid-container {
+.board-metric-buttons-nav-buttons-flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 
-   --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height));//540px 520px //we're stopping it when board's bottom reaches 'fold'. 
-
-    @mixin test() {
-        @if (var(--board-dimension-limit) > 500px) {
-            color: orange;
-        }
-    }
-
-    @include test();
-
+  .board-grid-container {
+    --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height)); //540px 520px //we're stopping it when board's bottom reaches 'fold'.
+    
     width: 100vw; max-width: var(--board-dimension-limit);
     height: 100vw; max-height: var(--board-dimension-limit);
-    display: grid;//display: inline-grid;
+
+    display: grid; //display: inline-grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     > div {
-        line-height: calc(var(--board-height) * 0.125);//12.5vw;
-        font-size: calc((var(--board-height) * 0.125) * 1.5);//18.75;
-        background-color: $light-square;
-        text-align: center;
+      line-height: calc(var(--board-height) * 0.125); //12.5vw;
+      font-size: calc((var(--board-height) * 0.125) * 1.5); //18.75;
+      background-color: $light-square;
+      text-align: center;
     }
     > .black-square {
-        background-color: $dark-square;
+      background-color: $dark-square;
     }
     > .potentialUserSquare {
-        background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%);
+      background-image: linear-gradient(
+        to bottom right,
+        $potential-user-square 25%,
+        transparent 25% 100%
+      );
     }
     > .potentialClickedOnPieceSquare {
-        background-color: $potential-clicked-on-piece-square;
+      background-color: $potential-clicked-on-piece-square;
     }
     > .potentialOpponentSquare {
-        background-image: linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);
+      background-image: linear-gradient(
+        to bottom right,
+        transparent 75%,
+        $potential-opponent-square 75% 100%
+      );
     }
     > .potentialUserAndOpponentSquare {
-        background-image: linear-gradient(to bottom right, $potential-user-square 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, $potential-opponent-square 75% 100%);//linear-gradient(to bottom right, white,yellow);
+      background-image: linear-gradient(
+          to bottom right,
+          $potential-user-square 25%,
+          transparent 25% 100%
+        ),
+        linear-gradient(
+          to bottom right,
+          transparent 75%,
+          $potential-opponent-square 75% 100%
+        ); //linear-gradient(to bottom right, white,yellow);
     }
     ///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
     > div > div {
-        height: 100%;//🐉why did we need this? (we do)
-        overflow: hidden;
+      height: 100%; //🐉why did we need this? (we do)
+      overflow: hidden;
     }
     .white-piece {
-        color: $white-piece;
+      color: $white-piece;
     }
     .black-piece {
-        color: $black-piece;
+      color: $black-piece;
     }
     .highlighted {
-        color: $clicked-on-piece;
+      color: $clicked-on-piece;
     }
     .pawn {
-        font-size: calc((var(--board-height) * 0.125) * 1.2);//15vw
+      font-size: calc((var(--board-height) * 0.125) * 1.2); //15vw
     }
+  }
+
+  .metric-buttons-and-nav-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  
+    .game-metric-buttons {
+      margin-bottom: $lh * 0.5;
+
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+
+      line-height: $lh * 0.8;
+
+      > div {
+        width: var(--button-min-width);
+
+        @include grid-container-template(1fr, 1fr);
+        align-content: start;
+        align-items: center;
+        text-align: center;
+    
+        font-size: 18px;
+
+        background-color: #dddddd;
+        color: black;//$dark-square;
+        border: solid grey 2px;//inset
+    }
+  
+    .switch {
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      border: black solid 1px;
+      margin: 0 auto;//($lh * 0.125)
+      border: solid 1px black;
+    }
+  
+    .potential-square {
+      border-radius: calc(var(--potential-square-button-height) * 0.1);
+      &-switch-color {
+        background-color: $potential-user-square;
+        border-color: $potential-user-square;
+      }
+    }
+    .opponent-potential-square {
+      border-radius: calc(var(--opponent-potential-square-button-height) * 0.1);
+      &-switch-color {
+        background-color: $potential-opponent-square;
+        border-color: $potential-opponent-square;
+      }
+    }
+    .selected-potential-square {
+      border-radius: calc(var(--selected-potential-square-button-height) * 0.1);
+      &-switch-color {
+        background-color: $potential-clicked-on-piece-square;
+        border-color: $potential-clicked-on-piece-square;
+      }
+    }
+    }
+    .nav-buttons {
+      display: flex;
+      flex-direction: column;
+      // align-content: center;
+      // align-items: center;
+      // margin-left: 5%;
+      > * {
+        // width: var(--button-min-width); 
+        // height: var(--button-min-width);
+        margin: 0;
+        text-align: center;
+      }
+    }
+
+    @media screen and (max-width: $tablet) {//739px
+      width: var(--board-height);
+      .game-metric-buttons {
+        flex-direction: row;
+        justify-content: center;
+      }
+      .nav-buttons {
+        flex-direction: row;
+        justify-content: space-evenly;//space-between;
+        column-gap: $lh * 0.5;
+        > * {
+          flex-basis: 285px//45%;
+        }
+      }
+    }
+  }
 }
 
+
+
+
+
 .pawn-promotion-grid-container {
-    background-color: $light-grey;
-    @media screen and (max-width: 500px) {
-        width: 100vw;
-        height: auto;
-        @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(33.3%, 1fr)), repeat(auto-fit, minmax(80px, 1fr)));
-        > * {
-            line-height: 12.5vw;
-            font-size: 18.75vw;
-            overflow: hidden;
-        }
+  background-color: $light-grey;
+  @media screen and (max-width: 500px) {
+    width: 100vw;
+    height: auto;
+    @include grid-container-horizontally-and-vertically-center-GIs(
+      repeat(auto-fit, minmax(33.3%, 1fr)),
+      repeat(auto-fit, minmax(80px, 1fr))
+    );
+    > * {
+      line-height: 12.5vw;
+      font-size: 18.75vw;
+      overflow: hidden;
     }
-    &-color-white {
-        color: white;
-    }
-    &-color-black {
-        color: black;
-    }
+  }
+  &-color-white {
+    color: white;
+  }
+  &-color-black {
+    color: black;
+  }
 }
 .pawn-promotion-title {
-    height: 80px;
-    @include grid-container-horizontally-and-vertically-center-GIs();
+  height: 80px;
+  @include grid-container-horizontally-and-vertically-center-GIs();
 }
 .pawn-promotion-exit-button {
-    height: 80px;
-    // border-top: dotted $light-square 1px;
-    // border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
+  height: 80px;
+  // border-top: dotted $light-square 1px;
+  // border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
+  @include grid-container-horizontally-and-vertically-center-GIs();
+  > * {
     @include grid-container-horizontally-and-vertically-center-GIs();
-    > * {
-        @include grid-container-horizontally-and-vertically-center-GIs();
-        height: 100%;
-        width: 10%;
-    }
+    height: 100%;
+    width: 10%;
+  }
 }
 ///////////////////////////////////////////TRASH|MISC//////////////////////////////////////////////////////////////////
 //make white squares

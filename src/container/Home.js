@@ -5,10 +5,10 @@ import Instructions from '../component/home/Instructions';
 import StartNewGame from '../component/home/StartNewGame';
 import ResumeGame from '../component/home/ResumeGame';
 import TerminateGame from '../component/home/TerminateGame';
-import firebase from '../helper/firebase.js'; 
+import firebase from '../helper/firebase.js';
 import "firebase/auth";
-import {Link} from 'react-router-dom';
-import {useState, useEffect, useRef} from 'react';
+import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 
 function Home() {
 
@@ -25,12 +25,13 @@ function Home() {
         for (let num = 0; num < 6; num++) {
             url += Math.round(Math.random() * 9);
         }
-        
+
         let game = db.ref(`/matches/${url}`);
-        game.set(bigObj); 
-        
+        game.set(bigObj);
+
         // DECIDE WHO'S WHITE
-        if (Math.random() > 0.5) { console.log("user1 is black");
+        if (Math.random() > 0.5) {
+            console.log("user1 is black");
             //user1 is black. Black always starts on 2nd position in board. 
             await game.child('user1').set(bigObj.user2); //works
             await game.child(`user1/recentlyReset`).remove();
@@ -39,13 +40,14 @@ function Home() {
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             await auth.createUserWithEmailAndPassword(`${url}@user1.com`, `${url}`);
-        } else { console.log("user1 is white");
+        } else {
+            console.log("user1 is white");
             //user1 is white. White always starts on 1st position in board.
             //SIGN USER1 IN
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             await auth.createUserWithEmailAndPassword(`${url}@user1.com`, `${url}`);
         }
-        
+
         //NAV TO GAME
         window.location.replace(`/${url}`);
     }
@@ -71,7 +73,7 @@ function Home() {
     }
     //CSS
     function roundCornersOfButtons() {
-        const buttons = Array.from(window.document.querySelectorAll(`.button`)); 
+        const buttons = Array.from(window.document.querySelectorAll(`.button`));
         for (let index = 0; index < buttons.length; index++) {
             const button = buttons[index];
             const theClassName = Array.from(button.classList)[0];
@@ -85,7 +87,7 @@ function Home() {
     useEffect(() => {
         let authListener = auth.onAuthStateChanged(() => {
             authListener();//removes listener
-            if (auth.currentUser) { 
+            if (auth.currentUser) {
                 setUser(auth.currentUser.email.slice(7, 12));
                 setUrl(auth.currentUser.email.slice(0, 6));
                 setNotSignedIn(false);
@@ -105,18 +107,18 @@ function Home() {
             unmountCSSFunctions();
         }
     }, [notSignedIn, url]);
-    
-    return ( 
+
+    return (
         <>
             <div className="home-grid-container">
-                {notSignedIn && <Instructions url={url}/>}
-                {notSignedIn && <StartNewGame startNewGame={startNewGame}/>}
-                {url && <ResumeGame url={url}/>}
-                {url && <TerminateGame terminateGame={terminateGame}/>}
+                {notSignedIn && <Instructions url={url} />}
+                {notSignedIn && <StartNewGame startNewGame={startNewGame} />}
+                {url && <ResumeGame url={url} />}
+                {url && <TerminateGame terminateGame={terminateGame} />}
             </div>
-        </> 
+        </>
     )
-  
+
 }
 
 export default Home;
