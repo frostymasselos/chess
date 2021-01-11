@@ -46,7 +46,8 @@ function Game({ params }) {
 
     //retrigger useEffects
     let [arbitrary, setArbitrary] = useState(false);
-    let [triggerBoardUseEffect, setTriggerBoardUseEffect] = useState(``);
+    let [reset, setReset] = useState(false);
+    let [rematching, setRematching] = useState(false);
 
     //info
     let authInfo = useRef({ url: params.slice(1) });
@@ -107,7 +108,7 @@ function Game({ params }) {
         async function opponentHasMoved(e) {
             console.log(`callback fired for ${opponent} moving`, e.val());
             await game.child(`${you}`).update({ canMove: true });
-            setCanMove(true); setTriggerBoardUseEffect(Math.random()); //only need use canMove?
+            setCanMove(true); //setTriggerBoardUseEffect(Math.random()); //only need use canMove?
         }
         game.child(`${opponent}`).orderByKey().equalTo(`moved`).on('child_changed', opponentHasMoved);
     }
@@ -148,7 +149,7 @@ function Game({ params }) {
         async function seeWhoHasRequestedRematch(e) {
             console.log("someone has requested rematch");
             await game.orderByKey().on(`value`, (e) => {
-                game.off();//remove listener
+                game.off();//remove listener//🐉probably not the right way to remove.
                 if (e.val().user1.rematch && e.val().user2.rematch) {
                     console.log("both players want rematch");
                     game.child(`${you}`).off(); game.child(`${opponent}`).off();//remove listeners (also removes listener for opp moving).
@@ -166,6 +167,7 @@ function Game({ params }) {
             console.log("executing restart game");
             game.child(`user1`).off('value', next);//remove listener
             // reset db & decide who's white 
+            // let changeOfColor = '';
             await game.set(bigObj);
             if (Math.random() > 0.5) {
                 console.log('user1 is black');
@@ -173,24 +175,28 @@ function Game({ params }) {
                 await game.child('user2/pieces').set(bigObj.user1.pieces);
                 await game.child(`user1`).update({ white: false });
                 await game.child(`user2`).update({ white: true, canMove: true });
+                // changeOfColor = authInfo.current.color === "white" ? true : '';
             } else {
                 console.log('user1 is white');
                 await game.child('user1/pieces').set(bigObj.user1.pieces);
                 await game.child('user2/pieces').set(bigObj.user2.pieces);
                 await game.child(`user1`).update({ white: true, canMove: true });
                 await game.child(`user2`).update({ white: false });
+                // changeOfColor = authInfo.current.color === "black" ? true : '';
             }
             await game.child(`user1`).update({ signedIn: true });
-            listenerForOpponentQuitting(game, "user1", "user2");
-            listenerForOpponentMoving(game, "user1", "user2");
-            listenerForWinner(game, "user1");
-            listenerForRematch(game, "user1", "user2");
             setWinner(false); setWaitingForOpponentToConfirmRematch(false);
-            setArbitrary(Math.random());//neccessary? Get user2 to arbitrarily refresh?
-            setTriggerBoardUseEffect(Math.random());
+            setReset(Math.random())//below setReset won't work alone🐉
+            setRematching(true);
+            setArbitrary(Math.random());
             await game.child(`user2`).update({ signedIn: true, recentlyReset: true });
         }
         game.child(`user1`).orderByKey().on(`value`, next);
+    }
+    function restartGame2(params) {
+        console.log("restartGame2")
+        setReset(Math.random())//need it to rotate board
+        setRematching(false);
     }
     function listenerForUser1RestartingGame(game, you, opponent) {
         async function refresh() {
@@ -198,7 +204,9 @@ function Game({ params }) {
             game.child(`${you}`).off(`child_changed`, refresh);//remove this listener
             game.off(); game.child(`${opponent}`).off();//remove all other listeners: quitting, moving, winner?
             await game.child(`${you}`).update({ recentlyReset: false });
-            setArbitrary(Math.random()); setTriggerBoardUseEffect(Math.random());
+            setReset(Math.random());
+            setRematching(true);
+            setArbitrary(Math.random());
         }
         game.child(`${you}`).orderByKey().equalTo(`recentlyReset`).on(`child_changed`, refresh);
     }
@@ -242,6 +250,10 @@ function Game({ params }) {
                                     }
                                     isAWinnerDeclared(match, user1);
                                     cssFunctions();
+                                    if (rematching) {
+                                        restartGame2();
+                                    }
+                                    console.log("reached end");
 
                                 } else {
                                     //USER1 1ST TIME
@@ -253,7 +265,7 @@ function Game({ params }) {
                                         }
                                         await game.child('user1').update({ signedIn: true });
                                         // ARBRITRARILY UPDATE STATE THAT RETRIGGERS current UseEffect CALLBACK to process 'user1 for a 2nd time'.
-                                        setArbitrary(Math.random().toFixed(5));
+                                        setArbitrary(Math.random());
                                     })();
                                 }
                             } else {
@@ -270,6 +282,9 @@ function Game({ params }) {
                                 setWaiting(false);
                                 isAWinnerDeclared(match, user2);
                                 cssFunctions();
+                                if (rematching) {
+                                    restartGame2();//🐉 add for user2
+                                }
                             }
                         } else {
                             //SIGNED IN USER1|2 INTRUDING 
@@ -300,7 +315,7 @@ function Game({ params }) {
                                     await game.child(`user1`).update({ canMove: true });
                                 }
                                 await game.child('user2').update({ signedIn: true });
-                                setArbitrary(Math.random().toFixed(5)); //rerun useEffect.
+                                setArbitrary(Math.random()); //rerun useEffect.
                             })();
                         }
                     };
@@ -321,8 +336,7 @@ function Game({ params }) {
             }
         });
         return () => {
-            console.log("cleanup");
-            unmountCSSFunctions();
+            console.log("cleanup"); unmountCSSFunctions();
         }
     }, [arbitrary]);
 
@@ -335,12 +349,12 @@ function Game({ params }) {
                 <div className="game-text">
                     {winner && <p className="winner-declaration-line">{winner} wins</p>}
                     {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch} />}
-                    {waitingForOpponentToConfirmRematch && <p>Waiting for opponnent to confirm rematch</p>}
+                    {waitingForOpponentToConfirmRematch && <p>Waiting for opponent to confirm rematch</p>}
                     {waiting && <Waiting />}
                     {user2SignedIn && <TurnNotifier canMove={canMove} check={check} />}
                 </div>
                 {playing &&
-                    <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} triggerBoardUseEffect={triggerBoardUseEffect} setCheck={setCheck}>
+                    <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} setCheck={setCheck} reset={reset}>
                         <div className="nav-buttons">
                             {playing && <Exit />}
                             {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth} />}

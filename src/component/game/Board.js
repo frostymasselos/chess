@@ -4,7 +4,7 @@ import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 
-function Board({ children, db, authInfo, canMove, setCanMove, setCheck, triggerBoardUseEffect }) {
+function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset }) {
 
     let [squareTags, setSquareTags] = useState([]);//could add it directly to DOM w/vanilla
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
@@ -491,18 +491,19 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, triggerB
         } else {
             board.classList.add(`unclickable`);
         }
-    }, [canMove]);
+    }, [canMove, reset]);
 
     //rotate for black
     useEffect(() => {
+        console.log("rotation executing");
+        let board = document.querySelector('.board-grid-container');
         if (authInfo.color === "black") {
-            console.log("rotating board");
-            let board = document.querySelector('.board-grid-container');
+            console.log("board is rotated");
             board.classList.add(`rotate180`);//board.style.setProperty("transform", "rotate(180deg)");
         } else {
-            console.log("not rotating board");
+            board.classList.remove(`rotate180`); console.log("board is straight");
         }
-    }, []);
+    }, [reset]);//🐉
 
     //1.populate boardArray & ui
     useEffect(() => {
@@ -558,7 +559,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, triggerB
                 db.ref(`matches/${authInfo.url}`).update({ winner: `${opponentColor.current} (${opponent.current})` });
             }
         });
-    }, [canMove]);
+    }, [canMove, reset]);
 
     //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
     useEffect(() => {
