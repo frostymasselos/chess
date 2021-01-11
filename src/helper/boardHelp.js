@@ -786,7 +786,7 @@ function returnPieceEmoji(name) {//console.log(name);
     name = name.replace(/\d/, '');
     switch (name) {
         case "pawn":
-            return "♟";
+            return "♜";
         case "rook":
             return "♜"
         case "knight":
@@ -802,7 +802,7 @@ function returnPieceEmoji(name) {//console.log(name);
     }
 }
 
-//doesn't work: ♟(empty pawn)
+//doesn't work: ♟(empty pawn)♟(black pawn)
 
 
 export { pieceMoveObj, directionConverterObj, returnPieceEmoji };
