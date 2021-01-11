@@ -578,16 +578,16 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, triggerB
                 </div>
                 <div className="metric-buttons-and-nav-buttons">
                     <div className="game-metric-buttons">
-                        <div className="potential-square button" onClick={highlightSquares.bind(null, "user")}>
-                            <div>
-                                Potential squares
-                                    <div className="potential-square-switch switch"></div>
-                            </div>
-                        </div>
                         <div className="opponent-potential-square button" onClick={highlightSquares.bind(null, "opponent")}>
                             <div>
                                 Opponent's potential squares
                                     <div className="opponent-potential-square-switch switch"></div>
+                            </div>
+                        </div>
+                        <div className="potential-square button" onClick={highlightSquares.bind(null, "user")}>
+                            <div>
+                                Potential squares
+                                    <div className="potential-square-switch switch"></div>
                             </div>
                         </div>
                         <div className="selected-potential-square button" onClick={decideToTurnOnOrOffClickedOnPiecePotentialMovesButton}>

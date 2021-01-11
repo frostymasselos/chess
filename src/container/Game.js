@@ -331,7 +331,7 @@ function Game({ params }) {
             {invalidRoute && <ErrorPage cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} roundCornersOfButtons={roundCornersOfButtons} />}
             {opponentQuits && <OpponentQuits cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} />}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase} cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} />}
-            <div className="game-grid-container">
+            <div className="game-container">
                 <div className="game-text">
                     {winner && <p className="winner-declaration-line">{winner} wins</p>}
                     {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch} />}

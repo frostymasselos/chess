@@ -256,7 +256,7 @@ img {
   background-image: linear-gradient(#ff851b, brown);
 }
 
-.game-grid-container {
+.game-container {
   margin-bottom: 0.7rem;
 }
 
@@ -513,13 +513,22 @@ img {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  --button-container-width: 100px;
+  width: var(--button-container-width);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
-  margin-bottom: 0.7rem;
+  -ms-flex-preferred-size: 40%;
+      flex-basis: 40%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -530,7 +539,12 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
-  width: var(--button-min-width);
+  -ms-flex-preferred-size: 0;
+      flex-basis: 0;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  padding: 2%;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -586,6 +600,8 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons {
+  -ms-flex-preferred-size: 30%;
+      flex-basis: 30%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -593,9 +609,13 @@ img {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > * {
+  width: var(--button-container-width);
   margin: 0;
   text-align: center;
 }
@@ -605,6 +625,7 @@ img {
     width: var(--board-height);
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
+    margin-bottom: 0.7rem;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
@@ -630,38 +651,44 @@ img {
   }
 }
 
-.pawn-promotion-grid-container {
+.pawn-promotion-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.pawn-promotion-container .pawn-promotion-grid-container {
+  -ms-grid-row-align: center;
+      align-self: center;
   background-color: #dddddd;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (25%)[4];
+      grid-template-columns: repeat(4, 25%);
+  -ms-grid-rows: auto;
+      grid-template-rows: auto;
+  place-items: center;
 }
 
-@media screen and (max-width: 500px) {
-  .pawn-promotion-grid-container {
-    width: 100vw;
-    height: auto;
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: (minmax(33.3%, 1fr))[auto-fit];
-        grid-template-columns: repeat(auto-fit, minmax(33.3%, 1fr));
-    -ms-grid-rows: (minmax(80px, 1fr))[auto-fit];
-        grid-template-rows: repeat(auto-fit, minmax(80px, 1fr));
-    place-items: center;
-  }
-  .pawn-promotion-grid-container > * {
-    line-height: 12.5vw;
-    font-size: 18.75vw;
-    overflow: hidden;
-  }
+.pawn-promotion-container .pawn-promotion-grid-container > * {
+  line-height: calc(var(--board-height) * 0.125);
+  font-size: calc((var(--board-height) * 0.125) * 1.5);
+  overflow: hidden;
 }
 
-.pawn-promotion-grid-container-color-white {
+.pawn-promotion-container .pawn-promotion-grid-container-color-white {
   color: white;
 }
 
-.pawn-promotion-grid-container-color-black {
+.pawn-promotion-container .pawn-promotion-grid-container-color-black {
   color: black;
 }
 
-.pawn-promotion-title {
+.pawn-promotion-container .pawn-promotion-title {
   height: 80px;
   display: -ms-grid;
   display: grid;
@@ -672,7 +699,7 @@ img {
   place-items: center;
 }
 
-.pawn-promotion-exit-button {
+.pawn-promotion-container .pawn-promotion-exit-button {
   height: 80px;
   display: -ms-grid;
   display: grid;
@@ -683,7 +710,7 @@ img {
   place-items: center;
 }
 
-.pawn-promotion-exit-button > * {
+.pawn-promotion-container .pawn-promotion-exit-button > * {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;

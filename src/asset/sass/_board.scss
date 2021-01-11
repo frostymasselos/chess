@@ -1,3 +1,11 @@
+@function square-dimension($applying-line-height) {
+  @if $applying-line-height {
+    @return calc(var(--board-height) * 0.125);
+  } @else {
+    @return calc((var(--board-height) * 0.125) * 1.5);
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 .z-index-1 {
   z-index: 1;
 }
@@ -34,8 +42,8 @@
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     > div {
-      line-height: calc(var(--board-height) * 0.125); //12.5vw;
-      font-size: calc((var(--board-height) * 0.125) * 1.5); //18.75;
+      line-height: square-dimension(true);//calc(var(--board-height) * 0.125); //12.5vw;
+      font-size: square-dimension(false);//calc((var(--board-height) * 0.125) * 1.5); //18.75;
       background-color: $light-square;
       text-align: center;
     }
@@ -93,19 +101,24 @@
   .metric-buttons-and-nav-buttons {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; justify-content: flex-end;
+    --button-container-width: 100px; width: var(--button-container-width);
   
     .game-metric-buttons {
-      margin-bottom: $lh * 0.5;
+      flex-basis: 40%;
+      // column-gap: 0.5 * $lh;
 
       display: flex;
+      justify-content: center;
       flex-direction: column;
       flex-wrap: wrap;
 
       line-height: $lh * 0.8;
 
       > div {
-        width: var(--button-min-width);
+        // width: var(--button-min-width);
+        flex-basis: 0; flex-grow: 1; //height: $button-min-height;//var(--button-container-width);
+        padding: 2%;
 
         @include grid-container-template(1fr, 1fr);
         align-content: start;
@@ -151,13 +164,15 @@
     }
     }
     .nav-buttons {
+      flex-basis: 30%;
       display: flex;
       flex-direction: column;
+      justify-content: flex-end;
       // align-content: center;
       // align-items: center;
       // margin-left: 5%;
       > * {
-        // width: var(--button-min-width); 
+        width: var(--button-container-width); 
         // height: var(--button-min-width);
         margin: 0;
         text-align: center;
@@ -167,6 +182,8 @@
     @media screen and (max-width: $tablet) {//739px
       width: var(--board-height);
       .game-metric-buttons {
+        // --game-metric-height: 80px; height: var(--game-metric-height);
+        margin-bottom: $lh * 0.5;
         flex-direction: row;
         justify-content: center;
       }
@@ -185,42 +202,47 @@
 
 
 
-
-.pawn-promotion-grid-container {
-  background-color: $light-grey;
-  @media screen and (max-width: 500px) {
-    width: 100vw;
-    height: auto;
+.pawn-promotion-container {
+  display: flex;
+  flex-direction: column;
+  .pawn-promotion-grid-container {
+    align-self: center;
+    // max-width: var(--board-height);
+    // max-height: 100px;//calc(var(--board-height * 0.125)); //flex-basis: calc(var(--board-height * 0.125));
+    background-color: $light-grey;
+    // width: var(--board-height);//100vw;
+    // margin: 0 auto;
     @include grid-container-horizontally-and-vertically-center-GIs(
-      repeat(auto-fit, minmax(33.3%, 1fr)),
-      repeat(auto-fit, minmax(80px, 1fr))
+      repeat(4, 25%), 
+      auto//repeat(auto-fit, minmax(80px, 1fr))
     );
     > * {
-      line-height: 12.5vw;
-      font-size: 18.75vw;
+      line-height: square-dimension(true);//12.5vw;
+      font-size: square-dimension(false);//18.75vw;
       overflow: hidden;
     }
+  
+    &-color-white {
+      color: $white-piece;
+    }
+    &-color-black {
+      color: $black-piece;
+    }
   }
-  &-color-white {
-    color: white;
-  }
-  &-color-black {
-    color: black;
-  }
-}
-.pawn-promotion-title {
-  height: 80px;
-  @include grid-container-horizontally-and-vertically-center-GIs();
-}
-.pawn-promotion-exit-button {
-  height: 80px;
-  // border-top: dotted $light-square 1px;
-  // border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
-  @include grid-container-horizontally-and-vertically-center-GIs();
-  > * {
+  .pawn-promotion-title {
+    height: 80px;
     @include grid-container-horizontally-and-vertically-center-GIs();
-    height: 100%;
-    width: 10%;
+  }
+  .pawn-promotion-exit-button {
+    height: 80px;
+    // border-top: dotted $light-square 1px;
+    // border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
+    @include grid-container-horizontally-and-vertically-center-GIs();
+    > * {
+      @include grid-container-horizontally-and-vertically-center-GIs();
+      height: 100%;
+      width: 10%;
+    }
   }
 }
 ///////////////////////////////////////////TRASH|MISC//////////////////////////////////////////////////////////////////

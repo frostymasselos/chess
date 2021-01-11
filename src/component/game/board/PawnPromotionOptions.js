@@ -1,6 +1,6 @@
-import {returnPieceEmoji} from '../../../helper/boardHelp.js';
+import { returnPieceEmoji } from '../../../helper/boardHelp.js';
 
-export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion, authInfo}) {
+export default function pawnPromotion({ pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion, authInfo }) {
 
     function choosePiece(e) {
         updatePieceToPromotePawnTo(e.target.dataset.name);
@@ -18,8 +18,8 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
         }
         console.log(pawnPromotionGraveyardFilteredOutDuplicateNames);
         //each item of filtered made into GI, 2x2. class="promotion-piece"
-        for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) { 
-            const tag = 
+        for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) {
+            const tag =
                 <div data-name={piece.name} key={Math.random()} onClick={choosePiece}>
                     {returnPieceEmoji(piece.name.replace(/\d/, ''))}
                 </div>;
@@ -30,13 +30,15 @@ export default function pawnPromotion({pawnPromotionGraveyard, updatePieceToProm
 
     return (
         <>
-            <div className='pawn-promotion-exit-button'>
-                <div onClick={resolvePawnPromotion}>X</div>
+            <div className="pawn-promotion-container">
+                {/* <div className='pawn-promotion-exit-button'>
+                    <div onClick={resolvePawnPromotion}>X</div>
+                </div> */}
+                <div className={`pawn-promotion-grid-container pawn-promotion-grid-container-color-${authInfo.color}`} >
+                    {options()}
+                </div>
+                {/* <div className='pawn-promotion-title'>Promote pawn</div> */}
             </div>
-            <div className={`pawn-promotion-grid-container pawn-promotion-grid-container-color-${authInfo.color}`} >
-                {options()}
-            </div>
-            {/* <div className='pawn-promotion-title'>Promote pawn</div> */}
         </>
     )
 }

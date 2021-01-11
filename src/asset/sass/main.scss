@@ -5,6 +5,7 @@ $laptop: 1024px;
 $wide: 1440px;
 
 $lh: 1.4rem; //(28px)
+$button-min-height: $lh * 3;
 $footer-color: #001f3f;
 $footer-info-color:darkorchid;
 $light-square: grey;
@@ -44,7 +45,7 @@ html {
   border: solid 3px brown;
   width: 90%;
   max-width: 380px; //400
-  height: $lh * 3; //100%
+  height: $button-min-height; //100%
   justify-self: center; //align-self: start;
   margin-top: $lh / 2;
   // margin-bottom: $lh / 2;
