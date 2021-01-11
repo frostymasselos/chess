@@ -802,7 +802,7 @@ function returnPieceEmoji(name) {//console.log(name);
     }
 }
 
-//old?: ♙
+//doesn't work: ♟(empty pawn)
 
 
 export { pieceMoveObj, directionConverterObj, returnPieceEmoji };
