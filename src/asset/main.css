@@ -438,7 +438,7 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container {
-  --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height));
+  --board-dimension-limit: calc(var(--vh100) - var(--header-height) - var(--game-text-height));
   width: 100vw;
   max-width: var(--board-dimension-limit);
   height: 100vw;

@@ -33,7 +33,7 @@
   justify-content: center;
 
   .board-grid-container {
-    --board-dimension-limit: calc(100vh - var(--header-height) - var(--game-text-height)); //540px 520px //we're stopping it when board's bottom reaches 'fold'.
+    --board-dimension-limit: calc(var(--vh100) - var(--header-height) - var(--game-text-height)); //540px 520px //we're stopping it when board's bottom reaches 'fold'.
     
     width: 100vw; max-width: var(--board-dimension-limit);
     height: 100vw; max-height: var(--board-dimension-limit);
