@@ -6,7 +6,7 @@
     align-content: start;
     justify-items: center;
     // row-gap: calc(var(--lh) * 1);
-    height: calc(100vh - var(--header-height) - var(--footer-height));//82.5vh
+    height: calc(var(--vh100) - var(--header-height) - var(--footer-height));//82.5vh
 
     > * {
         width: 90%;

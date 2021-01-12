@@ -1,9 +1,10 @@
 html {
   font-size: 20px;
+  --vh100: calc(100 * var(--vh));
   --margin-from-containing-block: 20px;
   --button-min-width: 100px;
-  --header-height: 12.5vh;
-  --footer-height: 17.5vh;
+  --header-height: calc(12.5 * var(--vh));
+  --footer-height: calc(17.5 * var(--vh));
 }
 
 *,
@@ -164,7 +165,7 @@ img {
   -ms-flex-line-pack: start;
       align-content: start;
   justify-items: center;
-  height: calc(100vh - var(--header-height) - var(--footer-height));
+  height: calc(var(--vh100) - var(--header-height) - var(--footer-height));
 }
 
 .home-grid-container > * {

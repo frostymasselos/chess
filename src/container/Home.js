@@ -72,6 +72,13 @@ function Home() {
         let authListener = auth.onAuthStateChanged(next);
     }
     //CSS
+    function earlyCSS() {
+        makeVHVariable(); window.addEventListener('resize', makeVHVariable);
+    }
+    function makeVHVariable() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty(`--vh`, `${vh}px`);
+    }
     function roundCornersOfButtons() {
         const buttons = Array.from(window.document.querySelectorAll(`.button`));
         for (let index = 0; index < buttons.length; index++) {
@@ -80,8 +87,9 @@ function Home() {
             window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
-    function unmountCSSFunctions(params) {
+    function unmountCSSFunctions() {
         window.removeEventListener('resize', roundCornersOfButtons);
+        window.removeEventListener('resize', makeVHVariable);
     }
 
     useEffect(() => {
@@ -95,6 +103,7 @@ function Home() {
                 setNotSignedIn(true);
             }
         });
+        earlyCSS();
     }, []);
     //CSS
     useEffect(() => {
@@ -104,7 +113,7 @@ function Home() {
         //consistently round corners of buttons
         roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
         return () => {
-            unmountCSSFunctions();
+            unmountCSSFunctions();//is this best placed in this useEffect?🐉
         }
     }, [notSignedIn, url]);
 
