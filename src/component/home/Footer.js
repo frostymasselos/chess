@@ -9,18 +9,18 @@ function Footer(params) {
             <div className="footer">
                 <div className="footer-info">
                     <p>
-                        Author: Ryan Frost.<br></br>e: ryanfrost2015@gmail.com.
+                        Author: Ryan Frost.<br></br>e: blah@gmail.com.
                     </p>
-                </div> 
+                </div>
                 <div className="icons">
                     <a href="https://github.com/frostymasselos" target="_blank">
-                        <img src={githubPNG} className="github-img"/>
+                        <img src={githubPNG} className="github-img" />
                     </a>
                     <a href="https://stackoverflow.com/users/14037283/tonitone120?tab=summary" target="_blank">
-                        <img src={soPNG} className="so-image"/>
+                        <img src={soPNG} className="so-image" />
                     </a>
                     <a href="https://rhcp.com" target="_blank">
-                        <img src={LinkedInPNG} className="linked-image"/>
+                        <img src={LinkedInPNG} className="linked-image" />
                     </a>
                 </div>
             </div>
