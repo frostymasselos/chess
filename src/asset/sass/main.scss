@@ -97,7 +97,7 @@ h1 {
   margin-bottom: $lh * 1;
 }
 a {
-  all: unset;
+  //all: unset;🐉 see if commenting-out this solves ''start new game' button appears hovered on on mobile when returning home'
   @include copy-for-anchor();
   cursor: default;
   text-decoration: initial;
