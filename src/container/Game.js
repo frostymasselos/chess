@@ -59,6 +59,11 @@ function Game({ params }) {
         roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
         makeCSSVariableOfGameTextHeight(); window.addEventListener('resize', makeCSSVariableOfGameTextHeight);
         makeCSSVariableOfBoardHeight(); window.addEventListener('resize', makeCSSVariableOfBoardHeight);
+        makeVHVariable(); window.addEventListener('resize', makeVHVariable);
+    }
+    function makeVHVariable() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty(`--vh`, `${vh}px`);
     }
     function roundCornersOfButtons() {
         const buttons = Array.from(window.document.querySelectorAll(`.button`));
@@ -80,6 +85,7 @@ function Game({ params }) {
         window.removeEventListener('resize', roundCornersOfButtons);
         window.removeEventListener('resize', makeCSSVariableOfGameTextHeight);
         window.removeEventListener('resize', makeCSSVariableOfBoardHeight);
+        window.removeEventListener('resize', makeVHVariable);
     }
     //NON-CSS
     function listenerForUser2SigningIn(game) {
