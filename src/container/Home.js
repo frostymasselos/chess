@@ -73,9 +73,12 @@ function Home() {
     }
     //CSS
     function earlyCSS() {
-        makeVHVariable(); window.addEventListener('resize', makeVHVariable);
+        makeVHVariableHome(); window.addEventListener('resize', makeVHVariableHome);
     }
-    function makeVHVariable() {
+    function laterCSS() {
+        roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
+    }
+    function makeVHVariableHome() {
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty(`--vh`, `${vh}px`);
     }
@@ -87,9 +90,11 @@ function Home() {
             window.document.querySelector(`#root`).style.setProperty(`--${theClassName}-button-height`, `${button.offsetHeight}px`);
         }
     };
-    function unmountCSSFunctions() {
+    function unmountEarlyCSSFunctions() {
+        window.removeEventListener('resize', makeVHVariableHome);
+    }
+    function unmountLaterCSSFunctions() {
         window.removeEventListener('resize', roundCornersOfButtons);
-        window.removeEventListener('resize', makeVHVariable);
     }
 
     useEffect(() => {
@@ -104,16 +109,19 @@ function Home() {
             }
         });
         earlyCSS();
+        return () => {
+            unmountEarlyCSSFunctions();//is this best placed in this useEffect?🐉
+        }
     }, []);
     //CSS
     useEffect(() => {
-        if (cssUseEffectFirstTime.current) {
+        if (cssUseEffectFirstTime.current) { //🐉un-comment back.
             cssUseEffectFirstTime.current = false; return;
         }
         //consistently round corners of buttons
-        roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
+        laterCSS();
         return () => {
-            unmountCSSFunctions();//is this best placed in this useEffect?🐉
+            unmountLaterCSSFunctions();
         }
     }, [notSignedIn, url]);
 
