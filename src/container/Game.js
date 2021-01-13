@@ -74,8 +74,11 @@ function Game({ params }) {
         }
     };
     function makeCSSVariableOfGameTextHeight() {
-        const gameTextHeight = window.document.querySelector(`.game-text`).offsetHeight;//console.log(gameTextHeight);
-        window.document.querySelector(`#root`).style.setProperty(`--game-text-height`, `${gameTextHeight}px`);
+        const gameText = window.document.querySelector(`.game-text`);
+        if (gameText) {
+            const gameTextHeight = gameText.offsetHeight;//console.log(gameTextHeight);
+            window.document.querySelector(`#root`).style.setProperty(`--game-text-height`, `${gameTextHeight}px`);
+        }
     }
     function unmountCSSFunctions() {
         window.removeEventListener('resize', roundCornersOfButtons);
@@ -342,12 +345,16 @@ function Game({ params }) {
         }
     }, [arbitrary]);
 
+    // useEffect(() => {
+
+    // }, [])
+
     return (
         <>
             {invalidRoute && <ErrorPage cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} roundCornersOfButtons={roundCornersOfButtons} />}
             {opponentQuits && <OpponentQuits cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} />}
             {onForeignMatch && <TerminateMatchForNewGame intruderInfo={authInfo.current} setArbitrary={setArbitrary} db={db} auth={auth} firebase={firebase} cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} />}
-            <div className="game-container">
+            {playing && <div className="game-container">
                 <div className="game-text">
                     {winner && <p className="winner-declaration-line">{winner} wins</p>}
                     {askForRematch && <Rematch indicateInterestInRematch={indicateInterestInRematch} />}
@@ -355,15 +362,13 @@ function Game({ params }) {
                     {waiting && <Waiting />}
                     {user2SignedIn && <TurnNotifier canMove={canMove} check={check} />}
                 </div>
-                {playing &&
-                    <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} setCheck={setCheck} reset={reset}>
-                        <div className="nav-buttons">
-                            {playing && <Exit />}
-                            {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth} />}
-                        </div>
-                    </Board>
-                }
-            </div>
+                <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} setCheck={setCheck} reset={reset}>
+                    <div className="nav-buttons">
+                        {playing && <Exit />}
+                        {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth} />}
+                    </div>
+                </Board>
+            </div>}
         </>
     )
 }

@@ -58,7 +58,7 @@ html {
   @include grid-container-horizontally-and-vertically-center-GIs();
 }
 @mixin fresh-page-container {
-  height: calc(100vh - var(--header-height) - var(--footer-height));
+  height: calc(var(--vh100) - var(--header-height) - var(--footer-height));
   text-align: center;
   display: flow-root; //padding-top: 55px;stops it from doing parental MC.
   p {
