@@ -58,7 +58,7 @@ function Game({ params }) {
     function cssFunctions() {
         roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
         makeCSSVariableOfGameTextHeight(); window.addEventListener('resize', makeCSSVariableOfGameTextHeight);
-        makeCSSVariableOfBoardHeight(); window.addEventListener('resize', makeCSSVariableOfBoardHeight);
+        // makeCSSVariableOfBoardHeight(); window.addEventListener('resize', makeCSSVariableOfBoardHeight);
         makeVHVariable(); window.addEventListener('resize', makeVHVariable);
     }
     function makeVHVariable() {
@@ -77,14 +77,10 @@ function Game({ params }) {
         const gameTextHeight = window.document.querySelector(`.game-text`).offsetHeight;//console.log(gameTextHeight);
         window.document.querySelector(`#root`).style.setProperty(`--game-text-height`, `${gameTextHeight}px`);
     }
-    function makeCSSVariableOfBoardHeight() {
-        const boardHeight = window.document.querySelector(`.board-grid-container`).offsetHeight;//console.log(gameTextHeight);
-        window.document.querySelector(`#root`).style.setProperty(`--board-height`, `${boardHeight}px`);
-    }
     function unmountCSSFunctions() {
         window.removeEventListener('resize', roundCornersOfButtons);
         window.removeEventListener('resize', makeCSSVariableOfGameTextHeight);
-        window.removeEventListener('resize', makeCSSVariableOfBoardHeight);
+        // window.removeEventListener('resize', makeCSSVariableOfBoardHeight);
         window.removeEventListener('resize', makeVHVariable);
     }
     //NON-CSS

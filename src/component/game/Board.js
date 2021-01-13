@@ -21,6 +21,18 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
     let pawnPromotionResolveFunction = useRef('');
     let pieceToPromotePawnTo = useRef('');
 
+    //CSS Functions
+    function runCSSFunctions() {
+        makeCSSVariableOfBoardHeight(); window.addEventListener('resize', makeCSSVariableOfBoardHeight);
+    }
+    function makeCSSVariableOfBoardHeight() {
+        const boardHeight = window.document.querySelector(`.board-grid-container`).offsetHeight;//console.log(gameTextHeight);
+        window.document.querySelector(`#root`).style.setProperty(`--board-height`, `${boardHeight}px`);
+    }
+    function unmountCSSFunctions() {
+        window.removeEventListener('resize', makeCSSVariableOfBoardHeight);
+    }
+
     function fillBoardArrayWithSquares() {
         boardArray.current = [];
         for (let num = 0; num < 64; num++) { //works
@@ -541,6 +553,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             fillBoardArrayWithPieces(e.val().user2.pieces);
             console.log("boardArray.current:", boardArray.current);
             renderPieces();
+            runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
             //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
@@ -559,6 +572,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 db.ref(`matches/${authInfo.url}`).update({ winner: `${opponentColor.current} (${opponent.current})` });
             }
         });
+        return () => {
+            unmountCSSFunctions();
+        }
     }, [canMove, reset]);
 
     //fixes stale closure problem of assigning onClickHandler to onclick attribute via 'mount' useEffect. Now the onClickHandler func the tags have always receives the latest state (& props?)
