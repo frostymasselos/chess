@@ -91,7 +91,10 @@ function Game({ params }) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
             game.child(`user2`).off('child_changed', user2SignInHasChanged);//console.log(`callback fired for user2 signing in`, e.val());
-            setWaiting(false); setUser2SignedIn(true);//setArbitrary(Math.random());//do we need this?
+            setWaiting(false); setUser2SignedIn(true);
+            if (authInfo.current.color === "white") {
+                setCanMove(true);
+            }
         }
         game.child(`user2`).orderByKey().equalTo(`signedIn`).on('child_changed', user2SignInHasChanged);
     }
@@ -269,7 +272,7 @@ function Game({ params }) {
                                             await game.child(`user2`).update({ canMove: true });
                                         }
                                         await game.child('user1').update({ signedIn: true });
-                                        // ARBRITRARILY UPDATE STATE THAT RETRIGGERS current UseEffect CALLBACK to process 'user1 for a 2nd time'.
+                                        // ARBRITRARILY UPDATE STATE THAT RETRIGGERS current UseEffect CALLBACK to process user1 for a 2nd time.
                                         setArbitrary(Math.random());
                                     })();
                                 }
@@ -345,9 +348,15 @@ function Game({ params }) {
         }
     }, [arbitrary]);
 
-    // useEffect(() => {
-
-    // }, [])
+    // useEffect(() => { //updating user1's `canMove` if `user2SignedIn` truthy. 
+    //     console.log("executed on initial execution or because recognised user2SignedIn state's changed");
+    //     if (user2SignedIn) {
+    //         console.log("recognised user2SignedIn as truthy");
+    //         if (authInfo.current.user === "user1" && authInfo.current.color === "white") {
+    //             setCanMove(true);
+    //         }
+    //     }
+    // }, [user2SignedIn]);
 
     return (
         <>
