@@ -557,20 +557,22 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
             //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
-            if (isUserKingInCheck()) {
-                if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
-                    endGame();
-                    return;
-                } else {
-                    setCheck(true); return;
-                }
-            }
-            if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
-                endGame();
-            }
             function endGame(params) {
                 db.ref(`matches/${authInfo.url}`).update({ winner: `${opponentColor.current} (${opponent.current})` });
             }
+            if (isUserKingInCheck()) {
+                if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
+                    endGame();
+                } else {
+                    setCheck(true);
+                }
+                return;
+            }
+            if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
+                endGame();
+                return;
+            }
+            setCheck(false);
         });
         return () => {
             unmountCSSFunctions();

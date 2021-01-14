@@ -3,7 +3,7 @@ export default function Instructions({ url }) {
         <div className="instructions">
             {/* <p>Instructions</p> */}
             <p>
-                save before debugging makeCSSVariableOfBoardHeight.
+                user1 white doesn't update canMove when user2 signs in debug1.
                 Clicking Start New Game will direct you to a random url.
                 Share this url with another player for them to join.
                 {url ? <span><br></br>Url: {window.location.origin}/{url}</span> : null}

@@ -348,16 +348,6 @@ function Game({ params }) {
         }
     }, [arbitrary]);
 
-    // useEffect(() => { //updating user1's `canMove` if `user2SignedIn` truthy. 
-    //     console.log("executed on initial execution or because recognised user2SignedIn state's changed");
-    //     if (user2SignedIn) {
-    //         console.log("recognised user2SignedIn as truthy");
-    //         if (authInfo.current.user === "user1" && authInfo.current.color === "white") {
-    //             setCanMove(true);
-    //         }
-    //     }
-    // }, [user2SignedIn]);
-
     return (
         <>
             {invalidRoute && <ErrorPage cssFunctions={cssFunctions} unmountCSSFunctions={unmountCSSFunctions} roundCornersOfButtons={roundCornersOfButtons} />}
