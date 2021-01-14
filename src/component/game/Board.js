@@ -132,10 +132,20 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             setShowingClickedOnPiecePotentialMoves(true);
             selectedPiecePiecesSwitch.classList.add(`selected-potential-square-switch-color`);
             if (clickedOnPiece.current) { //if clicked onPiece true, add its highlighting.
+                const originalSquareIndex = Number.parseFloat(clickedOnPiece.current.square.id.slice(1)); //console.log(originalSquareIndex);
                 const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(); console.log(squaresWithUserAndOpponentPieces);
                 const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
                 const geographicallyLegalSecondarySquareIndicesOfClickedOnPiece = arrayOfGeographicallyLegalSquares(clickedOnPiece.current.id, Number.parseFloat(clickedOnPiece.current.square.id.slice(1)), squaresWithUserPieces, squaresWithOpponentPieces); //console.log("geographicallyLegalSecondarySquareIndices:", geographicallyLegalSecondarySquareIndices);
-                simpleHighlightSquares(geographicallyLegalSecondarySquareIndicesOfClickedOnPiece);
+                const squaresToHighlight = geographicallyLegalSecondarySquareIndicesOfClickedOnPiece.filter((index) => {
+                    //🐉remove from pile squares that would get user in check.
+                    const board2 = JSON.parse(JSON.stringify(boardArray.current));
+                    board2[index].piece = board2[originalSquareIndex].piece;
+                    board2[originalSquareIndex].piece = null;
+                    if (!isUserKingInCheck(board2)) {
+                        return true;
+                    }
+                }); console.log(squaresToHighlight);
+                simpleHighlightSquares(squaresToHighlight);
             }
         }
     }
@@ -483,8 +493,8 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 let piece = e.target;
                 clickedOnPiece.current = { color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target }; console.log(clickedOnPiece.current);
                 piece.classList.add(`highlighted`);
-                //highlight potential squares
                 if (showingClickedOnPiecePotentialMoves) {
+                    //highlight potential squares🐉just run decideToTurn...?    
                     console.log("here2"); //showingClickedOnPiecePotentialMoves
                     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
                     const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
