@@ -212,6 +212,7 @@ function Game({ params }) {
             game.child(`${you}`).off(`child_changed`, refresh);//remove this listener
             game.off(); game.child(`${opponent}`).off();//remove all other listeners: quitting, moving, winner?
             await game.child(`${you}`).update({ recentlyReset: false });
+            setWaitingForOpponentToConfirmRematch(false);
             setReset(Math.random());
             setRematching(true);
             setArbitrary(Math.random());
