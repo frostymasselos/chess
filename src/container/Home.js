@@ -52,22 +52,29 @@ function Home() {
         window.location.replace(`/${url}`);
     }
     function terminateGame() {
-        async function next() {
+        async function next(e) {
             authListener();
-            const credential = firebase.auth.EmailAuthProvider.credential(`${url}@${user}.com`, `${url}`);
-            await auth.currentUser.reauthenticateWithCredential(credential);
-            //signal to opponent quitting?
-            await db.ref(`matches/${url}/${user}`).update({
-                quit: true
-            })
-            // delete db
-            await db.ref(`matches/${url}`).remove();
-            await auth.currentUser.delete();
-            //#1 stay on same page & change state
-            setNotSignedIn(true);
-            setUrl('');
-            //#2 manually refresh page
-            // window.location.reload();
+            function resetState(params) {
+                setNotSignedIn(true); setUrl(''); setUser('')
+            }
+            //🐉if auth is signed in...
+            if (e) {
+                const credential = firebase.auth.EmailAuthProvider.credential(`${url}@${user}.com`, `${url}`);
+                await auth.currentUser.reauthenticateWithCredential(credential);
+                //signal to opponent quitting?
+                await db.ref(`matches/${url}/${user}`).update({
+                    quit: true
+                })
+                // delete db
+                await db.ref(`matches/${url}`).remove();
+                await auth.currentUser.delete();
+                //#1 stay on same page & change state
+                resetState();
+                //#2 manually refresh page
+                // window.location.reload();
+            } else {
+                await db.ref(`matches/${url}`).remove(); resetState();
+            }
         }
         let authListener = auth.onAuthStateChanged(next);
     }
