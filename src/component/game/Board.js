@@ -574,7 +574,10 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
             //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
             function endGame(params) {
-                db.ref(`matches/${authInfo.url}`).update({ winner: `${opponentColor.current} (${opponent.current})` });
+                const winner = opponentColor.current;
+                let firstLetterCapitlaised = winner.slice(0, 1).toUpperCase();
+                let winnerCapitalised = winner.replace(/\w/, `${firstLetterCapitlaised}`); console.log(firstLetterCapitlaised, winnerCapitalised);
+                db.ref(`matches/${authInfo.url}`).update({ winner: `${winnerCapitalised}` }); //(${opponent.current})
             }
             if (isUserKingInCheck()) {
                 if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {

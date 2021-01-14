@@ -193,7 +193,7 @@ function Game({ params }) {
                 // changeOfColor = authInfo.current.color === "black" ? true : '';
             }
             await game.child(`user1`).update({ signedIn: true });
-            setWinner(false); setWaitingForOpponentToConfirmRematch(false);
+            setWinner(''); setWaitingForOpponentToConfirmRematch(false);
             setReset(Math.random())//below setReset won't work alone🐉
             setRematching(true);
             setArbitrary(Math.random());
