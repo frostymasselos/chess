@@ -199,26 +199,28 @@
   }
 }
 
-
-
-
 .pawn-promotion-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  justify-content: center;
+  // flex-direction: column;
   .pawn-promotion-grid-container {
-    align-self: center;
     // max-width: var(--board-height);
     // max-height: 100px;//calc(var(--board-height * 0.125)); //flex-basis: calc(var(--board-height * 0.125));
     background-color: $light-grey;
     // width: var(--board-height);//100vw;
     // margin: 0 auto;
-    @include grid-container-horizontally-and-vertically-center-GIs(
-      repeat(4, 25%), 
-      auto//repeat(auto-fit, minmax(80px, 1fr))
-    );
+    // @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(50px, 1fr)), auto); //repeat(4, 25%)
+    // align-self: center;
+
+    display: flex;
+    flex: 1 1 0px;
+    // flex-basis: 0px;
+    // flex-grow: 1;
+
     > * {
       line-height: square-dimension(true);//12.5vw;
       font-size: square-dimension(false);//18.75vw;
+      width: square-dimension(true);
       overflow: hidden;
     }
   
