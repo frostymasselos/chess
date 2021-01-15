@@ -60,7 +60,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 };
                 let piece = (
                     <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={returnClassVal()} data-color={square.piece.white ? "white" : "black"} data-pawn={square.piece.name.includes("pawn") ? "true" : "false"} style={styleVal} key={Math.random()}>
-                        {returnPieceEmoji(square.piece.white, square.piece.name)}
+                        {returnPieceEmoji(square.piece.name)}
                     </div>
                 );
                 arrayOfJSXPieces.push(piece);

@@ -117,14 +117,14 @@ img {
   @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
   align-items: stretch;
   > a {
-    @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
-    > div {
-      > span:nth-child(2) {
-        display: inline-block;
-        -moz-transform: scale(-1, 1);
-        -webkit-transform: scale(-1, 1);
-        transform: scale(-1, 1);
-      }
+    height: 100%;
+    @include grid-container-template(var(--header-height) var(--header-height), 100%);
+    > *:nth-child(2) {
+      // background-color: #ff4136;
+      display: inline-block;
+      -moz-transform: scale(-1, 1);
+      -webkit-transform: scale(-1, 1);
+      transform: scale(-1, 1);
     }
   }
 }

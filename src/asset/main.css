@@ -70,16 +70,16 @@ img {
 }
 
 .header > a {
+  height: 100%;
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  place-items: center;
+  -ms-grid-columns: var(--header-height) var(--header-height);
+      grid-template-columns: var(--header-height) var(--header-height);
+  -ms-grid-rows: 100%;
+      grid-template-rows: 100%;
 }
 
-.header > a > div > span:nth-child(2) {
+.header > a > *:nth-child(2) {
   display: inline-block;
   -webkit-transform: scale(-1, 1);
   transform: scale(-1, 1);

@@ -795,7 +795,7 @@ const directionConverterObj = {
     }
 };
 
-function returnPieceEmoji(white, name) {//console.log(name);
+function returnPieceEmoji(name) {//console.log(name);
     name = name.replace(/\d/, '');
     switch (name) {
         case "pawn":

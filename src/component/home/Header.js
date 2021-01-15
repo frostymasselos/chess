@@ -1,14 +1,20 @@
-import {Link} from 'react-router-dom';
+import { returnPieceEmoji } from '../../helper/boardHelp.js';
+import { Link } from 'react-router-dom';
 
 function Header() {//onClick={() => window.location.replace(``)
 
     return (
         <>
-            <div className="header"> 
+            <div className="header">
                 <Link to="/">
-                    <div>
-                        <span>♛</span><span>♘</span>
-                    </div>
+                    {/* <div> */}
+                    {/* <span> */}
+                    {returnPieceEmoji("pawn")}
+                    {/* </span> */}
+                    {/* <span> */}
+                    {returnPieceEmoji("knight")}
+                    {/* </span> */}
+                    {/* </div> */}
                 </Link>
                 {/* <span>♖♜</span> */}
             </div>
