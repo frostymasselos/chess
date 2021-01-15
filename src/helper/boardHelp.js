@@ -1,3 +1,16 @@
+import fatKing from '../asset/images/chess_pieces/fat/king.svg';
+import fatQueen from '../asset/images/chess_pieces/fat/queen.svg';
+import fatRook from '../asset/images/chess_pieces/fat/rook.svg';
+import fatKnight from '../asset/images/chess_pieces/fat/knight.svg';
+import fatBishop from '../asset/images/chess_pieces/fat/bishop.svg';
+import fatPawn from '../asset/images/chess_pieces/fat/pawn.svg';
+import sparseKing from '../asset/images/chess_pieces/sparse/king.svg';
+import sparseQueen from '../asset/images/chess_pieces/sparse/queen.svg';
+import sparseRook from '../asset/images/chess_pieces/sparse/rook.svg';
+import sparseKnight from '../asset/images/chess_pieces/sparse/knight.svg';
+import sparseBishop from '../asset/images/chess_pieces/sparse/bishop.svg';
+import sparsePawn from '../asset/images/chess_pieces/sparse/pawn.svg';
+
 const pieceMoveObj = { //add onto these as #2 strategy to catering for black
     white: {
         pawn: {
@@ -782,21 +795,27 @@ const directionConverterObj = {
     }
 };
 
-function returnPieceEmoji(name) {//console.log(name);
+function returnPieceEmoji(white, name) {//console.log(name);
     name = name.replace(/\d/, '');
     switch (name) {
         case "pawn":
-            return "⌂";
+            return <img className="pawn-image" src={sparsePawn} />;
+        // return "⌂";
         case "rook":
-            return "♜"
+            return <img className="piece-image" src={sparseRook} />;
+        // return "♜"
         case "knight":
-            return "♞"
+            return <img className="piece-image" src={sparseKnight} />;
+        // return "♞"
         case "bishop":
-            return "♝"
+            return <img className="piece-image" src={sparseBishop} />;
+        // return "♝"
         case "queen":
-            return "♛"
+            return <img className="piece-image" src={sparseQueen} />;
+        // return "♛"
         case "king":
-            return "♚"
+            return <img className="piece-image" src={sparseKing} />;
+        // return "♚"
         default:
             console.log("no match found!");
     }
@@ -804,6 +823,5 @@ function returnPieceEmoji(name) {//console.log(name);
 
 //doesn't work: ♟(empty pawn)♟(black pawn)
 //can-be-colored-in:⚚✝︎⏃⌵⌂
-
 
 export { pieceMoveObj, directionConverterObj, returnPieceEmoji };

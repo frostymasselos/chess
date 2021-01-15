@@ -445,10 +445,10 @@ img {
   max-height: var(--board-dimension-limit);
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[8];
-      grid-template-columns: repeat(8, 1fr);
-  -ms-grid-rows: (1fr)[8];
-      grid-template-rows: repeat(8, 1fr);
+  -ms-grid-columns: (12.5%)[8];
+      grid-template-columns: repeat(8, 12.5%);
+  -ms-grid-rows: (12.5%)[8];
+      grid-template-rows: repeat(8, 12.5%);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > div {
@@ -484,14 +484,23 @@ img {
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > div > div {
   height: 100%;
   overflow: hidden;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+  place-items: center;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .white-piece {
-  color: white;
+  -webkit-filter: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
+          filter: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .black-piece {
-  color: black;
+  -webkit-filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
+          filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .highlighted {
@@ -500,6 +509,11 @@ img {
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .pawn {
   font-size: calc((var(--board-height) * 0.125) * 1.2);
+}
+
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container .pawn-image {
+  width: 80%;
+  height: 80%;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {

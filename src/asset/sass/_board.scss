@@ -39,8 +39,8 @@
     height: 100vw; max-height: var(--board-dimension-limit);
 
     display: grid; //display: inline-grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(8, 12.5%);
+    grid-template-rows: repeat(8, 12.5%);
     > div {
       line-height: square-dimension(true);//calc(var(--board-height) * 0.125); //12.5vw;
       font-size: square-dimension(false);//calc((var(--board-height) * 0.125) * 1.5); //18.75;
@@ -81,20 +81,31 @@
     }
     ///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
     > div > div {
-      height: 100%; //🐉why did we need this? (we do)
+      height: 100%;
       overflow: hidden;
+      @include grid-container-horizontally-and-vertically-center-GIs();
     }
+    // .piece-image {
+    //   width: 95%;
+    //   height: 95%;
+    // }
     .white-piece {
-      color: $white-piece;
+      filter: $white-piece-filter;
+      // color: $white-piece-color;
     }
     .black-piece {
-      color: $black-piece;
+      filter: $black-piece-filter;
+      // color: $black-piece-color;
     }
     .highlighted {
       color: $clicked-on-piece;
     }
     .pawn {
-      font-size: calc((var(--board-height) * 0.125) * 1.2); //15vw
+      font-size: calc((var(--board-height) * 0.125) * 1.2); //15vw (80% of regular)
+    }
+    .pawn-image {
+      width: 80%;
+      height: 80%;
     }
   }
 
@@ -225,10 +236,10 @@
     }
   
     &-color-white {
-      color: $white-piece;
+      color: $white-piece-color;
     }
     &-color-black {
-      color: $black-piece;
+      color: $black-piece-color;
     }
   }
   .pawn-promotion-title {
