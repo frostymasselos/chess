@@ -53,15 +53,14 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                     gridRow: `${square.piece.rowPosition}`,
                     gridColumn: `${square.piece.columnPosition}`,
                 }; //see if you can just make whole attribute
-                let classVal = ``;
-                (function fillClassVal() {
-                    classVal += square.piece.white ? "white-piece " : "black-piece ";
+                function returnClassVal() {
+                    let classVal = square.piece.white ? "white-piece " : "black-piece ";
                     classVal += square.piece.name.includes("pawn") ? "pawn " : "";
-                })();
+                    return classVal;
+                };
                 let piece = (
-                    <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={classVal} data-color={square.piece.white ? "white" : "black"} data-pawn={square.piece.name.includes("pawn") ? "true" : "false"} style={styleVal} key={Math.random()}>
-                        {returnPieceEmoji(square.piece.name.replace(/\d/, ''))}
-                        {/* {square.piece.name} */}
+                    <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={returnClassVal()} data-color={square.piece.white ? "white" : "black"} data-pawn={square.piece.name.includes("pawn") ? "true" : "false"} style={styleVal} key={Math.random()}>
+                        {returnPieceEmoji(square.piece.name)}
                     </div>
                 );
                 arrayOfJSXPieces.push(piece);

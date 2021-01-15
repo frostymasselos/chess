@@ -671,8 +671,8 @@ img {
 
 .pawn-promotion-container .pawn-promotion-grid-container > * {
   line-height: calc(var(--board-height) * 0.125);
-  font-size: calc((var(--board-height) * 0.125) * 1.5);
   width: calc(var(--board-height) * 0.125);
+  font-size: calc((var(--board-height) * 0.125) * 1.5);
   overflow: hidden;
 }
 
