@@ -303,7 +303,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
         return true;
     }
     async function onClickHandler(e) {
-
+        const imgContainer = e.target.parentElement; console.log(imgContainer);
         if (clickedOnPiece.current) {
             console.log("2nd stage");
             const boardTag = window.document.querySelector(`.board-grid-container`);
@@ -486,7 +486,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             }
         } else {
             //haven't previously clicked on piece
-            console.log("1st stage");
+            console.log("1st stage"); console.log(e.target);
             if (e.target.dataset.square || e.target.dataset.color !== authInfo.color) {
                 console.log("clicked on empty square or opponent piece");
                 e.preventDefault();
@@ -497,13 +497,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 clickedOnPiece.current = { color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target }; console.log(clickedOnPiece.current);
                 piece.classList.add(`highlighted`);
                 if (showingClickedOnPiecePotentialMoves) {
-                    console.log("here2"); //showingClickedOnPiecePotentialMoves
-                    // const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
-                    // const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
-                    // const geographicallyLegalSecondarySquareIndices = arrayOfGeographicallyLegalSquares(piece.id, Number.parseFloat(e.currentTarget.id.slice(1)), squaresWithUserPieces, squaresWithOpponentPieces); //console.log("geographicallyLegalSecondarySquareIndices:", geographicallyLegalSecondarySquareIndices);
-                    // simpleHighlightSquares(geographicallyLegalSecondarySquareIndices);
-                    //highlight potential squares🐉just run decideToTurn...?
-                    // decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
+                    console.log("here2");
                     highlightSelectedPotentialSquares();
                 }
             }
