@@ -303,7 +303,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
         return true;
     }
     async function onClickHandler(e) {
-        const imgContainer = e.target.parentElement; console.log(imgContainer);
+
         if (clickedOnPiece.current) {
             console.log("2nd stage");
             const boardTag = window.document.querySelector(`.board-grid-container`);
