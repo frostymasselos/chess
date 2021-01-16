@@ -26,6 +26,19 @@
 .rotate180 {
   transform: rotate(180deg);
 }
+
+.white-piece {
+  filter: $white-piece-filter;
+  // color: $white-piece-color;
+}
+.black-piece {
+  filter: $black-piece-filter;
+  // color: $black-piece-color;
+}
+.pawn-image {
+  width: 100%;//80%;
+  height: 100%;//80%;
+}
 ///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
 .board-metric-buttons-nav-buttons-flex-container {
   display: flex;
@@ -89,23 +102,11 @@
     //   width: 95%;
     //   height: 95%;
     // }
-    .white-piece {
-      filter: $white-piece-filter;
-      // color: $white-piece-color;
-    }
-    .black-piece {
-      filter: $black-piece-filter;
-      // color: $black-piece-color;
-    }
     .highlighted {
-      color: $clicked-on-piece;
+      filter: $clicked-on-piece-filter;
     }
     .pawn {
       font-size: calc((var(--board-height) * 0.125) * 1.2); //15vw (80% of regular)
-    }
-    .pawn-image {
-      width: 80%;
-      height: 80%;
     }
   }
 
@@ -236,11 +237,14 @@
     }
   
     &-color-white {
-      color: $white-piece-color;
+      // filter: $white-piece-filter;
+      // color: $white-piece-color;
+      background-color: grey//$dark-square;//black;//
     }
-    &-color-black {
-      color: $black-piece-color;
-    }
+    // &-color-black {
+    //   // filter: $black-piece-filter;
+    //   // color: $black-piece-color;
+    // }
   }
   .pawn-promotion-title {
     height: 80px;

@@ -9,10 +9,16 @@ function Header() {//onClick={() => window.location.replace(``)
                 <Link to="/">
                     {/* <div> */}
                     {/* <span> */}
-                    {returnPieceEmoji("pawn")}
+
+                    {/* {returnPieceEmoji("pawn")} */}
+                    <img className="piece-image" src={returnPieceEmoji("queen")} />
+
                     {/* </span> */}
                     {/* <span> */}
-                    {returnPieceEmoji("knight")}
+
+                    {/* {returnPieceEmoji("knight")} */}
+                    <img className="piece-image" src={returnPieceEmoji("knight")} />
+
                     {/* </span> */}
                     {/* </div> */}
                 </Link>

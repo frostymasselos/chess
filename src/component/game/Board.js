@@ -55,13 +55,14 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 }; //see if you can just make whole attribute
                 function returnClassVal() {
                     let classVal = square.piece.white ? "white-piece " : "black-piece ";
-                    classVal += square.piece.name.includes("pawn") ? "pawn " : "";
+                    classVal += square.piece.name.includes("pawn") ? "pawn pawn-image " : "piece-image";
                     return classVal;
                 };
                 let piece = (
-                    <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={returnClassVal()} data-color={square.piece.white ? "white" : "black"} data-pawn={square.piece.name.includes("pawn") ? "true" : "false"} style={styleVal} key={Math.random()}>
-                        {returnPieceEmoji(square.piece.name)}
-                    </div>
+                    <img id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={returnClassVal()} data-color={square.piece.white ? "white" : "black"} data-pawn={square.piece.name.includes("pawn") ? "true" : "false"} style={styleVal} src={returnPieceEmoji(square.piece.name)} key={Math.random()} />
+                    // <div id={`${square.piece.white ? "white" : "black"}${square.piece.name}`} className={returnClassVal()} data-color={square.piece.white ? "white" : "black"} data-pawn={square.piece.name.includes("pawn") ? "true" : "false"} style={styleVal} key={Math.random()}>
+                    //     {returnPieceEmoji(square.piece.name)}
+                    // </div>
                 );
                 arrayOfJSXPieces.push(piece);
             }
@@ -303,7 +304,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
         return true;
     }
     async function onClickHandler(e) {
-
         if (clickedOnPiece.current) {
             console.log("2nd stage");
             const boardTag = window.document.querySelector(`.board-grid-container`);

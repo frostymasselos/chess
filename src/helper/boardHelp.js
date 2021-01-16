@@ -799,22 +799,28 @@ function returnPieceEmoji(name) {//console.log(name);
     name = name.replace(/\d/, '');
     switch (name) {
         case "pawn":
-            return <img className="pawn-image" src={sparsePawn} />;
+            return sparsePawn;
+        // return <img className="pawn-image" src={sparsePawn} />;
         // return "⌂";
         case "rook":
-            return <img className="piece-image" src={sparseRook} />;
+            return sparseRook;
+        // return <img className="piece-image" src={sparseRook} />;
         // return "♜"
         case "knight":
-            return <img className="piece-image" src={sparseKnight} />;
+            return sparseKnight;
+        // return <img className="piece-image" src={sparseKnight} />;
         // return "♞"
         case "bishop":
-            return <img className="piece-image" src={sparseBishop} />;
+            return sparseBishop;
+        // return <img className="piece-image" src={sparseBishop} />;
         // return "♝"
         case "queen":
-            return <img className="piece-image" src={sparseQueen} />;
+            return sparseQueen;
+        // return <img className="piece-image" src={sparseQueen} />;
         // return "♛"
         case "king":
-            return <img className="piece-image" src={sparseKing} />;
+            return sparseKing;
+        // return <img className="piece-image" src={sparseKing} />;
         // return "♚"
         default:
             console.log("no match found!");

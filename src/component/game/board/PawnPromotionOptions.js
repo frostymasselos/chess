@@ -19,10 +19,16 @@ export default function pawnPromotion({ pawnPromotionGraveyard, updatePieceToPro
         console.log(pawnPromotionGraveyardFilteredOutDuplicateNames);
         //each item of filtered made into GI, 2x2. class="promotion-piece"
         for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) {
+            function classVal() {
+                let classVal = "piece-image ";
+                classVal += `${authInfo.color}-piece `;
+                return classVal;
+            }
             const tag =
-                <div data-name={piece.name} key={Math.random()} onClick={choosePiece}>
-                    {returnPieceEmoji(piece.name.replace(/\d/, ''))}
-                </div>;
+                <img className={classVal()} data-name={piece.name} onClick={choosePiece} src={returnPieceEmoji(piece.name)} key={Math.random()} />
+            // <div data-name={piece.name} key={Math.random()} onClick={choosePiece}>
+            //     {returnPieceEmoji(piece.name.replace(/\d/, ''))}
+            // </div>;
             optionTags.push(tag);
         }
         return optionTags;
