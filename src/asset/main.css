@@ -77,6 +77,7 @@ img {
       grid-template-columns: var(--header-height) var(--header-height);
   -ms-grid-rows: 100%;
       grid-template-rows: 100%;
+  place-items: center;
 }
 
 .header > a > *:nth-child(2) {
@@ -436,9 +437,14 @@ img {
           filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
 }
 
+.piece-image {
+  width: 90%;
+  height: 90%;
+}
+
 .pawn-image {
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
 }
 
 .board-metric-buttons-nav-buttons-flex-container {
@@ -467,10 +473,18 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   line-height: calc(var(--board-height) * 0.125);
   font-size: calc((var(--board-height) * 0.125) * 1.5);
   background-color: grey;
-  text-align: center;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .black-square {
@@ -494,18 +508,6 @@ img {
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserAndOpponentSquare {
   background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074d9), color-stop(25%, transparent)), -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #ff4136));
   background-image: linear-gradient(to bottom right, #0074d9 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, #ff4136 75% 100%);
-}
-
-.board-metric-buttons-nav-buttons-flex-container .board-grid-container > div > div {
-  height: 100%;
-  overflow: hidden;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr;
-      grid-template-columns: 1fr;
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
-  place-items: center;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .highlighted {
@@ -667,14 +669,18 @@ img {
 }
 
 .pawn-promotion-container {
+  height: calc(var(--board-height) * 0.125);
   display: -ms-grid;
   display: grid;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-grid-columns: 100%;
+      grid-template-columns: 100%;
+  -ms-grid-rows: 100%;
+      grid-template-rows: 100%;
+  place-items: center;
 }
 
 .pawn-promotion-container .pawn-promotion-grid-container {
+  height: 100%;
   background-color: #dddddd;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -682,17 +688,17 @@ img {
   -webkit-box-flex: 1;
       -ms-flex: 1 1 0px;
           flex: 1 1 0px;
-}
-
-.pawn-promotion-container .pawn-promotion-grid-container > * {
-  line-height: calc(var(--board-height) * 0.125);
-  width: calc(var(--board-height) * 0.125);
-  font-size: calc((var(--board-height) * 0.125) * 1.5);
-  overflow: hidden;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .pawn-promotion-container .pawn-promotion-grid-container-color-white {
-  background-color: grey;
+  background-color: #ff851b;
+}
+
+.pawn-promotion-container .pawn-promotion-grid-container > * {
+  width: calc(var(--board-height) * 0.125);
 }
 
 .pawn-promotion-container .pawn-promotion-title {

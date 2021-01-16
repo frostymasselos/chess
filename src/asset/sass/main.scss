@@ -119,7 +119,7 @@ img {
   align-items: stretch;
   > a {
     height: 100%;
-    @include grid-container-template(var(--header-height) var(--header-height), 100%);
+    @include grid-container-horizontally-and-vertically-center-GIs(var(--header-height) var(--header-height), 100%);
     > *:nth-child(2) {
       // background-color: #ff4136;
       display: inline-block;

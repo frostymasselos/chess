@@ -35,9 +35,13 @@
   filter: $black-piece-filter;
   // color: $black-piece-color;
 }
+.piece-image {
+  width: 90%;
+  height: 90%;
+}
 .pawn-image {
-  width: 100%;//80%;
-  height: 100%;//80%;
+  width: 80%;//80%;
+  height: 80%;//80%;
 }
 ///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
 .board-metric-buttons-nav-buttons-flex-container {
@@ -51,14 +55,14 @@
     width: 100vw; max-width: var(--board-dimension-limit);
     height: 100vw; max-height: var(--board-dimension-limit);
 
-    display: grid; //display: inline-grid;
-    grid-template-columns: repeat(8, 12.5%);
-    grid-template-rows: repeat(8, 12.5%);
+    @include grid-container-template(repeat(8, 12.5%), repeat(8, 12.5%));
+    //all squares
     > div {
+      // @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);//for unknown reasons, grid-centering doesn't work uniformly on all pieces.
+      display: flex; justify-content: center; align-items: center;
       line-height: square-dimension(true);//calc(var(--board-height) * 0.125); //12.5vw;
       font-size: square-dimension(false);//calc((var(--board-height) * 0.125) * 1.5); //18.75;
       background-color: $light-square;
-      text-align: center;
     }
     > .black-square {
       background-color: $dark-square;
@@ -93,14 +97,10 @@
         ); //linear-gradient(to bottom right, white,yellow);
     }
     ///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
-    > div > div {
-      height: 100%;
-      overflow: hidden;
-      @include grid-container-horizontally-and-vertically-center-GIs();
-    }
-    // .piece-image {
-    //   width: 95%;
-    //   height: 95%;
+    // > div > div {
+    //   height: 100%;
+    //   overflow: hidden;
+    //   @include grid-container-horizontally-and-vertically-center-GIs();
     // }
     .highlighted {
       filter: $clicked-on-piece-filter;
@@ -212,39 +212,29 @@
 }
 
 .pawn-promotion-container {
-  display: grid;
-  justify-content: center;
-  // flex-direction: column;
+  height: calc(var(--board-height) * 0.125);
+  @include grid-container-horizontally-and-vertically-center-GIs(100%, 100%);
   .pawn-promotion-grid-container {
-    // max-width: var(--board-height);
-    // max-height: 100px;//calc(var(--board-height * 0.125)); //flex-basis: calc(var(--board-height * 0.125));
+    height: 100%;
     background-color: $light-grey;
-    // width: var(--board-height);//100vw;
-    // margin: 0 auto;
-    // @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(50px, 1fr)), auto); //repeat(4, 25%)
-    // align-self: center;
 
+    // @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(50px, 1fr)), auto); //repeat(4, 25%)
     display: flex;
     flex: 1 1 0px;
-    // flex-basis: 0px;
-    // flex-grow: 1;
-
-    > * {
-      line-height: square-dimension(true);//12.5vw;
-      width: square-dimension(true);
-      font-size: square-dimension(false);//18.75vw;
-      overflow: hidden;
-    }
+    align-items: center;
   
     &-color-white {
       // filter: $white-piece-filter;
       // color: $white-piece-color;
-      background-color: grey//$dark-square;//black;//
+      background-color: $dark-square;//grey//black;//
     }
     // &-color-black {
     //   // filter: $black-piece-filter;
     //   // color: $black-piece-color;
     // }
+    > * {
+      width: calc(var(--board-height) * 0.125);
+    }
   }
   .pawn-promotion-title {
     height: 80px;
