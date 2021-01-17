@@ -550,6 +550,7 @@ img {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  line-height: 1.12rem;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
