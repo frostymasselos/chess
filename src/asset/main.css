@@ -520,27 +520,22 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  height: var(--board-height);
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+  -ms-grid-rows: 3fr 4fr 3fr;
+      grid-template-rows: 3fr 4fr 3fr;
+      grid-template-areas: "." "metric" "nav";
   --button-container-width: 100px;
   width: var(--button-container-width);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 1 40%;
-          flex: 0 1 40%;
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: metric;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -609,9 +604,9 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 1 30%;
-          flex: 0 1 30%;
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  grid-area: nav;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -632,6 +627,7 @@ img {
 
 @media screen and (max-width: 785px) {
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
+    height: auto;
     width: var(--board-height);
     -webkit-box-pack: initial;
         -ms-flex-pack: initial;
