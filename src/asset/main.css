@@ -550,9 +550,6 @@ img {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  line-height: 1.12rem;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
@@ -640,18 +637,24 @@ img {
 @media screen and (max-width: 768px) {
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
     width: var(--board-height);
+    -webkit-box-pack: initial;
+        -ms-flex-pack: initial;
+            justify-content: initial;
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 1 auto;
+            flex: 0 1 auto;
     margin-bottom: 0.7rem;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
             flex-direction: row;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 1 auto;
+            flex: 0 1 auto;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
         -ms-flex-direction: row;

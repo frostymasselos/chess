@@ -119,13 +119,11 @@
     .game-metric-buttons {
       flex-basis: 40%;
       // column-gap: 0.5 * $lh;
-
       display: flex;
       justify-content: center;
       flex-direction: column;
-      flex-wrap: wrap;
 
-      line-height: $lh * 0.8;
+      // line-height: $lh * 0.8;
 
       > div {
         // width: var(--button-min-width);
@@ -193,13 +191,14 @@
 
     @media screen and (max-width: $tablet) {//739px
       width: var(--board-height);
+      justify-content: initial;
       .game-metric-buttons {
-        // --game-metric-height: 80px; height: var(--game-metric-height);
+        flex: 0 1 auto;
         margin-bottom: $lh * 0.5;
         flex-direction: row;
-        justify-content: center;
       }
       .nav-buttons {
+        flex: 0 1 auto;
         flex-direction: row;
         justify-content: space-evenly;//space-between;
         column-gap: $lh * 0.5;
