@@ -9,7 +9,7 @@ function Footer(params) {
             <div className="footer">
                 <div className="footer-info">
                     <p>
-                        Author: Ryan Frost.<br></br>e: blah@gmail.com.
+                        Created by Ryan Frost.<br></br>e: ryanfrost2015@gmail.com.
                     </p>
                 </div>
                 <div className="icons">
