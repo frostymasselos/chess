@@ -453,16 +453,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 const movedFromRowPosition = window.getComputedStyle(clickedOnPiece.current.square).getPropertyValue('grid-row-start');
                 const movedFromColumnPosition = window.getComputedStyle(clickedOnPiece.current.square).getPropertyValue('grid-column-start');
                 await userDb.update({
-                    movedFrom: {
-                        originalSquareIndex: originalSquareIndex,
-                        //rowPosition: `${movedFromRowPosition}/${String(Number.parseInt(movedFromRowPosition) + 1)}`,
-                        //columnPosition: `${movedFromColumnPosition}/${String(Number.parseInt(movedFromColumnPosition) + 1)}`,
-                    },
-                    movedTo: {
-                        secondarySquareIndex: secondarySquareIndex,
-                        //rowPosition: `${updatedRowPosition}/${String(Number.parseInt(updatedRowPosition) + 1)}`,
-                        //columnPosition: `${updatedColumnPosition}/${String(Number.parseInt(updatedColumnPosition) + 1)}`,
-                    }
+                    movedFrom: originalSquareIndex,
+                    //rowPosition: `${movedFromRowPosition}/${String(Number.parseInt(movedFromRowPosition) + 1)}`,
+                    //columnPosition: `${movedFromColumnPosition}/${String(Number.parseInt(movedFromColumnPosition) + 1)}`,
+                    movedTo: secondarySquareIndex,
+                    //rowPosition: `${updatedRowPosition}/${String(Number.parseInt(updatedRowPosition) + 1)}`,
+                    //columnPosition: `${updatedColumnPosition}/${String(Number.parseInt(updatedColumnPosition) + 1)}`,
                 });
                 //potentially kill opponent piece
                 if (opponentToKill) {
