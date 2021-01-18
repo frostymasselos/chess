@@ -121,6 +121,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             }
         }
     }
+    function highlightOpponentMovement(opponent) {
+        if (opponent.movedFrom) {
+            window.document.querySelector(`#i${opponent.movedFrom}`).classList.add('opponent-moved-from-square');//🐉
+            window.document.querySelector(`#i${opponent.movedTo}`).classList.add('opponent-moved-to-square');
+        }
+    }
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton() {
         const selectedPiecePiecesSwitch = window.document.querySelector(`.selected-potential-square-switch`);
         if (showingClickedOnPiecePotentialMoves) {
@@ -306,7 +312,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
     }
     async function onClickHandler(e) {
         if (clickedOnPiece.current) {
-            console.log("2nd stage");
+            console.log("2nd stage"); console.log("2", clickedOnPiece.current.square);
             const boardTag = window.document.querySelector(`.board-grid-container`);
             const allSquareTags = Array.from(window.document.querySelectorAll(`.board-grid-container > div`));
             const originalPiece = clickedOnPiece.current.piece; //console.log(originalPiece);
@@ -362,7 +368,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             console.log(`executing user's click`);
             originalPiece.classList.remove(`highlighted`);
             // decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
-            clickedOnPiece.current = false;
+            // clickedOnPiece.current = false;//🐉put it at end?(make sure it doesn't interfere with pawn-promotion)
             function secondarySquareIndexIsAtEndOfBoard(color, secondarySquareIndex) {
                 const endSquaresWhite = [56, 57, 58, 59, 60, 61, 62, 63];
                 const endSquaresBlack = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -442,6 +448,22 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                     rowPosition: `${updatedRowPosition}/${String(Number.parseInt(updatedRowPosition) + 1)}`,
                     columnPosition: `${updatedColumnPosition}/${String(Number.parseInt(updatedColumnPosition) + 1)}`,
                 });
+                //update movedFrom & movedTo
+                console.log("2", clickedOnPiece.current.square);
+                const movedFromRowPosition = window.getComputedStyle(clickedOnPiece.current.square).getPropertyValue('grid-row-start');
+                const movedFromColumnPosition = window.getComputedStyle(clickedOnPiece.current.square).getPropertyValue('grid-column-start');
+                await userDb.update({
+                    movedFrom: {
+                        originalSquareIndex: originalSquareIndex,
+                        //rowPosition: `${movedFromRowPosition}/${String(Number.parseInt(movedFromRowPosition) + 1)}`,
+                        //columnPosition: `${movedFromColumnPosition}/${String(Number.parseInt(movedFromColumnPosition) + 1)}`,
+                    },
+                    movedTo: {
+                        secondarySquareIndex: secondarySquareIndex,
+                        //rowPosition: `${updatedRowPosition}/${String(Number.parseInt(updatedRowPosition) + 1)}`,
+                        //columnPosition: `${updatedColumnPosition}/${String(Number.parseInt(updatedColumnPosition) + 1)}`,
+                    }
+                });
                 //potentially kill opponent piece
                 if (opponentToKill) {
                     await opponentDb.child(`pieces/${opponentToKill}`).update({ alive: false });
@@ -451,11 +473,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                     console.log("updating pawn");
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: true });
                 }
-                //🐉potentially update PawnPromotionNumber
+                //potentially update PawnPromotionNumber
                 if (pieceToPromotePawnTo.current) {
                     pieceToPromotePawnTo.current = '';
                     await userDb.update({ pawnPromotionNumber: authInfo.pawnPromotionNumber + 1 });
                 }
+                clickedOnPiece.current = false;//⚠️used to be under 'EXECUTING USER'S CLICK'
                 setCanMove(false);//boardTag.classList.add(`unclickable`);
                 await userDb.update({ canMove: false, moved: Math.random() });
             }
@@ -494,10 +517,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             } else {
                 //clicked on piece
                 let piece = e.target;
-                clickedOnPiece.current = { color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target }; console.log(clickedOnPiece.current);
+                clickedOnPiece.current = { color: piece.dataset.color, id: piece.id, square: e.currentTarget, piece: e.target };//console.log(clickedOnPiece.current);
                 piece.classList.add(`highlighted`);
                 if (showingClickedOnPiecePotentialMoves) {
-                    console.log("here2");
                     highlightSelectedPotentialSquares();
                 }
             }
@@ -561,6 +583,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             fillBoardArrayWithPieces(e.val().user1.pieces);
             fillBoardArrayWithPieces(e.val().user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
+            highlightOpponentMovement(e.val()[opponent.current]);
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);

@@ -67,6 +67,12 @@
     > .black-square {
       background-color: $dark-square;
     }
+    .opponent-moved-from-square {
+      background-color: $significant-button;
+    }
+    .opponent-moved-to-square {
+      background-color: $significant-button;
+    }
     > .potentialUserSquare {
       background-image: linear-gradient(
         to bottom right,

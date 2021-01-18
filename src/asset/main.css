@@ -491,6 +491,14 @@ img {
   background-color: #ff851b;
 }
 
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container .opponent-moved-from-square {
+  background-color: #ffdc00;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container .opponent-moved-to-square {
+  background-color: #ffdc00;
+}
+
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserSquare {
   background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074d9), color-stop(25%, transparent));
   background-image: linear-gradient(to bottom right, #0074d9 25%, transparent 25% 100%);
