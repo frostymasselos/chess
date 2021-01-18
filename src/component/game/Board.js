@@ -96,6 +96,8 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
         }
         //return arrayOfJSXSquares;
         setSquareTags(arrayOfJSXSquares);
+        //highlight squares user's just moved from
+
         //color in black squares🧙‍♂️no clue how its able to see the square-tags here.
         let arrayOfSquares = Array.from(document.querySelectorAll(`.board-grid-container > div`));//console.log(arrayOfSquares);
         for (let index = 0, total = 1; index <= 63; total++) {
@@ -557,19 +559,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 }
             }
             fillBoardArrayWithPieces(e.val().user1.pieces);
-            fillBoardArrayWithPieces(e.val().user2.pieces);
-            console.log("boardArray.current:", boardArray.current);
+            fillBoardArrayWithPieces(e.val().user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
             //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
-            function endGame(params) {
-                const winner = opponentColor.current;
-                let firstLetterCapitlaised = winner.slice(0, 1).toUpperCase();
-                let winnerCapitalised = winner.replace(/\w/, `${firstLetterCapitlaised}`); console.log(firstLetterCapitlaised, winnerCapitalised);
-                db.ref(`matches/${authInfo.url}`).update({ winner: `${winnerCapitalised}` }); //(${opponent.current})
-            }
             if (isUserKingInCheck()) {
                 if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
                     endGame();
@@ -581,6 +576,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
                 endGame();
                 return;
+            }
+            function endGame() {
+                const winner = opponentColor.current;
+                let firstLetterCapitlaised = winner.slice(0, 1).toUpperCase();
+                let winnerCapitalised = winner.replace(/\w/, `${firstLetterCapitlaised}`); console.log(firstLetterCapitlaised, winnerCapitalised);
+                db.ref(`matches/${authInfo.url}`).update({ winner: `${winnerCapitalised}` }); //(${opponent.current})
             }
             setCheck(false);
         });
