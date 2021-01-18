@@ -188,6 +188,8 @@
     }
 
     @media screen and (max-width: 785px) {//$tablet🧙‍♂📱this accomodates Safari - Safari wraps buttons onto new lines before everyone else
+      display: flex;
+      flex-direction: column;
       height: auto; 
       width: var(--board-height);
       justify-content: initial;
