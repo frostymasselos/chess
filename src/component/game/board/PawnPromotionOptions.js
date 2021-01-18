@@ -1,24 +1,18 @@
+import { useState, useEffect } from 'react';
 import { returnPieceEmoji } from '../../../helper/boardHelp.js';
 
-export default function pawnPromotion({ pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion, authInfo }) {
+export default function PawnPromotion({ pawnPromotionGraveyard, updatePieceToPromotePawnTo, resolvePawnPromotion, authInfo, db }) {
+
+    let [pawnPromotionNumber, setPawnPromotionNumber] = useState('');
 
     function choosePiece(e) {
         updatePieceToPromotePawnTo(e.target.dataset.name);
         resolvePawnPromotion();
     }
     function options() {
-        //filter out duplicates
         const optionTags = [];
-        const pawnPromotionGraveyardFilteredOutDuplicateNames = [];
-        for (const deadPiece of pawnPromotionGraveyard) {
-            if (pawnPromotionGraveyardFilteredOutDuplicateNames.some((filteredDeadPiece) => deadPiece.name.replace(/\d/, '') === filteredDeadPiece.name.replace(/\d/, ''))) {
-                continue;
-            }
-            pawnPromotionGraveyardFilteredOutDuplicateNames.push(deadPiece);
-        }
-        console.log(pawnPromotionGraveyardFilteredOutDuplicateNames);
-        //each item of filtered made into GI, 2x2. class="promotion-piece"
-        for (const piece of pawnPromotionGraveyardFilteredOutDuplicateNames) {
+        const potentialPieces = [{ name: `rook${pawnPromotionNumber}` }, { name: `knight${pawnPromotionNumber}` }, { name: `bishop${pawnPromotionNumber}` }, { name: `queen${pawnPromotionNumber}` }];
+        for (const piece of potentialPieces) {//pawnPromotionGraveyardFilteredOutDuplicateNames
             function classVal() {
                 let classVal = "piece-image ";
                 classVal += `${authInfo.color}-piece `;
@@ -26,13 +20,16 @@ export default function pawnPromotion({ pawnPromotionGraveyard, updatePieceToPro
             }
             const tag =
                 <img className={classVal()} data-name={piece.name} onClick={choosePiece} src={returnPieceEmoji(piece.name)} key={Math.random()} />
-            // <div data-name={piece.name} key={Math.random()} onClick={choosePiece}>
-            //     {returnPieceEmoji(piece.name.replace(/\d/, ''))}
-            // </div>;
             optionTags.push(tag);
         }
         return optionTags;
     }
+
+    useEffect(() => {
+        db.ref(`matches/${authInfo.url}/${authInfo.user}/pawnPromotionNumber`).orderByKey().on('value', (e) => {
+            setPawnPromotionNumber(e.val());
+        });
+    });
 
     return (
         <>

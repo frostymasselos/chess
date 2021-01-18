@@ -246,7 +246,7 @@ function Game({ params }) {
                                     listenerForOpponentMoving(game, "user1", "user2");
                                     listenerForWinner(game, "user1");
                                     listenerForRematch(game, "user1", "user2");
-                                    authInfo.current = { ...authInfo.current, color: user1.white ? "white" : "black" };
+                                    authInfo.current = { ...authInfo.current, color: user1.white ? "white" : "black", pawnPromotionNumber: user1.pawnPromotionNumber };
                                     setCanMove(user1.canMove ? true : false); setPlaying(true);//BOARD IS RENDERED HERE
                                     if (user2.signedIn) {
                                         //USER2 SIGNED IN
@@ -284,7 +284,7 @@ function Game({ params }) {
                                 listenerForOpponentMoving(game, "user2", "user1");//✅
                                 listenerForWinner(game, "user2");
                                 listenerForUser1RestartingGame(game, "user2", "user1");
-                                authInfo.current = { ...authInfo.current, color: user2.white ? "white" : "black" };
+                                authInfo.current = { ...authInfo.current, color: user2.white ? "white" : "black", pawnPromotionNumber: user2.pawnPromotionNumber };
                                 setCanMove(user2.canMove ? true : false);
                                 setPlaying(true);//BOARD IS RENDERED HERE
                                 setUser2SignedIn(true);

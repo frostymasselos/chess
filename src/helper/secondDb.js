@@ -9,6 +9,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
         pawnReincarnate: null,//name
         quit: false,
         rematch: false,
+        pawnPromotionNumber: 3,
         pieces: {
             "pawn1": {
                 white: true,
@@ -146,6 +147,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
         quit: false,
         rematch: false,
         recentlyReset: false,
+        pawnPromotionNumber: 3,
         pieces: {
             "pawn1": {
                 white: false,
@@ -272,7 +274,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
             },
         },
     },
-    winner: ''
+    winner: '',
 }
 
 export default bigObj;

@@ -226,7 +226,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
         pieceToPromotePawnTo.current = piece;//console.log(piece, pieceToPromotePawnTo.current);
     }
     function resolvePawnPromotion() {
-        console.log("1");
         setOpportunityForPawnToPromote(false);
         pawnPromotionResolveFunction.current.call(null, 5);
     }
@@ -321,6 +320,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             const board2 = JSON.parse(JSON.stringify(boardArray.current));
             board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
             board2[originalSquareIndex].piece = null;
+            const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
             if (e.target.id === clickedOnPiece.current.id) {
                 //clicked on same square 
                 console.log("piece deselected");
@@ -371,7 +371,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 let emptySquare = e.target;
                 emptySquare.append(originalPiece);//console.log(emptySquare, originalPiece, secondarySquareTag);
                 console.log("secondaryEl is an empty square:", e.target);
-                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) {//console.log("here");
+                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`)) {
                     boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
                     await new Promise((resolve) => {
@@ -379,17 +379,15 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                         pawnPromotionResolveFunction.current = resolve;
                     });
                     if (pieceToPromotePawnTo.current) {
-                        // //change UI
-                        // emptySquare.firstElementChild.remove();
-                        // const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;//add class & data-color
-                        // newTag.append(`${pieceToPromotePawnTo.current}`);
-                        // emptySquare.append(newTag);
-                        //change dB
+                        //change UI
                         //kill pawn
-                        const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                         await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ alive: false });//originalSquareId.slice(5).replace(/\d/, '')
                         //revive
-                        await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({ alive: true, });
+                        await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({
+                            alive: true,
+                            name: pieceToPromotePawnTo.current,
+                            white: authInfo.color === "white" ? true : false,
+                        });
                         boardArrayOriginalPiece = { name: pieceToPromotePawnTo.current };//console.log(pieceToPromotePawnTo.current); console.log(boardArrayOriginalPiece);
                     }
                 }
@@ -403,7 +401,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 //     enemyPiece.classList.add(`fizzle`);
                 // }, 2000);
                 enemyPieceSquare.append(originalPiece);
-                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`) && pawnPromotionGraveyard.current.length) { //console.log("here");
+                if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`)) { //&& pawnPromotionGraveyard.current.length//console.log("here");
                     boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
                     await new Promise((resolve) => {
@@ -411,17 +409,15 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                         pawnPromotionResolveFunction.current = resolve;
                     });
                     if (pieceToPromotePawnTo.current) {
-                        //change UI
-                        // enemyPieceSquare.firstElementChild.remove();
-                        // const newTag = window.document.createElement('div'); newTag.className = `${authInfo.color}`; newTag.dataset.color = `${authInfo.color}`;  //add class & data-color
-                        // newTag.append(`${pieceToPromotePawnTo.current}`);
-                        // enemyPieceSquare.append(newTag);
                         //change dB
-                        const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                         //kill pawn
                         await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ alive: false }); //originalSquareId.slice(5).replace(/\d/, '')
                         //revive
-                        await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({ alive: true, });
+                        await userDb.child(`pieces/${pieceToPromotePawnTo.current}`).update({
+                            alive: true,
+                            name: pieceToPromotePawnTo.current,
+                            white: authInfo.color === "white" ? true : false,
+                        });
                         boardArrayOriginalPiece = { name: pieceToPromotePawnTo.current }; // console.log(pieceToPromotePawnTo.current); console.log(boardArrayOriginalPiece);
                     }
                 }
@@ -430,11 +426,10 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             //send this info to db full grid-area property to dB property. 
             async function publishMoveToDb(opponentToKill) {
                 //update user piece's coordinates
-                let userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
                 let opponentDb = db.ref(`matches/${authInfo.url}/${opponent.current}`);
-                let updatedRowPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue(`grid-row`).slice(0, 1); console.log(secondarySquareTag, updatedRowPosition, window.getComputedStyle(secondarySquareTag)); console.log(secondarySquareTag.style.gridRow);
+                let updatedRowPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue(`grid-row`).slice(0, 1); //console.log(secondarySquareTag, updatedRowPosition, window.getComputedStyle(secondarySquareTag)); console.log(secondarySquareTag.style.gridRow);
                 if (!updatedRowPosition) {
-                    console.log('here');
+                    //console.log('here');
                     updatedRowPosition = secondarySquareTag.style.gridRow.slice(0, 1);
                 }
                 let updatedColumnPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue('grid-column').slice(0, 1);
@@ -454,9 +449,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                     console.log("updating pawn");
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: true });
                 }
-                //updateUI
+                //🐉potentially update PawnPromotionNumber
+                if (pieceToPromotePawnTo.current) {
+                    pieceToPromotePawnTo.current = '';
+                    await userDb.update({ pawnPromotionNumber: authInfo.pawnPromotionNumber + 1 });
+                }
                 setCanMove(false);//boardTag.classList.add(`unclickable`);
-                //updateDb
                 await userDb.update({ canMove: false, moved: Math.random() });
             }
             function checkIfOpponentIsInCheckOrCheckmate() {
@@ -602,7 +600,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
 
     return (
         <>
-            {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion} authInfo={authInfo} />}
+            {opportunityForPawnToPromote && <PawnPromotionOptions pawnPromotionGraveyard={pawnPromotionGraveyard.current} updatePieceToPromotePawnTo={updatePieceToPromotePawnTo} resolvePawnPromotion={resolvePawnPromotion} authInfo={authInfo} db={db} />}
             <div className="board-metric-buttons-nav-buttons-flex-container">
                 <div className="board-grid-container unclickable">
                     {squareTags}
