@@ -52,7 +52,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
     },
     black: {
         pawn: {
-            direction: ["pawn_backward", "pawn_diagonal_backward_left", "pawn_diagonal_backward_right"],//🐉remember to include success with black
+            direction: ["pawn_backward", "pawn_diagonal_backward_left", "pawn_diagonal_backward_right"],
             total: {
                 primary: 1
             }
@@ -328,7 +328,6 @@ const directionConverterObj = {
                         break parent;
                     }
                 }
-
                 legalSecondarySquareIndexes.push(potentialSquare);
             }
             return legalSecondarySquareIndexes;
