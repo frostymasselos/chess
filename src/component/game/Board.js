@@ -123,7 +123,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
     }
     function highlightOpponentMovement(opponent) {
         if (opponent.movedFrom) {
-            window.document.querySelector(`#i${opponent.movedFrom}`).classList.add('opponent-moved-from-square');//🐉
+            window.document.querySelector(`#i${opponent.movedFrom}`).classList.add('opponent-moved-from-square');
             window.document.querySelector(`#i${opponent.movedTo}`).classList.add('opponent-moved-to-square');
         }
     }
@@ -262,10 +262,11 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
         let total = '';
         if (pieceType === "pawn") {
             let squareWithPawnPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex);//console.log("squareWithPawnPiece", squareWithPawnPiece);
-            squareWithPawnPiece.piece.moved ? total = 1 : total = 2
+            squareWithPawnPiece.piece.moved > 0 ? total = 1 : total = 2;
         } else {
             total = pieceMoveObj[ourColor][pieceType].total.primary;//console.log("total:", total);
         }
+
         for (const move of pieceMoveObj[ourColor][pieceType].direction) {//console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
@@ -367,8 +368,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
             //EXECUTING USER'S CLICK.
             console.log(`executing user's click`);
             originalPiece.classList.remove(`highlighted`);
-            // decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
-            // clickedOnPiece.current = false;//🐉put it at end?(make sure it doesn't interfere with pawn-promotion)
             function secondarySquareIndexIsAtEndOfBoard(color, secondarySquareIndex) {
                 const endSquaresWhite = [56, 57, 58, 59, 60, 61, 62, 63];
                 const endSquaresBlack = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -399,7 +398,32 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                         boardArrayOriginalPiece = { name: pieceToPromotePawnTo.current };//console.log(pieceToPromotePawnTo.current); console.log(boardArrayOriginalPiece);
                     }
                 }
-                publishMoveToDb(); console.log("finished onClick handler");
+                function haveIPerformedEnpassant() {
+                    //ask: am I a pawn? Is there an enemy pawn behind me which has onDoubleSquareMove set to true?
+                    console.log(404, boardArrayOriginalPiece, originalPiece.id);
+                    if (!originalPiece.id.includes(`pawn`)) {
+                        return;
+                    }
+                    let suspectedPieceIndex = '';
+                    if (authInfo.color === "white") {
+                        suspectedPieceIndex = secondarySquareIndex - 8;
+                    } else {
+                        suspectedPieceIndex = secondarySquareIndex + 8;
+                    }
+                    const boardArraySuspectedSquare = boardArray.current.find((squareWithOpponentPiece) => squareWithOpponentPiece.index === suspectedPieceIndex);//squareWithOpponentPiece.index === suspectedPieceIndex //console.log(boardArrayOriginalPiece);//boardArray.current[suspectedPieceIndex]; 
+                    console.log(suspectedPieceIndex, boardArraySuspectedSquare);
+                    if (boardArraySuspectedSquare.piece) {
+                        if (boardArraySuspectedSquare.piece.name.includes("pawn") && isEnemyPiece() && boardArraySuspectedSquare.piece.onDoubleSquareMove) {//enemyPieceBehindMe
+                            console.log("ENPASSANT");
+                            //return: opp's pawn-piece's name or falsey value. 
+                            return boardArraySuspectedSquare.piece.name;
+                        }
+                        function isEnemyPiece() {
+                            return (opponentColor.current === "white" && boardArraySuspectedSquare.piece.white) || (opponentColor.current === "black" && !boardArraySuspectedSquare.piece.white) ? true : false
+                        }
+                    }
+                }
+                publishMoveToDb(haveIPerformedEnpassant()); console.log("finished onClick handler");
             } else {
                 //second square has an enemy piece
                 const enemyPiece = e.target;
@@ -465,9 +489,14 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                     await opponentDb.child(`pieces/${opponentToKill}`).update({ alive: false });
                 }
                 //potentially update pawn
-                if (boardArrayOriginalPiece.name.includes(`pawn`) && !boardArrayOriginalPiece.moved) {
-                    console.log("updating pawn");
-                    await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: true });
+                if (boardArrayOriginalPiece.name.includes(`pawn`) && (boardArrayOriginalPiece.moved < 2)) {//🐉changing..
+                    await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: boardArrayOriginalPiece.moved + 1 });
+                    if (secondarySquareIndex - originalSquareIndex === 16 || secondarySquareIndex - originalSquareIndex === -16) {
+                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ onDoubleSquareMove: true });
+                    }
+                    if (boardArrayOriginalPiece.moved === 1) {
+                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ onDoubleSquareMove: false });
+                    }
                 }
                 //potentially update PawnPromotionNumber
                 if (pieceToPromotePawnTo.current) {
@@ -542,7 +571,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
         } else {
             board.classList.remove(`rotate180`); console.log("board is straight");
         }
-    }, [reset]);//🐉
+    }, [reset]);
 
     //1.populate boardArray & ui
     useEffect(() => {

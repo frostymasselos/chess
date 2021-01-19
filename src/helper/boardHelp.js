@@ -52,7 +52,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
     },
     black: {
         pawn: {
-            direction: ["pawn_backward", "pawn_diagonal_backward_left", "pawn_diagonal_backward_right"],
+            direction: ["pawn_backward", "pawn_diagonal_backward_left", "pawn_diagonal_backward_right"],//🐉remember to include success with black
             total: {
                 primary: 1
             }
@@ -88,6 +88,11 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
             },
         },
     }
+}
+
+//abstract
+function enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, adjacentIndex) {
+    return boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.piece.name.includes("pawn") && squareWithOpponentPiece.piece.onDoubleSquareMove && squareWithOpponentPiece.index === originalSquareIndex + adjacentIndex);
 }
 
 const directionConverterObj = {
@@ -150,7 +155,11 @@ const directionConverterObj = {
             }
             parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueLeft) * currentTotal, currentCounter++) {
                 //check if potentialSquare occupied by opponent piece
-                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                // function enpassant() {
+                //     //return true;
+                //     return boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.piece.name.includes("pawn") && squareWithOpponentPiece.piece.onDoubleSquareMove && squareWithOpponentPiece.index === originalSquareIndex - 1);
+                // }
+                if (!(boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare) || enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, valueLeft))) {//🐉and there's no enemy 
                     break parent;
                 }
                 legalSecondarySquareIndexes.push(potentialSquare);
@@ -173,7 +182,7 @@ const directionConverterObj = {
             }
             parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueLeft) * currentTotal, currentCounter++) {
                 //check if potentialSquare occupied by opponent piece
-                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                if (!(boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare) || enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, valueLeft))) {
                     break parent;
                 }
                 legalSecondarySquareIndexes.push(potentialSquare);
@@ -197,7 +206,7 @@ const directionConverterObj = {
 
             parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueRight) * currentTotal, currentCounter++) {
                 //check if potentialSquare occupied by opponent piece
-                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                if (!(boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare) || enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, valueRight))) {
                     break parent;
                 }
                 legalSecondarySquareIndexes.push(potentialSquare);
@@ -221,7 +230,7 @@ const directionConverterObj = {
 
             parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueDown + valueRight) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare >= 0; currentTotal++, potentialSquare = potentialSquare + (valueDown + valueRight) * currentTotal, currentCounter++) {
                 //check if potentialSquare occupied by opponent piece
-                if (!boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare)) {
+                if (!(boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare) || enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, valueRight))) {
                     break parent;
                 }
                 legalSecondarySquareIndexes.push(potentialSquare);
