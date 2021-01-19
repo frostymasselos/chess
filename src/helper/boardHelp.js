@@ -92,7 +92,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
 
 //abstract
 function enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, adjacentIndex) {
-    return boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.piece.name.includes("pawn") && squareWithOpponentPiece.piece.onDoubleSquareMove && squareWithOpponentPiece.index === originalSquareIndex + adjacentIndex);
+    return boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.piece.name.includes("pawn") && squareWithOpponentPiece.piece.justMoved2Squares && squareWithOpponentPiece.index === originalSquareIndex + adjacentIndex);
 }
 
 const directionConverterObj = {

@@ -4,7 +4,7 @@ import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 
-function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset }) {
+function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }) {
 
     let [squareTags, setSquareTags] = useState([]);//could add it directly to DOM w/vanilla
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
@@ -12,6 +12,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
     let [showingClickedOnPiecePotentialMoves, setShowingClickedOnPiecePotentialMoves] = useState(false);
     let [opportunityForPawnToPromote, setOpportunityForPawnToPromote] = useState(false);
 
+    let matchRef = useRef('');
     let opponent = useRef(authInfo.user === "user1" ? "user2" : "user1");
     let opponentColor = useRef(authInfo.color === "white" ? "black" : "white");
     let boardArray = useRef([]);
@@ -410,10 +411,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                     } else {
                         suspectedPieceIndex = secondarySquareIndex + 8;
                     }
-                    const boardArraySuspectedSquare = boardArray.current.find((squareWithOpponentPiece) => squareWithOpponentPiece.index === suspectedPieceIndex);//squareWithOpponentPiece.index === suspectedPieceIndex //console.log(boardArrayOriginalPiece);//boardArray.current[suspectedPieceIndex]; 
-                    console.log(suspectedPieceIndex, boardArraySuspectedSquare);
+                    const boardArraySuspectedSquare = boardArray.current.find((squareWithOpponentPiece) => squareWithOpponentPiece.index === suspectedPieceIndex); console.log(suspectedPieceIndex, boardArraySuspectedSquare);//squareWithOpponentPiece.index === suspectedPieceIndex //console.log(boardArrayOriginalPiece);//boardArray.current[suspectedPieceIndex]; 
                     if (boardArraySuspectedSquare.piece) {
-                        if (boardArraySuspectedSquare.piece.name.includes("pawn") && isEnemyPiece() && boardArraySuspectedSquare.piece.onDoubleSquareMove) {//enemyPieceBehindMe
+                        if (boardArraySuspectedSquare.piece.name.includes("pawn") && isEnemyPiece() && boardArraySuspectedSquare.piece.justMoved2Squares) {//enemyPieceBehindMe
                             console.log("ENPASSANT");
                             //return: opp's pawn-piece's name or falsey value. 
                             return boardArraySuspectedSquare.piece.name;
@@ -488,14 +488,25 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                 if (opponentToKill) {
                     await opponentDb.child(`pieces/${opponentToKill}`).update({ alive: false });
                 }
+                //potentially update pawns (#1🐉use boardArray) Alternative was to search for data again in db
+                const pawns = [];
+                for (const key in matchRef.current[authInfo.user].pieces) {
+                    if (key.includes("pawn")) {
+                        pawns.push(matchRef.current[authInfo.user].pieces[key]);
+                    }
+                } console.log(pawns);
+                pawns.forEach((pawn) => {
+                    if (pawn.justMoved2Squares) {
+                        console.log("FOUND PAWN WITH DOUBLE-SQUARE-MOVE");
+                        userDb.child(`pieces/${pawn.name}`).update({ justMoved2Squares: false });
+                    }
+                });
+
                 //potentially update pawn
                 if (boardArrayOriginalPiece.name.includes(`pawn`) && (boardArrayOriginalPiece.moved < 2)) {//🐉changing..
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: boardArrayOriginalPiece.moved + 1 });
                     if (secondarySquareIndex - originalSquareIndex === 16 || secondarySquareIndex - originalSquareIndex === -16) {
-                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ onDoubleSquareMove: true });
-                    }
-                    if (boardArrayOriginalPiece.moved === 1) {
-                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ onDoubleSquareMove: false });
+                        await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ justMoved2Squares: true });
                     }
                 }
                 //potentially update PawnPromotionNumber
@@ -605,10 +616,11 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset })
                     }
                 }
             }
-            fillBoardArrayWithPieces(e.val().user1.pieces);
-            fillBoardArrayWithPieces(e.val().user2.pieces);//console.log("boardArray.current:", boardArray.current);
+            const match = e.val(); matchRef.current = match;
+            fillBoardArrayWithPieces(match.user1.pieces);
+            fillBoardArrayWithPieces(match.user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            highlightOpponentMovement(e.val()[opponent.current]);
+            highlightOpponentMovement(match[opponent.current]);
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
