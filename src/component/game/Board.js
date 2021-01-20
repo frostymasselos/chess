@@ -476,17 +476,15 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
                 console.log("2", clickedOnPiece.current.square);
                 const movedFromRowPosition = window.getComputedStyle(clickedOnPiece.current.square).getPropertyValue('grid-row-start');
                 const movedFromColumnPosition = window.getComputedStyle(clickedOnPiece.current.square).getPropertyValue('grid-column-start');
-                await userDb.update({
-                    movedFrom: originalSquareIndex,
-                    //rowPosition: `${movedFromRowPosition}/${String(Number.parseInt(movedFromRowPosition) + 1)}`,
-                    //columnPosition: `${movedFromColumnPosition}/${String(Number.parseInt(movedFromColumnPosition) + 1)}`,
-                    movedTo: secondarySquareIndex,
-                    //rowPosition: `${updatedRowPosition}/${String(Number.parseInt(updatedRowPosition) + 1)}`,
-                    //columnPosition: `${updatedColumnPosition}/${String(Number.parseInt(updatedColumnPosition) + 1)}`,
-                });
+                await userDb.update({ movedFrom: originalSquareIndex, movedTo: secondarySquareIndex, });
                 //potentially kill opponent piece
                 if (opponentToKill) {
                     await opponentDb.child(`pieces/${opponentToKill}`).update({ alive: false });
+                    //switch off opponent movement highlighted squares
+                    const [opponentMovedFromSquare, opponentMovedToSquare] = [window.document.querySelector('.opponent-moved-from-square'), window.document.querySelector('.opponent-moved-to-square')]; console.log(opponentMovedFromSquare, opponentMovedToSquare);
+                    opponentMovedFromSquare.classList.remove('.opponent-moved-from-square'); opponentMovedToSquare.classList.remove('opponent-moved-to-square');
+                } else {
+                    //turn|keep switch on
                 }
                 //potentially update pawns (#1🐉use boardArray) Alternative was to search for data again in db
                 const pawns = [];
