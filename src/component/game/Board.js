@@ -126,6 +126,10 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
         if (opponent.movedFrom) {
             window.document.querySelector(`#i${opponent.movedFrom}`).classList.add('opponent-moved-from-square');
             window.document.querySelector(`#i${opponent.movedTo}`).classList.add('opponent-moved-to-square');
+            setTimeout(() => {
+                window.document.querySelector(`.opponent-moved-from-square`).classList.remove('opponent-moved-from-square');
+                window.document.querySelector(`.opponent-moved-to-square`).classList.remove('opponent-moved-to-square');
+            }, 3000);
         }
     }
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton() {
