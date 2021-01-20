@@ -127,6 +127,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
             window.document.querySelector(`#i${opponent.movedFrom}`).classList.add('opponent-moved-from-square');
             window.document.querySelector(`#i${opponent.movedTo}`).classList.add('opponent-moved-to-square');
             setTimeout(() => {
+                console.log(window.document.querySelector(`.opponent-moved-from-square`), window.document.querySelector(`.opponent-moved-to-square`));
                 window.document.querySelector(`.opponent-moved-from-square`).classList.remove('opponent-moved-from-square');
                 window.document.querySelector(`.opponent-moved-to-square`).classList.remove('opponent-moved-to-square');
             }, 3000);
