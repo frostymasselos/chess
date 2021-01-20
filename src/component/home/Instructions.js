@@ -3,7 +3,7 @@ export default function Instructions({ url }) {
         <div className="instructions">
             {/* <p>Instructions</p> */}
             <p>
-                exp3
+                removes opponent-movement-highlighting if you capture opp's last-moved-piece.
                 Clicking Start New Game will direct you to a random url.
                 Share this url with another player for them to join.
                 {url ? <span><br></br>Url: {window.location.origin}/{url}</span> : null}
