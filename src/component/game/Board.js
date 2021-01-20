@@ -623,7 +623,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
             fillBoardArrayWithPieces(match.user1.pieces);
             fillBoardArrayWithPieces(match.user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            if (!(match.user1.movedTo === match.user2.movedTo)) {
+            if (!(match.user1.movedTo === match.user2.movedTo && !canMove)) {//🐉&& you've just done the killing...canMove falsey?
                 highlightOpponentMovement(match[opponent.current]);
             }
             runCSSFunctions();
