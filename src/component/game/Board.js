@@ -126,11 +126,11 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
         if (opponent.movedFrom) {
             window.document.querySelector(`#i${opponent.movedFrom}`).classList.add('opponent-moved-from-square');
             window.document.querySelector(`#i${opponent.movedTo}`).classList.add('opponent-moved-to-square');
-            setTimeout(() => {
-                console.log(window.document.querySelector(`.opponent-moved-from-square`), window.document.querySelector(`.opponent-moved-to-square`));
-                window.document.querySelector(`.opponent-moved-from-square`).classList.remove('opponent-moved-from-square');
-                window.document.querySelector(`.opponent-moved-to-square`).classList.remove('opponent-moved-to-square');
-            }, 3000);
+            // setTimeout(() => { //`highlightOpponentMovement, left alone, fires twice (once after opp's moved; once after you move). Remedy this. 
+            //     console.log(window.document.querySelector(`.opponent-moved-from-square`), window.document.querySelector(`.opponent-moved-to-square`));
+            //     window.document.querySelector(`.opponent-moved-from-square`).classList.remove('opponent-moved-from-square');
+            //     window.document.querySelector(`.opponent-moved-to-square`).classList.remove('opponent-moved-to-square');
+            // }, 3000);
         }
     }
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton() {
@@ -623,7 +623,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
             fillBoardArrayWithPieces(match.user1.pieces);
             fillBoardArrayWithPieces(match.user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            highlightOpponentMovement(match[opponent.current]);
+            if (!(match.user1.movedTo === match.user2.movedTo)) {
+                highlightOpponentMovement(match[opponent.current]);
+            }
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
