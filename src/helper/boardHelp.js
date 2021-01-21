@@ -365,7 +365,7 @@ const directionConverterObj = {
                     //white
                     const userKingSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "king");//console.log(userKingSquare);
                     const relevantRookSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "rook1");//console.log(relevantRookSquare);
-                    if (!userKingSquare.piece.moved && !relevantRookSquare.piece.moved && areSquaresEmpty([3, 2, 1], boardArray)) { // && kingMovingToTheseSquaresDoesntPutHimInCheck([3, 2], 4, boardArray, isUserKingInCheck) //🧙‍♂️it fails, for white, when all pieces that'd stop castling, for white & black, are dead. There's a recursion that goes on (only then - which is strange)
+                    if (!userKingSquare.piece.moved && !relevantRookSquare.piece.moved && areSquaresEmpty([3, 2, 1], boardArray)) { // && kingMovingToTheseSquaresDoesntPutHimInCheck([3, 2], 4, boardArray, isUserKingInCheck) //🧙‍♂️it fails, for white, when added to a white & a black. There's a recursion that goes on (only then - which is strange)
                         console.log("finalWhite");
                         legalSecondarySquareIndexes.push(2);
                         //maybe only update this for real when..castlingInfo = "left";

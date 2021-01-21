@@ -278,7 +278,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 ourColor//userColor: authInfo.color,
             }
         }
-
         for (const move of pieceMoveObj[ourColor][pieceType].direction) {//console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
@@ -342,6 +341,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
             board2[originalSquareIndex].piece = null;
             const userDb = db.ref(`matches/${authInfo.url}/${authInfo.user}`);
+            const opponentDb = db.ref(`matches/${authInfo.url}/${opponent.current}`);
             if (e.target.id === clickedOnPiece.current.id) {
                 //clicked on same square 
                 console.log("piece deselected");
@@ -422,15 +422,15 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                     } else {
                         suspectedPieceIndex = secondarySquareIndex + 8;
                     }
-                    const boardArraySuspectedSquare = boardArray.current.find((squareWithOpponentPiece) => squareWithOpponentPiece.index === suspectedPieceIndex); console.log(suspectedPieceIndex, boardArraySuspectedSquare);//squareWithOpponentPiece.index === suspectedPieceIndex //console.log(boardArrayOriginalPiece);//boardArray.current[suspectedPieceIndex]; 
+                    const boardArraySuspectedSquare = boardArray.current.find((squareWithOpponentPiece) => squareWithOpponentPiece.index === suspectedPieceIndex);//console.log(suspectedPieceIndex, boardArraySuspectedSquare);//squareWithOpponentPiece.index === suspectedPieceIndex //console.log(boardArrayOriginalPiece);//boardArray.current[suspectedPieceIndex]; 
                     if (boardArraySuspectedSquare.piece) {
+                        function isEnemyPiece() {
+                            return (opponentColor.current === "white" && boardArraySuspectedSquare.piece.white) || (opponentColor.current === "black" && !boardArraySuspectedSquare.piece.white) ? true : false
+                        }
                         if (boardArraySuspectedSquare.piece.name.includes("pawn") && isEnemyPiece() && boardArraySuspectedSquare.piece.justMoved2Squares) {//enemyPieceBehindMe
                             console.log("ENPASSANT");
                             //return: opp's pawn-piece's name or falsey value. 
                             return boardArraySuspectedSquare.piece.name;
-                        }
-                        function isEnemyPiece() {
-                            return (opponentColor.current === "white" && boardArraySuspectedSquare.piece.white) || (opponentColor.current === "black" && !boardArraySuspectedSquare.piece.white) ? true : false
                         }
                     }
                 }
@@ -469,7 +469,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             //send this info to db full grid-area property to dB property. 
             async function publishMoveToDb(opponentToKill) {
                 //update user piece's coordinates
-                let opponentDb = db.ref(`matches/${authInfo.url}/${opponent.current}`);
                 let updatedRowPosition = window.getComputedStyle(secondarySquareTag).getPropertyValue(`grid-row`).slice(0, 1); //console.log(secondarySquareTag, updatedRowPosition, window.getComputedStyle(secondarySquareTag)); console.log(secondarySquareTag.style.gridRow);
                 if (!updatedRowPosition) {
                     //console.log('here');
@@ -492,7 +491,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 if (opponentToKill) {
                     await opponentDb.child(`pieces/${opponentToKill}`).update({ alive: false });
                     //switch off opponent movement highlighted squares
-                    const [opponentMovedFromSquare, opponentMovedToSquare] = [window.document.querySelector('.opponent-moved-from-square'), window.document.querySelector('.opponent-moved-to-square')]; console.log(opponentMovedFromSquare, opponentMovedToSquare);
+                    const [opponentMovedFromSquare, opponentMovedToSquare] = [window.document.querySelector('.opponent-moved-from-square'), window.document.querySelector('.opponent-moved-to-square')];//console.log(opponentMovedFromSquare, opponentMovedToSquare);
                     opponentMovedFromSquare.classList.remove('.opponent-moved-from-square'); opponentMovedToSquare.classList.remove('opponent-moved-to-square');
                 } else {
                     //turn|keep switch on
@@ -667,7 +666,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             fillBoardArrayWithPieces(match.user1.pieces);
             fillBoardArrayWithPieces(match.user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            if (!(match.user1.movedTo === match.user2.movedTo && !canMove)) {//🐉&& you've just done the killing...canMove falsey?
+            if (canMove) { //!(match.user1.movedTo === match.user2.movedTo && !canMove)
                 highlightOpponentMovement(match[opponent.current]);
             }
             runCSSFunctions();
