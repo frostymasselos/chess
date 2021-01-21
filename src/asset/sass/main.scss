@@ -120,8 +120,11 @@ img {
   > a {
     height: 100%;
     @include grid-container-horizontally-and-vertically-center-GIs(var(--header-height) var(--header-height), 100%);
-    > *:nth-child(2) {
-      // background-color: #ff4136;
+    > *:first-child {
+      justify-self: end;
+    }
+    > *:last-child {
+      justify-self: start;
       display: inline-block;
       -moz-transform: scale(-1, 1);
       -webkit-transform: scale(-1, 1);

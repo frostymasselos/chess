@@ -3,7 +3,7 @@ export default function Instructions({ url }) {
         <div className="instructions">
             {/* <p>Instructions</p> */}
             <p>
-                removes opponent-movement-highlighting if you capture opp's last-moved-piece.
+                castling (not respecting king can't pass over squares that'd check him)
                 Clicking Start New Game will direct you to a random url.
                 Share this url with another player for them to join.
                 {url ? <span><br></br>Url: {window.location.origin}/{url}</span> : null}

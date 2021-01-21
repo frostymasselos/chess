@@ -90,7 +90,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 rowPosition: '8/9',
                 columnPosition: '1/2',
                 alive: true,
-                neverMoved: true,
+                moved: false,
                 name: "rook1",
             },
             "rook2": {
@@ -98,7 +98,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 rowPosition: '8/9',
                 columnPosition: '8/9',
                 alive: true,
-                neverMoved: true,
+                moved: false,
                 name: "rook2",
             },
             "knight1": {
@@ -134,7 +134,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 rowPosition: '8/9',
                 columnPosition: '5/6',
                 alive: true,
-                neverMoved: true,
+                moved: false,
                 name: "king",
             },
             "queen": {
@@ -238,7 +238,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 rowPosition: '1/2',
                 columnPosition: '8/9',
                 alive: true,
-                neverMoved: true,
+                moved: false,
                 name: "rook1",
             },
             "rook2": {
@@ -246,7 +246,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 rowPosition: '1/2',
                 columnPosition: '1/2',
                 alive: true,
-                neverMoved: true,
+                moved: false,
                 name: "rook2",
             },
             "knight1": {
@@ -282,7 +282,7 @@ let bigObj = { //have a demo like this ready in db (that can't be deleted) that 
                 rowPosition: '1/2',
                 columnPosition: '5/6',
                 alive: true,
-                neverMoved: true,
+                moved: false,
                 name: "king",
             },
             "queen": {

@@ -80,7 +80,14 @@ img {
   place-items: center;
 }
 
-.header > a > *:nth-child(2) {
+.header > a > *:first-child {
+  -ms-grid-column-align: end;
+      justify-self: end;
+}
+
+.header > a > *:last-child {
+  -ms-grid-column-align: start;
+      justify-self: start;
   display: inline-block;
   -webkit-transform: scale(-1, 1);
   transform: scale(-1, 1);

@@ -4,7 +4,7 @@ import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 
-function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }) {
+function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, reset, }) {
 
     let [squareTags, setSquareTags] = useState([]);//could add it directly to DOM w/vanilla
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
@@ -265,18 +265,24 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
     function arrayOfGeographicallyLegalSquares(pieceId, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color) {
         const allLegalSecondarySquareIndexes = [];
         const pieceType = Object.keys(pieceMoveObj.white).find((key) => pieceId.includes(`${key}`));//console.log("pieceType:", pieceType);
-        let total = '';
+        let miscInfo = '';
+        let total = pieceMoveObj[ourColor][pieceType].total.primary;//console.log("total:", total);;
         if (pieceType === "pawn") {
             let squareWithPawnPiece = squaresWithUserPieces.find((squareWithUserPiece) => squareWithUserPiece.index === originalSquareIndex);//console.log("squareWithPawnPiece", squareWithPawnPiece);
             squareWithPawnPiece.piece.moved > 0 ? total = 1 : total = 2;
-        } else {
-            total = pieceMoveObj[ourColor][pieceType].total.primary;//console.log("total:", total);
+        } else if (pieceType === "king") {
+            miscInfo = {
+                check,
+                isUserKingInCheck,
+                boardArray: boardArray.current,
+                ourColor//userColor: authInfo.color,
+            }
         }
 
         for (const move of pieceMoveObj[ourColor][pieceType].direction) {//console.log("move:", move);
             for (const direction in directionConverterObj) {
                 if (move === direction) {
-                    const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces); //console.log(moveLegalSecondaryIndexes);  
+                    const moveLegalSecondaryIndexes = directionConverterObj[direction].funcPrimary(total, originalSquareIndex, squaresWithUserPieces, squaresWithOpponentPieces, miscInfo); //console.log(moveLegalSecondaryIndexes);  
                     moveLegalSecondaryIndexes.forEach((index) => allLegalSecondarySquareIndexes.push(index))
                 }
             }
@@ -294,9 +300,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
     function isUserKingInCheck(board = boardArray.current, ourColor = authInfo.color, enemyColor = opponentColor.current) {
         //square index of user king
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board, ourColor);
-        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
-        let squareIndexOfUserKing = ''; squaresWithUserPieces.forEach((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); //console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
-        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); //console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; console.log(squaresWithUserPieces); console.log(squaresWithOpponentPieces);
+        let squareIndexOfUserKing = ''; squaresWithUserPieces.forEach((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
+        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareIndexOfOpponentPiece) => legalSquareIndexOfOpponentPiece === squareIndexOfUserKing);
     }
     function isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color, enemyColor = opponentColor.current) {
@@ -367,6 +373,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
             }
             //check for check. imagine original piece has successfully moved to secondary square.
             if (isUserKingInCheck(board2)) {
+                //console.log(board2);
                 console.log("illegal move - king is in check");
                 e.preventDefault();
                 return;
@@ -382,8 +389,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
             if (e.target.dataset.square) {
                 //second square is an empty square
                 let emptySquare = e.target;
-                emptySquare.append(originalPiece);//console.log(emptySquare, originalPiece, secondarySquareTag);
-                console.log("secondaryEl is an empty square:", e.target);
+                emptySquare.append(originalPiece);//console.log(emptySquare, originalPiece, secondarySquareTag);console.log("secondaryEl is an empty square:", e.target);
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`)) {
                     boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
@@ -491,7 +497,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
                 } else {
                     //turn|keep switch on
                 }
-                //potentially update pawns (#1🐉use boardArray) Alternative was to search for data again in db
+                //potentially update pawns (🐉refactor to use boardArray) Alternative was to search for data again in db.
                 const pawns = [];
                 for (const key in matchRef.current[authInfo.user].pieces) {
                     if (key.includes("pawn")) {
@@ -504,7 +510,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
                         userDb.child(`pieces/${pawn.name}`).update({ justMoved2Squares: false });
                     }
                 });
-
                 //potentially update pawn
                 if (boardArrayOriginalPiece.name.includes(`pawn`) && (boardArrayOriginalPiece.moved < 2)) {//🐉changing..
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: boardArrayOriginalPiece.moved + 1 });
@@ -517,6 +522,63 @@ function Board({ children, db, authInfo, canMove, setCanMove, setCheck, reset, }
                     pieceToPromotePawnTo.current = '';
                     await userDb.update({ pawnPromotionNumber: authInfo.pawnPromotionNumber + 1 });
                 }
+                //potentially update rook or king
+                if (boardArrayOriginalPiece.name.includes(`rook`) && !boardArrayOriginalPiece.moved || boardArrayOriginalPiece.name.includes(`king`) && !boardArrayOriginalPiece.moved) {
+                    await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: true });
+                }
+                //potentially update rook for castling
+                if (boardArrayOriginalPiece.name.includes(`king`) && ((originalSquareIndex - secondarySquareIndex === 2) || originalSquareIndex - secondarySquareIndex === -2)) {
+                    if (originalSquareIndex - secondarySquareIndex === 2) {
+                        //king-moved-absolutely-left
+                        if (authInfo.color === "white") { //🐉abstract this into a function?
+                            //white
+                            //changeUI of castle
+                            //const relevantCastleSquare = window.document.querySelector(`#i0`); console.log(relevantCastleSquare);
+                            const relevantCastle = window.document.querySelector(`#whiterook1`);//console.log(relevantCastle);
+                            const newSquareForCastle = window.document.querySelector(`#i3`);//console.log(newSquareForCastle);
+                            newSquareForCastle.append(relevantCastle);
+                            //change db of castle (position & moved status)
+                            await userDb.child(`pieces/rook1`).update({
+                                columnPosition: "4/5",
+                                moved: true,
+                            });
+                        } else {
+                            //black
+                            const relevantCastle = window.document.querySelector(`#blackrook2`);//console.log(relevantCastle);
+                            const newSquareForCastle = window.document.querySelector(`#i59`);//console.log(newSquareForCastle);
+                            newSquareForCastle.append(relevantCastle);
+                            //change db of castle (position & moved status)
+                            await userDb.child(`pieces/rook2`).update({
+                                columnPosition: "4/5",
+                                moved: true,
+                            });
+                        }
+                    } else {
+                        //king-moved-absolutely-right
+                        if (authInfo.color === "white") {
+                            //white
+                            const relevantCastle = window.document.querySelector(`#whiterook2`);//console.log(relevantCastle);
+                            const newSquareForCastle = window.document.querySelector(`#i5`);//console.log(newSquareForCastle);
+                            newSquareForCastle.append(relevantCastle);
+                            //change db of castle (position & moved status)
+                            await userDb.child(`pieces/rook2`).update({
+                                columnPosition: "6/7",
+                                moved: true,
+                            });
+                        } else {
+                            //black
+                            const relevantCastle = window.document.querySelector(`#blackrook1`);//console.log(relevantCastle);
+                            const newSquareForCastle = window.document.querySelector(`#i61`);//console.log(newSquareForCastle);
+                            newSquareForCastle.append(relevantCastle);
+                            //change db of castle (position & moved status)
+                            await userDb.child(`pieces/rook1`).update({
+                                columnPosition: "6/7",
+                                moved: true,
+                            });
+                        }
+                    }
+                }
+
                 clickedOnPiece.current = false;//⚠️used to be under 'EXECUTING USER'S CLICK'
                 setCanMove(false);//boardTag.classList.add(`unclickable`);
                 await userDb.update({ canMove: false, moved: Math.random() });

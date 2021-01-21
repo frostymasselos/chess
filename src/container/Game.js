@@ -362,7 +362,7 @@ function Game({ params }) {
                     {waiting && <Waiting />}
                     {user2SignedIn && <TurnNotifier canMove={canMove} check={check} />}
                 </div>
-                <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} setCheck={setCheck} reset={reset}>
+                <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} check={check} setCheck={setCheck} reset={reset}>
                     <div className="nav-buttons">
                         {playing && <Exit />}
                         {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth} />}
