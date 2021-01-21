@@ -19,7 +19,8 @@ $white-piece-filter: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) 
 $black-piece-filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
 $clicked-on-piece-color: #85144b;
 $clicked-on-piece-filter: invert(14%) sepia(55%) saturate(3565%) hue-rotate(311deg) brightness(93%) contrast(99%);
-$significant-button: #ffdc00;
+$significant-button: #ff851b;//#ffdc00;
+$yellow: #ffdc00; //tetradic pink for yellow: #FF00A2
 $light-grey: #dddddd;
 html {
   font-size: 20px;
@@ -44,8 +45,8 @@ html {
   place-items: center;
 }
 @mixin button {
-  background-color: $dark-square;
-  border: solid 3px brown;
+  background-color: $yellow;//$dark-square;
+  border: solid 3px brown;//$dark-square; //#9F8900(htmlcolorcodes 3rd shade)  #FF00A2;//#900C3F;//brown;
   width: 90%;
   max-width: 380px; //400
   height: $button-min-height; //100%
@@ -54,7 +55,7 @@ html {
   // margin-bottom: $lh / 2;
   @include grid-container-horizontally-and-vertically-center-GIs();
   &:hover {
-    background-image: linear-gradient($dark-square, brown);
+    background-image: linear-gradient($yellow, $dark-square);//brown $dark-square brown
   }
 }
 @mixin board-info-button {
@@ -120,6 +121,10 @@ img {
   > a {
     height: 100%;
     @include grid-container-horizontally-and-vertically-center-GIs(var(--header-height) var(--header-height), 100%);
+    > * {
+      height: 90%;
+      width: 90%;
+    }
     > *:first-child {
       justify-self: end;
     }
@@ -184,8 +189,9 @@ img {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #root .warning-button {
   background-color: $potential-opponent-square;
+  // border-color: #4F0080;
   &:hover {
-    background-image: linear-gradient($potential-opponent-square, brown);
+    background-image: linear-gradient($potential-opponent-square, brown);//brown
   }
 }
 #root .significant-button {

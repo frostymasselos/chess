@@ -80,6 +80,11 @@ img {
   place-items: center;
 }
 
+.header > a > * {
+  height: 90%;
+  width: 90%;
+}
+
 .header > a > *:first-child {
   -ms-grid-column-align: end;
       justify-self: end;
@@ -193,7 +198,7 @@ img {
 }
 
 .home-grid-container .new-game {
-  background-color: #ff851b;
+  background-color: #ffdc00;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -212,12 +217,12 @@ img {
 }
 
 .home-grid-container .new-game:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
-  background-image: linear-gradient(#ff851b, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(#ff851b));
+  background-image: linear-gradient(#ffdc00, #ff851b);
 }
 
 .home-grid-container .resume-game {
-  background-color: #ff851b;
+  background-color: #ffdc00;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -236,12 +241,12 @@ img {
 }
 
 .home-grid-container .resume-game:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
-  background-image: linear-gradient(#ff851b, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(#ff851b));
+  background-image: linear-gradient(#ffdc00, #ff851b);
 }
 
 .home-grid-container .home-terminate-game {
-  background-color: #ff851b;
+  background-color: #ffdc00;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -260,8 +265,8 @@ img {
 }
 
 .home-grid-container .home-terminate-game:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
-  background-image: linear-gradient(#ff851b, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(#ff851b));
+  background-image: linear-gradient(#ffdc00, #ff851b);
 }
 
 .game-container {
@@ -281,7 +286,7 @@ img {
 }
 
 .floating-home-button {
-  background-color: #ff851b;
+  background-color: #ffdc00;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -301,12 +306,12 @@ img {
 }
 
 .floating-home-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
-  background-image: linear-gradient(#ff851b, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(#ff851b));
+  background-image: linear-gradient(#ffdc00, #ff851b);
 }
 
 .exit-game-button {
-  background-color: #ff851b;
+  background-color: #ffdc00;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -326,8 +331,8 @@ img {
 }
 
 .exit-game-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
-  background-image: linear-gradient(#ff851b, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(#ff851b));
+  background-image: linear-gradient(#ffdc00, #ff851b);
 }
 
 .exit-game-button > a {
@@ -341,7 +346,7 @@ img {
 }
 
 .game-terminate-game-button {
-  background-color: #ff851b;
+  background-color: #ffdc00;
   border: solid 3px brown;
   width: 90%;
   max-width: 380px;
@@ -361,8 +366,8 @@ img {
 }
 
 .game-terminate-game-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
-  background-image: linear-gradient(#ff851b, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(#ff851b));
+  background-image: linear-gradient(#ffdc00, #ff851b);
 }
 
 .opponent-quits-page-container {
@@ -445,13 +450,13 @@ img {
 }
 
 .piece-image {
-  width: 90%;
-  height: 90%;
+  width: 80%;
+  height: 80%;
 }
 
 .pawn-image {
-  width: 80%;
-  height: 80%;
+  width: 75%;
+  height: 75%;
 }
 
 .board-metric-buttons-nav-buttons-flex-container {
@@ -499,11 +504,11 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .opponent-moved-from-square {
-  background-color: #ffdc00;
+  background-color: #ff851b;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .opponent-moved-to-square {
-  background-color: #ffdc00;
+  background-color: #ff851b;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserSquare {
@@ -761,11 +766,11 @@ img {
 }
 
 #root .significant-button {
-  background-color: #ffdc00;
+  background-color: #ff851b;
 }
 
 #root .significant-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffdc00), to(brown));
-  background-image: linear-gradient(#ffdc00, brown);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
+  background-image: linear-gradient(#ff851b, brown);
 }
 /*# sourceMappingURL=main.css.map */

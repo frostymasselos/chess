@@ -899,17 +899,17 @@ function returnPieceEmoji(name) {//console.log(name);
     name = name.replace(/\d/, '');
     switch (name) {
         case "pawn":
-            return sparsePawn;
+            return fatPawn;
         case "rook":
-            return sparseRook;
+            return fatRook;
         case "knight":
-            return sparseKnight;
+            return fatKnight;
         case "bishop":
-            return sparseBishop;
+            return fatBishop;
         case "queen":
-            return sparseQueen;
+            return fatQueen;
         case "king":
-            return sparseKing;
+            return fatKing;
         default:
             console.log("no match found!");
     }
