@@ -54,7 +54,7 @@
     
     width: 100vw; max-width: var(--board-dimension-limit);
     height: 100vw; max-height: var(--board-dimension-limit);
-    border: inset darken($dark-square, 30%) calc(var(--board-height) * 0.02);//$dark-square
+    border: inset darken($dark-square, 30%) calc(var(--board-height) * 0.02);//$dark-square //30% //1%
 
     @include grid-container-template(repeat(8, 12.5%), repeat(8, 12.5%));
     //all squares
@@ -69,10 +69,10 @@
       background-color: $dark-square;
     }
     .opponent-moved-from-square {
-      background-color: $significant-button;
+      background-color: var(--opponent-moved-from-square);
     }
     .opponent-moved-to-square {
-      background-color: $significant-button;
+      background-color: var(--opponent-moved-to-square);
     }
     > .potentialUserSquare {
       background-image: linear-gradient(

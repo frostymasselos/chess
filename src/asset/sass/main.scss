@@ -3,13 +3,20 @@ $tablet: 768px;
 $laptop: 1024px;
 $wide: 1440px;
 
+//MAGNUS
+//Acceptable 'one-offs':
+//orange...
+
 $lh: 1.4rem; //(28px)
 $button-min-height: $lh * 3;
 $orange: #FF851B; //FB8B24
+$colors-blue: #0074D9;
+$colors-aqua: #7FDBFF;
 $header-color: #dddddd;
 $footer-color: #090B19;////#001f3f; //dark-sienna(brown):#3C1518 bluegrey:#090B19 brown#1F0812 indigo:#133C55 green:#012622 
 $footer-info-color: white;//darkorchid;
-$dark-square: #7897cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 Magnus'-blue:#7897cb; GOOD COMBINATION: $orange & brown (#9B2915) $orange & #925E78
+$dark-square: #78b0cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 Magnus'-blue:#7897cb #78a9cb #78b0cb(chosen) #6490a7(dark-taken) #308298(light-taken) Magnus-comp(orange):#cba278 TINTS:(Magnus' one)#3e97b0; SHADES:#5A8498 #4B6E7F #3C5866 #2D424C TINTS: light-teal(#71cfc69c)
+                          //GOOD COMBINATION: $orange & brown (#9B2915) $orange & #925E78
 $light-square: grey;//#ff851b; #925E78 violet-webFF84E8 light-greenBAB700 golden-rodE6AF2E lavaC81D25 purplemunselB118C8 greyishbrown#835c3b
 $button-hover: brown;
 $potential-user-square: #0074d9;//#0074d9;
@@ -32,6 +39,9 @@ html {
   --header-height: calc(12.5 * var(--vh));//12.5vh//10
   --footer-height: calc(17.5 * var(--vh));//17.5vh;//16 ( = golden ratio w/title?)
   --light-brown: #bc875f; --light-beige: #f3d8b2; --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
+  --light-grey: #808080;
+  --opponent-moved-from-square: hsl(220 100% 75% / 1); //in-order-of-winner-to-loser: $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); $another-violet:#76a9ffhsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a gold:#cbc478 #cb9a78 $colors-aqua; 
+  --opponent-moved-to-square: hsl(220 100% 75% / 1);
 }
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
 /////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////

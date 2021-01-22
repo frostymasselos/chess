@@ -8,6 +8,9 @@ html {
   --light-brown: #bc875f;
   --light-beige: #f3d8b2;
   --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
+  --light-grey: #808080;
+  --opponent-moved-from-square: hsl(220 100% 75% / 1);
+  --opponent-moved-to-square: hsl(220 100% 75% / 1);
 }
 
 *,
@@ -479,7 +482,7 @@ img {
   max-width: var(--board-dimension-limit);
   height: 100vw;
   max-height: var(--board-dimension-limit);
-  border: inset #2f4b7b calc(var(--board-height) * 0.02);
+  border: inset #2f627b calc(var(--board-height) * 0.02);
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (12.5%)[8];
@@ -504,15 +507,15 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .black-square {
-  background-color: #7897cb;
+  background-color: #78b0cb;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .opponent-moved-from-square {
-  background-color: #ff851b;
+  background-color: var(--opponent-moved-from-square);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .opponent-moved-to-square {
-  background-color: #ff851b;
+  background-color: var(--opponent-moved-to-square);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserSquare {
@@ -719,7 +722,7 @@ img {
 }
 
 .pawn-promotion-container .pawn-promotion-grid-container-color-white {
-  background-color: #7897cb;
+  background-color: #78b0cb;
 }
 
 .pawn-promotion-container .pawn-promotion-grid-container > * {

@@ -126,11 +126,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
         if (opponent.movedFrom) {
             window.document.querySelector(`#i${opponent.movedFrom}`).classList.add('opponent-moved-from-square');
             window.document.querySelector(`#i${opponent.movedTo}`).classList.add('opponent-moved-to-square');
-            // setTimeout(() => { //`highlightOpponentMovement, left alone, fires twice (once after opp's moved; once after you move). Remedy this. 
-            //     console.log(window.document.querySelector(`.opponent-moved-from-square`), window.document.querySelector(`.opponent-moved-to-square`));
-            //     window.document.querySelector(`.opponent-moved-from-square`).classList.remove('opponent-moved-from-square');
-            //     window.document.querySelector(`.opponent-moved-to-square`).classList.remove('opponent-moved-to-square');
-            // }, 3000);
+        }
+    }
+    function highlightYourMovement(you) {
+        if (you.movedFrom) {
+            window.document.querySelector(`#i${you.movedFrom}`).classList.add('opponent-moved-from-square');
+            window.document.querySelector(`#i${you.movedTo}`).classList.add('opponent-moved-to-square');
         }
     }
     function decideToTurnOnOrOffClickedOnPiecePotentialMovesButton() {
@@ -668,6 +669,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             renderPieces();
             if (canMove) { //!(match.user1.movedTo === match.user2.movedTo && !canMove)
                 highlightOpponentMovement(match[opponent.current]);
+            }
+            if (!canMove) {
+                highlightYourMovement(match[authInfo.user]);
             }
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
