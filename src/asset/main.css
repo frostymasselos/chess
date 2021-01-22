@@ -496,7 +496,7 @@ img {
           align-items: center;
   line-height: calc(var(--board-height) * 0.125);
   font-size: calc((var(--board-height) * 0.125) * 1.5);
-  background-color: brown;
+  background-color: #835c3b;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .black-square {
