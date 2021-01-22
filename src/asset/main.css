@@ -5,6 +5,9 @@ html {
   --button-min-width: 100px;
   --header-height: calc(12.5 * var(--vh));
   --footer-height: calc(17.5 * var(--vh));
+  --light-brown: #bc875f;
+  --light-beige: #f3d8b2;
+  --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
 }
 
 *,
@@ -476,6 +479,7 @@ img {
   max-width: var(--board-dimension-limit);
   height: 100vw;
   max-height: var(--board-dimension-limit);
+  border: inset #2f4b7b calc(var(--board-height) * 0.02);
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (12.5%)[8];
@@ -496,11 +500,11 @@ img {
           align-items: center;
   line-height: calc(var(--board-height) * 0.125);
   font-size: calc((var(--board-height) * 0.125) * 1.5);
-  background-color: #835c3b;
+  background-color: grey;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .black-square {
-  background-color: #FF851B;
+  background-color: #7897cb;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .opponent-moved-from-square {
@@ -715,7 +719,7 @@ img {
 }
 
 .pawn-promotion-container .pawn-promotion-grid-container-color-white {
-  background-color: #FF851B;
+  background-color: #7897cb;
 }
 
 .pawn-promotion-container .pawn-promotion-grid-container > * {

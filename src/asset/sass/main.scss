@@ -6,10 +6,11 @@ $wide: 1440px;
 $lh: 1.4rem; //(28px)
 $button-min-height: $lh * 3;
 $orange: #FF851B; //FB8B24
-$footer-color: #090B19;////#001f3f; //dark-sienna(brown):#3C1518 blue:#090B19 brown#1F0812 indigo:#133C55 green:#012622 
+$header-color: #dddddd;
+$footer-color: #090B19;////#001f3f; //dark-sienna(brown):#3C1518 bluegrey:#090B19 brown#1F0812 indigo:#133C55 green:#012622 
 $footer-info-color: white;//darkorchid;
-$dark-square: $orange;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 GOOD COMBINATION: $orange & brown (#9B2915) $orange & #925E78
-$light-square: #835c3b;//#ff851b; #925E78 violet-webFF84E8 light-greenBAB700 golden-rodE6AF2E lavaC81D25 purplemunselB118C8 greyishbrown#835c3b
+$dark-square: #7897cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 Magnus'-blue:#7897cb; GOOD COMBINATION: $orange & brown (#9B2915) $orange & #925E78
+$light-square: grey;//#ff851b; #925E78 violet-webFF84E8 light-greenBAB700 golden-rodE6AF2E lavaC81D25 purplemunselB118C8 greyishbrown#835c3b
 $button-hover: brown;
 $potential-user-square: #0074d9;//#0074d9;
 $potential-opponent-square: #ff4136;
@@ -30,6 +31,7 @@ html {
   --button-min-width: 100px;
   --header-height: calc(12.5 * var(--vh));//12.5vh//10
   --footer-height: calc(17.5 * var(--vh));//17.5vh;//16 ( = golden ratio w/title?)
+  --light-brown: #bc875f; --light-beige: #f3d8b2; --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
 }
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
 /////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////
@@ -116,7 +118,7 @@ img {
 .header {
   height: var(--header-height);
   font-size: calc(var(--header-height) * 0.75); //60px
-  background-color: #dddddd;
+  background-color: $header-color;
   @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
   align-items: stretch;
   > a {
