@@ -251,9 +251,15 @@
         flex: 0 1 auto;
         flex-direction: row;
         justify-content: space-evenly;//space-between;
-        column-gap: $lh * 0.5;
+        // column-gap: $lh * 0.5;
         > * {
           width: 285px;//flex-basis: 285px//45%; calc(var(--board-height) * 0.333);
+        }
+        > *:first-child {
+          margin-right: $lh * 0.5;
+        }
+        > *:last-child {
+          margin-left: $lh * 0.5;
         }
       }
     }

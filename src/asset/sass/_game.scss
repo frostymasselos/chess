@@ -3,6 +3,7 @@
 }
 
 .game-text {
+  width: var(--width-of-text-containers); margin: 0 auto;
   display: flow-root;
   > * {
     text-align: center;

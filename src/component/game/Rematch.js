@@ -1,10 +1,10 @@
-import {useState} from 'react';
+import { useState } from 'react';
 
-export default function Rematch({indicateInterestInRematch}) {
+export default function Rematch({ indicateInterestInRematch }) {
 
     return (
         <>
-            <div className="floating-home-button request-rematch-button button significant-button" onClick={indicateInterestInRematch}> 
+            <div className="floating-home-button request-rematch-button button" onClick={indicateInterestInRematch}>
                 Request rematch
             </div>
         </>

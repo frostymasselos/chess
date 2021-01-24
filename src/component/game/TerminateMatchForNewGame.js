@@ -1,10 +1,10 @@
-import {Link} from 'react-router-dom';
-import {useState, useEffect, useRef} from 'react';
+import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 
-function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebase, cssFunctions, unmountCSSFunctions}) { 
+function TerminateMatchForNewGame({ intruderInfo, setArbitrary, db, auth, firebase, cssFunctions, unmountCSSFunctions }) {
 
     const intruderUrl = useRef(intruderInfo.email.slice(0, 6));
-    
+
     async function backToIntrudersGame() {//console.log(intruderInfo.url);
         window.location.replace(`/${intruderUrl.current}`);//even though you nav to a different url, using `Link` to nav doesn't 'update' Game. Try arbitrarily refresh?🐉
     }
@@ -13,7 +13,7 @@ function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebas
             authListener();
             const credential = firebase.auth.EmailAuthProvider.credential(`${intruderInfo.email}`, `${intruderUrl.current}`);
             await auth.currentUser.reauthenticateWithCredential(credential);
-            await db.ref(`matches/${intruderUrl.current}/${intruderInfo.user}`).update({quit: true});
+            await db.ref(`matches/${intruderUrl.current}/${intruderInfo.user}`).update({ quit: true });
             await db.ref(`matches/${intruderUrl.current}`).remove();
             await auth.currentUser.delete();
             //ARBRITRARILY TRIGGER STATE IN GAME
@@ -28,7 +28,7 @@ function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebas
             console.log("unmounting");
             unmountCSSFunctions();
             // window.removeEventListener('resize', roundCornersOfButtons);✅
-        }; 
+        };
     }, []);
 
     return (
@@ -38,7 +38,7 @@ function TerminateMatchForNewGame({intruderInfo, setArbitrary, db, auth, firebas
                 <div className="floating-home-button button" onClick={backToIntrudersGame}>
                     Go back to your game
                 </div>
-                <div className="floating-home-button button significant-button" onClick={terminateMatchForNewGame}>
+                <div className="floating-home-button button warning-button" onClick={terminateMatchForNewGame}>
                     Join this game<br></br>(WARNING: this deletes current game)
                 </div>
             </div>

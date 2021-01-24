@@ -1,4 +1,4 @@
-import bigObj from '../helper/secondDb';
+import bigObj from '../helper/db';
 import { useState, useEffect, useRef } from 'react';
 import Test from '../component/Test.js';
 import ErrorPage from '../component/game/ErrorPage.js';

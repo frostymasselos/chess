@@ -38,7 +38,7 @@ $exit-button-color: #cb78aebd;
 $resume-button-color: #ffc630;
 $potential-user-square: $vine-green; //blue: #363cff;//$colors-blue;
 $potential-opponent-square: #ff4136;
-$potential-clicked-on-piece-square: #85144b;//
+$potential-clicked-on-piece-square: #85144b;
 $white-piece-color: $beige;//white;
 $black-piece-color: black;
 $white-piece-filter: invert(90%) sepia(15%) saturate(799%) hue-rotate(341deg) brightness(99%) contrast(95%);//white: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
@@ -53,15 +53,16 @@ html {
   font-size: 28px;//20px;
   // background-image: url('https://images.unsplash.com/photo-1525034687081-c702010cb70d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8d29vZCUyMHRleHR1cmV8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80') ;//url('https://www.psdgraphics.com/file/light-wooden-background.jpg');
   --vh100: calc(100 * var(--vh));
-  --margin-from-containing-block: 20px;
+  --margin-from-containing-block: 20px;//?
+  --width-of-text-containers: 90%;
   --button-min-width: 100px;
   --header-height: calc(12.5 * var(--vh));//12.5vh//10
   --footer-height: calc(17.5 * var(--vh));//17.5vh;//16 ( = golden ratio w/title?)
   --light-brown: #bc875f; --light-beige: #f3d8b2; --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
   --light-grey: #808080;
   --yousef-Dark: #0D0221;
-  --opponent-moved-from-square: hsl(220 100% 75% / 1); //in-order-of-winner-to-loser: $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); $another-violet:#76a9ffhsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a gold:#cbc478 #cb9a78 $colors-aqua; 
-  --opponent-moved-to-square: hsl(220 100% 75% / 1);
+  --opponent-moved-from-square: $clicked-on-piece-color; //in-order-of-winner-to-loser: $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); $another-violet:#76a9ffhsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a gold:#cbc478 #cb9a78 $colors-aqua; 
+  --opponent-moved-to-square: $clicked-on-piece-color;
 }
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
 /////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////
@@ -230,9 +231,9 @@ img {
     background-image: linear-gradient($potential-opponent-square, brown);//brown
   }
 }
-#root .significant-button {
-  background-color: $significant-button;
-  &:hover {
-    background-image: linear-gradient($significant-button, brown);
-  }
-}
+// #root .significant-button {
+//   background-color: $significant-button;
+//   &:hover {
+//     background-image: linear-gradient($significant-button, brown);
+//   }
+// }

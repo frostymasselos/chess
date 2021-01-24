@@ -1,5 +1,5 @@
 // import Test from '../component/Test.js';
-import bigObj from '../helper/secondDb';
+import bigObj from '../helper/db';
 import Header from '../component/home/Header';
 import Instructions from '../component/home/Instructions';
 import StartNewGame from '../component/home/StartNewGame';

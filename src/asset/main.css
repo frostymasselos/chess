@@ -8,6 +8,7 @@ html {
   font-size: 28px;
   --vh100: calc(100 * var(--vh));
   --margin-from-containing-block: 20px;
+  --width-of-text-containers: 90%;
   --button-min-width: 100px;
   --header-height: calc(12.5 * var(--vh));
   --footer-height: calc(17.5 * var(--vh));
@@ -16,8 +17,8 @@ html {
   --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
   --light-grey: #808080;
   --yousef-Dark: #0D0221;
-  --opponent-moved-from-square: hsl(220 100% 75% / 1);
-  --opponent-moved-to-square: hsl(220 100% 75% / 1);
+  --opponent-moved-from-square: $clicked-on-piece-color;
+  --opponent-moved-to-square: $clicked-on-piece-color;
 }
 
 *,
@@ -196,7 +197,7 @@ img {
 }
 
 .home-grid-container > * {
-  width: 90%;
+  width: var(width-of-text-containers);
   max-width: 500px;
   margin-bottom: 0.5rem;
 }
@@ -294,6 +295,8 @@ img {
 }
 
 .game-text {
+  width: var(--width-of-text-containers);
+  margin: 0 auto;
   display: flow-root;
 }
 
@@ -727,11 +730,15 @@ img {
     -webkit-box-pack: space-evenly;
         -ms-flex-pack: space-evenly;
             justify-content: space-evenly;
-    -webkit-column-gap: 0.5rem;
-            column-gap: 0.5rem;
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > * {
     width: 285px;
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > *:first-child {
+    margin-right: 0.5rem;
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > *:last-child {
+    margin-left: 0.5rem;
   }
 }
 
@@ -809,14 +816,5 @@ img {
 #root .warning-button:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#ff4136), to(brown));
   background-image: linear-gradient(#ff4136, brown);
-}
-
-#root .significant-button {
-  background-color: #ff851b;
-}
-
-#root .significant-button:hover {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff851b), to(brown));
-  background-image: linear-gradient(#ff851b, brown);
 }
 /*# sourceMappingURL=main.css.map */
