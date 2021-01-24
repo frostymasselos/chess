@@ -30,9 +30,9 @@ $header-color: transparent;//#dddddd;
 $footer-color: #090B19;////#001f3f; //dark-sienna(brown):#3C1518 bluegrey:#090B19 brown#1F0812 indigo:#133C55 green:#012622 
 $footer-filter: invert(6%) sepia(13%) saturate(2281%) hue-rotate(194deg) brightness(93%) contrast(103%);
 $footer-info-color: white;//darkorchid;
-$dark-square: #78b0cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 Magnus'-blue:#7897cb #78a9cb #78b0cb(chosen) #6490a7(dark-taken) #308298(light-taken) Magnus-comp(orange):#cba278 TINTS:(Magnus' one)#3e97b0; SHADES:#5A8498 #4B6E7F #3C5866 #2D424C TINTS: light-teal(#71cfc69c)
+$dark-square: grey;//#ff851b; #925E78 violet-webFF84E8 light-greenBAB700 golden-rodE6AF2E lavaC81D25 purplemunselB118C8 greyishbrown#835c3b
+$light-square: #78b0cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 Magnus'-blue:#7897cb #78a9cb #78b0cb(chosen) #6490a7(dark-taken) #308298(light-taken) Magnus-comp(orange):#cba278 TINTS:(Magnus' one)#3e97b0; SHADES:#5A8498 #4B6E7F #3C5866 #2D424C TINTS: light-teal(#71cfc69c)
                           //GOOD COMBINATION: $orange & brown (#9B2915) $orange & #925E78
-$light-square: grey;//#ff851b; #925E78 violet-webFF84E8 light-greenBAB700 golden-rodE6AF2E lavaC81D25 purplemunselB118C8 greyishbrown#835c3b
 $button-hover: brown;
 $exit-button-color: #cb78aebd;
 $resume-button-color: #ffc630;
@@ -88,9 +88,6 @@ html {
   margin-bottom: $lh * 0.5;
   // margin-bottom: $lh / 2;
   @include grid-container-horizontally-and-vertically-center-GIs();
-  &:hover {
-    background-image: linear-gradient($yellow, $orange);//brown $dark-square brown
-  }
 }
 @mixin board-info-button {
   @include grid-container-horizontally-and-vertically-center-GIs();
@@ -227,9 +224,6 @@ img {
 #root .warning-button {
   background-color: $colors-red-saturation-decrease;
   // border-color: #4F0080;
-  &:hover {
-    background-image: linear-gradient($potential-opponent-square, brown);//brown
-  }
 }
 // #root .significant-button {
 //   background-color: $significant-button;
