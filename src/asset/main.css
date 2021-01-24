@@ -1,5 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Redressed&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Cinzel:wght@600&family=Open+Sans&display=swap");
 html {
-  font-size: 20px;
+  font-family: 'Cormorant Garamond';
+  font-size: 28px;
   --vh100: calc(100 * var(--vh));
   --margin-from-containing-block: 20px;
   --button-min-width: 100px;
@@ -9,6 +15,7 @@ html {
   --light-beige: #f3d8b2;
   --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
   --light-grey: #808080;
+  --yousef-Dark: #0D0221;
   --opponent-moved-from-square: hsl(220 100% 75% / 1);
   --opponent-moved-to-square: hsl(220 100% 75% / 1);
 }
@@ -31,7 +38,7 @@ html {
 
 @media screen and (max-width: 500px) {
   #root {
-    line-height: 1.4rem;
+    line-height: 1rem;
   }
 }
 
@@ -40,8 +47,8 @@ body {
 }
 
 h1 {
-  margin-top: 0.7rem;
-  margin-bottom: 1.4rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 a {
@@ -62,7 +69,7 @@ img {
 .header {
   height: var(--header-height);
   font-size: calc(var(--header-height) * 0.75);
-  background-color: #dddddd;
+  background-color: transparent;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -77,6 +84,7 @@ img {
 
 .header > a {
   height: 100%;
+  border-bottom: 1px solid black;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: var(--header-height) var(--header-height);
@@ -87,8 +95,10 @@ img {
 }
 
 .header > a > * {
-  height: 90%;
-  width: 90%;
+  height: 80%;
+  width: 80%;
+  -webkit-filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
+          filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
 }
 
 .header > a > *:first-child {
@@ -105,18 +115,18 @@ img {
 }
 
 .footer {
-  font-size: 15px;
+  font-size: 21px;
   line-height: 1.2em;
   width: 100vw;
   height: var(--footer-height);
   background-color: #090B19;
-  color: white;
+  color: #F7DBA7;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
-  -ms-grid-rows: 40% 60%;
-      grid-template-rows: 40% 60%;
+  -ms-grid-rows: 30% 70%;
+      grid-template-rows: 30% 70%;
 }
 
 .footer .footer-info {
@@ -164,7 +174,6 @@ img {
   }
   .footer > .icons {
     margin: 0;
-    margin-right: 2%;
     -ms-grid-column-align: end;
         justify-self: end;
   }
@@ -183,12 +192,17 @@ img {
   -ms-flex-line-pack: start;
       align-content: start;
   justify-items: center;
-  height: calc(var(--vh100) - var(--header-height) - var(--footer-height));
+  min-height: calc(var(--vh100) - var(--header-height) - var(--footer-height));
 }
 
 .home-grid-container > * {
   width: 90%;
   max-width: 500px;
+  margin-bottom: 0.5rem;
+}
+
+.home-grid-container > *:first-child {
+  margin-top: 2rem;
 }
 
 .home-grid-container .instructions {
@@ -196,22 +210,22 @@ img {
 }
 
 .home-grid-container .instructions p {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
 }
 
-.home-grid-container .instructions > :first-child {
-  margin-top: 1.4rem;
+.home-grid-container .instructions p:last-child {
+  margin-bottom: 0;
 }
 
 .home-grid-container .new-game {
-  background-color: #ffdc00;
-  border: solid 3px brown;
+  background-color: #F7DBA7;
+  border: solid 3px grey;
   width: 90%;
-  max-width: 380px;
-  height: 4.2rem;
+  max-width: 360px;
+  height: 3rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-top: 0.7rem;
+  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -228,14 +242,14 @@ img {
 }
 
 .home-grid-container .resume-game {
-  background-color: #ffdc00;
-  border: solid 3px brown;
+  background-color: #F7DBA7;
+  border: solid 3px grey;
   width: 90%;
-  max-width: 380px;
-  height: 4.2rem;
+  max-width: 360px;
+  height: 3rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-top: 0.7rem;
+  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -252,14 +266,14 @@ img {
 }
 
 .home-grid-container .home-terminate-game {
-  background-color: #ffdc00;
-  border: solid 3px brown;
+  background-color: #F7DBA7;
+  border: solid 3px grey;
   width: 90%;
-  max-width: 380px;
-  height: 4.2rem;
+  max-width: 360px;
+  height: 3rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-top: 0.7rem;
+  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -276,7 +290,7 @@ img {
 }
 
 .game-container {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
 }
 
 .game-text {
@@ -288,18 +302,18 @@ img {
 }
 
 .game-text p {
-  margin: 0.7rem 0;
+  margin: 0.5rem 0;
 }
 
 .floating-home-button {
-  background-color: #ffdc00;
-  border: solid 3px brown;
+  background-color: #F7DBA7;
+  border: solid 3px grey;
   width: 90%;
-  max-width: 380px;
-  height: 4.2rem;
+  max-width: 360px;
+  height: 3rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-top: 0.7rem;
+  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -308,7 +322,7 @@ img {
       grid-template-rows: 1fr;
   place-items: center;
   border-radius: calc(var(--floating-home-button-button-height) * 0.25);
-  margin: 0.7rem auto;
+  margin: 0.5rem auto;
 }
 
 .floating-home-button:hover {
@@ -317,14 +331,14 @@ img {
 }
 
 .exit-game-button {
-  background-color: #ffdc00;
-  border: solid 3px brown;
+  background-color: #F7DBA7;
+  border: solid 3px grey;
   width: 90%;
-  max-width: 380px;
-  height: 4.2rem;
+  max-width: 360px;
+  height: 3rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-top: 0.7rem;
+  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -333,7 +347,7 @@ img {
       grid-template-rows: 1fr;
   place-items: center;
   border-radius: calc(var(--exit-game-button-button-height) * 0.25);
-  margin: 0.7rem auto;
+  margin: 0.5rem auto;
 }
 
 .exit-game-button:hover {
@@ -352,14 +366,14 @@ img {
 }
 
 .game-terminate-game-button {
-  background-color: #ffdc00;
-  border: solid 3px brown;
+  background-color: #F7DBA7;
+  border: solid 3px grey;
   width: 90%;
-  max-width: 380px;
-  height: 4.2rem;
+  max-width: 360px;
+  height: 3rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-top: 0.7rem;
+  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -368,7 +382,7 @@ img {
       grid-template-rows: 1fr;
   place-items: center;
   border-radius: calc(var(--game-terminate-game-button-button-height) * 0.25);
-  margin: 0.7rem auto;
+  margin: 0.5rem auto;
 }
 
 .game-terminate-game-button:hover {
@@ -383,11 +397,11 @@ img {
 }
 
 .opponent-quits-page-container p {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
 }
 
 .opponent-quits-page-container p:nth-child(1) {
-  margin-top: 0.7rem;
+  margin-top: 0.5rem;
 }
 
 .quit-match-for-new-game-container {
@@ -397,11 +411,11 @@ img {
 }
 
 .quit-match-for-new-game-container p {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
 }
 
 .quit-match-for-new-game-container p:nth-child(1) {
-  margin-top: 0.7rem;
+  margin-top: 0.5rem;
 }
 
 .error-page-container {
@@ -411,11 +425,11 @@ img {
 }
 
 .error-page-container p {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
 }
 
 .error-page-container p:nth-child(1) {
-  margin-top: 0.7rem;
+  margin-top: 0.5rem;
 }
 
 .z-index-1 {
@@ -446,8 +460,8 @@ img {
 }
 
 .white-piece {
-  -webkit-filter: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
-          filter: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
+  -webkit-filter: invert(90%) sepia(15%) saturate(799%) hue-rotate(341deg) brightness(99%) contrast(95%);
+          filter: invert(90%) sepia(15%) saturate(799%) hue-rotate(341deg) brightness(99%) contrast(95%);
 }
 
 .black-piece {
@@ -474,6 +488,7 @@ img {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  --distance-between-board-and-buttons: //calc(var(--board-height) * 0.02);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container {
@@ -482,7 +497,6 @@ img {
   max-width: var(--board-dimension-limit);
   height: 100vw;
   max-height: var(--board-dimension-limit);
-  border: inset #2f627b calc(var(--board-height) * 0.02);
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (12.5%)[8];
@@ -519,8 +533,8 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserSquare {
-  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074d9), color-stop(25%, transparent));
-  background-image: linear-gradient(to bottom right, #0074d9 25%, transparent 25% 100%);
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #38A32A), color-stop(25%, transparent));
+  background-image: linear-gradient(to bottom right, #38A32A 25%, transparent 25% 100%);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialClickedOnPieceSquare {
@@ -533,8 +547,8 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container > .potentialUserAndOpponentSquare {
-  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #0074d9), color-stop(25%, transparent)), -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #ff4136));
-  background-image: linear-gradient(to bottom right, #0074d9 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, #ff4136 75% 100%);
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(25%, #38A32A), color-stop(25%, transparent)), -webkit-gradient(linear, left top, right bottom, color-stop(75%, transparent), color-stop(75%, #ff4136));
+  background-image: linear-gradient(to bottom right, #38A32A 25%, transparent 25% 100%), linear-gradient(to bottom right, transparent 75%, #ff4136 75% 100%);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container .highlighted {
@@ -548,6 +562,9 @@ img {
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
   height: var(--board-height);
+  --button-container-width: 105px;
+  width: var(--button-container-width);
+  margin-left: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -555,11 +572,19 @@ img {
   -ms-grid-rows: 3fr 4fr 3fr;
       grid-template-rows: 3fr 4fr 3fr;
       grid-template-areas: "." "metric" "nav";
-  --button-container-width: 100px;
-  width: var(--button-container-width);
+  --button-font-size: 21px;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons > div > div:first-child {
+  margin-bottom: 0.25rem;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons > div > div:last-child {
+  margin-top: 0.25rem;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
+  margin: 0.5rem 0;
   -ms-grid-row: 2;
   -ms-grid-column: 1;
   grid-area: metric;
@@ -573,25 +598,24 @@ img {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  line-height: 1.12rem;
+  line-height: 0.8rem;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
+  font-size: var(--button-font-size);
   -webkit-box-flex: 1;
       -ms-flex: 1 1 0px;
           flex: 1 1 0px;
-  padding: 2%;
+  padding: 5% 2%;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
   -ms-grid-rows: 1fr;
       grid-template-rows: 1fr;
-  place-items: center;
   text-align: center;
-  font-size: 18px;
-  background-color: #dddddd;
-  color: black;
+  background-color: #090B19;
+  color: #F7DBA7;
   border: solid grey 2px;
 }
 
@@ -608,8 +632,8 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .potential-square-switch-color {
-  background-color: #0074d9;
-  border-color: #0074d9;
+  background-color: #38A32A;
+  border-color: #38A32A;
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .opponent-potential-square {
@@ -648,11 +672,12 @@ img {
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > * {
   width: var(--button-container-width);
+  padding: 2%;
   margin: 0;
   text-align: center;
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 695px) {
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -663,19 +688,33 @@ img {
             flex-direction: column;
     height: auto;
     width: var(--board-height);
+    margin-left: 0;
     -webkit-box-pack: initial;
         -ms-flex-pack: initial;
             justify-content: initial;
   }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons > div > div:first-child {
+    margin-bottom: 0;
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons > div > div:last-child {
+    margin-top: 0;
+  }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
+    margin: 0.25rem 0;
     -webkit-box-flex: 0;
         -ms-flex: 0 1 auto;
             flex: 0 1 auto;
-    margin-bottom: 0.7rem;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
             flex-direction: row;
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
+    padding: 2%;
+    margin-right: 0.25rem;
+  }
+  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > *:last-child {
+    margin-right: 0;
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons {
     -webkit-box-flex: 0;
@@ -688,8 +727,8 @@ img {
     -webkit-box-pack: space-evenly;
         -ms-flex-pack: space-evenly;
             justify-content: space-evenly;
-    -webkit-column-gap: 0.7rem;
-            column-gap: 0.7rem;
+    -webkit-column-gap: 0.5rem;
+            column-gap: 0.5rem;
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > * {
     width: 285px;
@@ -764,7 +803,7 @@ img {
 }
 
 #root .warning-button {
-  background-color: #ff4136;
+  background-color: #e65151;
 }
 
 #root .warning-button:hover {

@@ -6,11 +6,20 @@
     align-content: start;
     justify-items: center;
     // row-gap: calc(var(--lh) * 1);
-    height: calc(var(--vh100) - var(--header-height) - var(--footer-height));//82.5vh
+    min-height: calc(var(--vh100) - var(--header-height) - var(--footer-height));//82.5vh
 
     > * {
         width: 90%;
         max-width: 500px;
+        margin-bottom: $lh * 0.5;
+    }
+
+    // > .button ~ .button {
+    //     margin-top: $lh * 0.5;
+    // }
+
+    > *:first-child {
+        margin-top: $lh * 2;//0.5
     }
 
     .instructions {
@@ -18,10 +27,13 @@
         // width: $width;
         text-align: center;
         p {
-            margin-bottom: $lh * 0.5//calc(var(--lh) * 1)
+            margin-bottom: $lh * 0.5;//calc(var(--lh) * 1)
+        }
+        p:last-child {
+            margin-bottom: 0;
         }
         > :first-child {
-            margin-top: $lh * 1;//0.5
+            // margin-top: $lh * 1;//0.5
         }
         // p:last-child {
         //     margin-bottom: 0;

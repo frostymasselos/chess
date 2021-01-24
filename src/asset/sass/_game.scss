@@ -23,6 +23,7 @@
 }
 .exit-game-button {
   @include button;
+  // background-color: $exit-button-color;
   border-radius: calc(var(--exit-game-button-button-height) * 0.25);
   margin: ($lh * 0.5) auto;
   > a {

@@ -1,30 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Redressed&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Cinzel:wght@600&family=Open+Sans&display=swap');
 /////////////////////////////////////////////////CONSISTENT VARIABLES///////////////////////////////////////////////////////////
 $tablet: 768px;
 $laptop: 1024px;
 $wide: 1440px;
 
-//MAGNUS
-//Acceptable 'one-offs':
-//orange...
+//violet: hsl(-122 44% 63% / 0.74)
+//mint: #A4F9C8
+//green:#81C14B
+//crimson:A4031F #B80C09 //red:D63230
+//beige: #F7DBA7
+//vine-green: ...
+//nice-yellow: #ffc630
 
-$lh: 1.4rem; //(28px)
+$lh: 1rem;//1.4rem; //(1.4x20=28px)
 $button-min-height: $lh * 3;
 $orange: #FF851B; //FB8B24
+$colors-red-saturation-decrease: #e65151; //colors-red blue contrast #363cff
 $colors-blue: #0074D9;
 $colors-aqua: #7FDBFF;
-$header-color: #dddddd;
+$colors-fuscia: #F012BE;
+$colors-green: #2ECC40;
+$vine-green: #38A32A; //#14591D
+$beige: #F7DBA7;
+$header-color: transparent;//#dddddd; 
 $footer-color: #090B19;////#001f3f; //dark-sienna(brown):#3C1518 bluegrey:#090B19 brown#1F0812 indigo:#133C55 green:#012622 
+$footer-filter: invert(6%) sepia(13%) saturate(2281%) hue-rotate(194deg) brightness(93%) contrast(103%);
 $footer-info-color: white;//darkorchid;
 $dark-square: #78b0cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 Magnus'-blue:#7897cb #78a9cb #78b0cb(chosen) #6490a7(dark-taken) #308298(light-taken) Magnus-comp(orange):#cba278 TINTS:(Magnus' one)#3e97b0; SHADES:#5A8498 #4B6E7F #3C5866 #2D424C TINTS: light-teal(#71cfc69c)
                           //GOOD COMBINATION: $orange & brown (#9B2915) $orange & #925E78
 $light-square: grey;//#ff851b; #925E78 violet-webFF84E8 light-greenBAB700 golden-rodE6AF2E lavaC81D25 purplemunselB118C8 greyishbrown#835c3b
 $button-hover: brown;
-$potential-user-square: #0074d9;//#0074d9;
+$exit-button-color: #cb78aebd;
+$resume-button-color: #ffc630;
+$potential-user-square: $vine-green; //blue: #363cff;//$colors-blue;
 $potential-opponent-square: #ff4136;
 $potential-clicked-on-piece-square: #85144b;//
-$white-piece-color: white;
+$white-piece-color: $beige;//white;
 $black-piece-color: black;
-$white-piece-filter: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
+$white-piece-filter: invert(90%) sepia(15%) saturate(799%) hue-rotate(341deg) brightness(99%) contrast(95%);//white: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
 $black-piece-filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
 $clicked-on-piece-color: #85144b;
 $clicked-on-piece-filter: invert(14%) sepia(55%) saturate(3565%) hue-rotate(311deg) brightness(93%) contrast(99%);
@@ -32,7 +49,9 @@ $significant-button: #ff851b;//#ffdc00;
 $yellow: #ffdc00; //tetradic pink for yellow: #FF00A2
 $light-grey: #dddddd;
 html {
-  font-size: 20px;
+  font-family: 'Cormorant Garamond';//'Viaoda Libre', cursive;
+  font-size: 28px;//20px;
+  // background-image: url('https://images.unsplash.com/photo-1525034687081-c702010cb70d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8d29vZCUyMHRleHR1cmV8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80') ;//url('https://www.psdgraphics.com/file/light-wooden-background.jpg');
   --vh100: calc(100 * var(--vh));
   --margin-from-containing-block: 20px;
   --button-min-width: 100px;
@@ -40,6 +59,7 @@ html {
   --footer-height: calc(17.5 * var(--vh));//17.5vh;//16 ( = golden ratio w/title?)
   --light-brown: #bc875f; --light-beige: #f3d8b2; --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
   --light-grey: #808080;
+  --yousef-Dark: #0D0221;
   --opponent-moved-from-square: hsl(220 100% 75% / 1); //in-order-of-winner-to-loser: $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); $another-violet:#76a9ffhsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a gold:#cbc478 #cb9a78 $colors-aqua; 
   --opponent-moved-to-square: hsl(220 100% 75% / 1);
 }
@@ -58,13 +78,13 @@ html {
   place-items: center;
 }
 @mixin button {
-  background-color: $yellow;//$dark-square;
-  border: solid 3px brown;//$dark-square; //#9F8900(htmlcolorcodes 3rd shade)  #FF00A2;//#900C3F;//brown;
+  background-color: $white-piece-color;//$dark-square; pink:#f5a3d8bd #cb78aebd //RESUME BUTTON: gold: rgb(264 198 48 / 1)#F8C630 #E7BB41 teal(hsl(211 44% 63% / 0.74)hsl(175 44% 63% / 0.74)) blue(color-of-board)
+  border: solid 3px grey;//$dark-square; //#9F8900(htmlcolorcodes 3rd shade)  #FF00A2;//#900C3F;//brown;
   width: 90%;
-  max-width: 380px; //400
+  max-width: 360px; //320 380 400
   height: $button-min-height; //100%
   justify-self: center; //align-self: start;
-  margin-top: $lh / 2;
+  margin-bottom: $lh * 0.5;
   // margin-bottom: $lh / 2;
   @include grid-container-horizontally-and-vertically-center-GIs();
   &:hover {
@@ -133,10 +153,12 @@ img {
   align-items: stretch;
   > a {
     height: 100%;
+    border-bottom: 1px solid black;
     @include grid-container-horizontally-and-vertically-center-GIs(var(--header-height) var(--header-height), 100%);
     > * {
-      height: 90%;
-      width: 90%;
+      height: 80%;//90%;
+      width: 80%;//90%;
+      filter: $black-piece-filter;
     }
     > *:first-child {
       justify-self: end;
@@ -151,19 +173,19 @@ img {
   }
 }
 .footer {
-  font-size: 15px;
+  font-size: 21px;//15px;
   $lh: 1.2em;
   $distance-from-footer-top: $lh * 0.25;
   line-height: $lh;
   width: 100vw;
   height: var(--footer-height);
   background-color: $footer-color;
-  color: $footer-info-color;
-  @include grid-container-template(1fr, 40% 60%); //38% 62%
+  color: $beige;//$footer-info-color;
+  @include grid-container-template(1fr, 30% 70%); //40% 60% when email was included//38% 62%
   .footer-info {
     @include grid-container-horizontally-and-vertically-center-GIs();
     text-align: center;
-    align-items: start;
+    align-items: start;//start; when email was included
     @media screen and (min-width: $tablet) {
       // padding-left: 0%;
     }
@@ -187,7 +209,7 @@ img {
     grid-template-rows: 100%;
     > .icons {
       margin: 0;
-      margin-right: 2%;
+      // margin-right: 2%;
       justify-self: end;
       a {
         margin: calc(0.25 * var(--footer-height)) 0;
@@ -199,9 +221,10 @@ img {
 @import "./home.scss";
 @import "./game.scss";
 @import "./board.scss";
+// @import "./ystyling.scss";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #root .warning-button {
-  background-color: $potential-opponent-square;
+  background-color: $colors-red-saturation-decrease;
   // border-color: #4F0080;
   &:hover {
     background-image: linear-gradient($potential-opponent-square, brown);//brown

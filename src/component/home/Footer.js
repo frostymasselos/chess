@@ -9,7 +9,7 @@ function Footer(params) {
             <div className="footer">
                 <div className="footer-info">
                     <p>
-                        Created by Ryan Frost.<br></br>e: ryanfrost2015@gmail.com.
+                        Created by Ryan Frost
                     </p>
                 </div>
                 <div className="icons">
@@ -29,3 +29,5 @@ function Footer(params) {
 }
 
 export default Footer;
+
+{/* <br></br>e: ryanfrost2015@gmail.com. */ }
