@@ -464,13 +464,13 @@ img {
 }
 
 .piece-image {
-  width: 70%;
-  height: 70%;
+  width: 75%;
+  height: 75%;
 }
 
 .pawn-image {
-  width: 70%;
-  height: 70%;
+  width: 75%;
+  height: 75%;
 }
 
 .board-metric-buttons-nav-buttons-flex-container {
