@@ -167,12 +167,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
         }); console.log(squaresToHighlight);
         simpleHighlightSquares(squaresToHighlight);
     }
-    function simpleHighlightSquares(indices) {
-        for (const index of indices) {
-            let squareToHighlight = window.document.querySelector(`#i${index}`);
-            squareToHighlight.classList.add(`potentialClickedOnPieceSquare`);
-        }
-    }
     function highlightSquares(player) {
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
         const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
@@ -235,6 +229,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                     }
                 }
             }
+        }
+    }
+    function simpleHighlightSquares(indices) {
+        for (const index of indices) {
+            let squareToHighlight = window.document.querySelector(`#i${index}`);
+            squareToHighlight.classList.add(`potentialClickedOnPieceSquare`);
         }
     }
     function updatePieceToPromotePawnTo(piece) {
@@ -562,6 +562,8 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 }
 
                 clickedOnPiece.current = false;//⚠️used to be under 'EXECUTING USER'S CLICK'
+                // setShowingUserPiecesPotentialMoves(false);
+                // setShowingOpponentPiecesPotentialMoves(false);
                 setCanMove(false);//boardTag.classList.add(`unclickable`);
                 await userDb.update({ canMove: false, moved: Math.random() });
             }
@@ -673,6 +675,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             if (!canMove) {
                 highlightYourMovement(match[authInfo.user]);
             }
+            if (showingUserPiecesPotentialMoves) {
+                highlightSquares("user");
+            }
+            if (showingOpponentPiecesPotentialMoves) {
+                highlightSquares("opponent");
+            }
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
@@ -710,6 +718,13 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             squareTag.onclick = onClickHandler;
         }
     });
+    //reset metric buttons
+    useEffect(() => {
+        // console.log("HERE");
+        // highlightSquares.bind(null, "opponent");
+        // highlightSquares.bind(null, "user"); 
+        // decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
+    }, [canMove]);
 
     return (
         <>
