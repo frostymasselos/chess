@@ -17,8 +17,8 @@ html {
   --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
   --light-grey: #808080;
   --yousef-Dark: #0D0221;
-  --opponent-moved-from-square: #85144b;
-  --opponent-moved-to-square: #85144b;
+  --opponent-moved-from-square: #147085;
+  --opponent-moved-to-square: #147085;
 }
 
 *,
@@ -253,6 +253,10 @@ img {
   border-radius: calc(var(--new-game-button-height) * 0.25);
 }
 
+.home-grid-container .new-game:hover {
+  background-color: #ebd7b3;
+}
+
 .home-grid-container .resume-game {
   background-color: #F7DBA7;
   width: 90%;
@@ -273,6 +277,10 @@ img {
   border-radius: calc(var(--resume-game-button-height) * 0.25);
 }
 
+.home-grid-container .resume-game:hover {
+  background-color: #ebd7b3;
+}
+
 .home-grid-container .home-terminate-game {
   background-color: #F7DBA7;
   width: 90%;
@@ -291,6 +299,10 @@ img {
       grid-template-rows: 1fr;
   place-items: center;
   border-radius: calc(var(--home-terminate-game-button-height) * 0.25);
+}
+
+.home-grid-container .home-terminate-game:hover {
+  background-color: #ebd7b3;
 }
 
 .game-container {
@@ -332,6 +344,10 @@ img {
   margin: 0.5rem auto;
 }
 
+.floating-home-button:hover {
+  background-color: #ebd7b3;
+}
+
 .exit-game-button {
   background-color: #F7DBA7;
   width: 90%;
@@ -351,6 +367,10 @@ img {
   place-items: center;
   border-radius: calc(var(--exit-game-button-button-height) * 0.25);
   margin: 0.5rem auto;
+}
+
+.exit-game-button:hover {
+  background-color: #ebd7b3;
 }
 
 .exit-game-button > a {
@@ -382,6 +402,10 @@ img {
   place-items: center;
   border-radius: calc(var(--game-terminate-game-button-button-height) * 0.25);
   margin: 0.5rem auto;
+}
+
+.game-terminate-game-button:hover {
+  background-color: #ebd7b3;
 }
 
 .opponent-quits-page-container {
@@ -748,7 +772,7 @@ img {
 
 .pawn-promotion-container .pawn-promotion-grid-container {
   height: 100%;
-  background-color: #dddddd;
+  background-color: grey;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -758,10 +782,6 @@ img {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-}
-
-.pawn-promotion-container .pawn-promotion-grid-container-color-white {
-  background-color: grey;
 }
 
 .pawn-promotion-container .pawn-promotion-grid-container > * {
@@ -804,5 +824,9 @@ img {
 
 #root .warning-button {
   background-color: #e65151;
+}
+
+#root .warning-button:hover {
+  background-color: #d46363;
 }
 /*# sourceMappingURL=main.css.map */

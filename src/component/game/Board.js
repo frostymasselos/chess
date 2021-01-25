@@ -494,10 +494,8 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 if (opponentToKill) {
                     await opponentDb.child(`pieces/${opponentToKill}`).update({ alive: false });
                     //switch off opponent movement highlighted squares
-                    const [opponentMovedFromSquare, opponentMovedToSquare] = [window.document.querySelector('.opponent-moved-from-square'), window.document.querySelector('.opponent-moved-to-square')];//console.log(opponentMovedFromSquare, opponentMovedToSquare);
-                    opponentMovedFromSquare.classList.remove('.opponent-moved-from-square'); opponentMovedToSquare.classList.remove('opponent-moved-to-square');
-                } else {
-                    //turn|keep switch on
+                    // const [opponentMovedFromSquare, opponentMovedToSquare] = [window.document.querySelector('.opponent-moved-from-square'), window.document.querySelector('.opponent-moved-to-square')];//console.log(opponentMovedFromSquare, opponentMovedToSquare);
+                    // opponentMovedFromSquare.classList.remove('.opponent-moved-from-square'); opponentMovedToSquare.classList.remove('opponent-moved-to-square');
                 }
                 //potentially update pawns (🐉refactor to use boardArray) Alternative was to search for data again in db.
                 const pawns = [];

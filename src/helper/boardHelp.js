@@ -44,7 +44,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
             },
         },
         king: {
-            direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right", "castling_left", "castling_right"], //i) add castling-right & ii) apply to black.
+            direction: ["forward", "backward", "left", "right", "diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"], //"castling_left", "castling_right"
             total: {
                 primary: 1,
             },
@@ -70,7 +70,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
             }
         },
         bishop: {
-            direction: ["diagonal_backward_right", "diagonal_forward_right", "diagonal_backward_left", "diagonal_forward_left"],
+            direction: ["diagonal_forward_left", "diagonal_backward_left", "diagonal_forward_right", "diagonal_backward_right"],
             total: {
                 primary: 8,
             }
@@ -82,7 +82,7 @@ const pieceMoveObj = { //add onto these as #2 strategy to catering for black
             },
         },
         king: {
-            direction: ["backward", "forward", "right", "left", "diagonal_backward_right", "diagonal_backward_left", "diagonal_forward_right", "diagonal_forward_left", "castling_left", "castling_right"], //
+            direction: ["backward", "forward", "right", "left", "diagonal_backward_right", "diagonal_backward_left", "diagonal_forward_right", "diagonal_forward_left",],//"castling_left", "castling_right"
             total: {
                 primary: 1,
             },
@@ -235,7 +235,7 @@ const directionConverterObj = {
     },
     pawn_diagonal_backward_right: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
-            const [valueDown, valueRight] = [1, -8];
+            const [valueDown, valueRight] = [-8, 1];
             total = total === 2 ? 1 : total; //stops unmoved pawns from diagonally killing up to 2 squares
             const legalSecondarySquareIndexes = [];
 
@@ -356,6 +356,40 @@ const directionConverterObj = {
             return legalSecondarySquareIndexes;
         },
     },
+    right: {//doesn't go above higher-closest multiple of 7 (starting on 8).
+        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
+            const value = 1;
+            const legalSecondarySquareIndexes = [];
+            //calculate squares before it reaches right-edge of board
+            let counter = 0;
+            for (let potentialSquare = originalSquareIndex + value; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
+                if ((potentialSquare - 7) % 8 === 0) {
+                    counter++;
+                    break;
+                }
+            }
+            parent: for (let potentialSquare = originalSquareIndex + value, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total); potentialSquare--, currentCounter++, currentTotal++) {
+                const potentialSquare = originalSquareIndex + (value * currentTotal);
+
+                //check if potentialSquare occupied by user piece
+                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
+                    if (squareWithUserPiece.index === potentialSquare) {
+                        break parent;
+                    }
+                }
+                //check if potentialSquare occupied by opponent piece
+                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
+                    if (squareWithOpponentPiece.index === potentialSquare) {
+                        legalSecondarySquareIndexes.push(potentialSquare);
+                        break parent;
+                    }
+                }
+
+                legalSecondarySquareIndexes.push(potentialSquare);
+            }
+            return legalSecondarySquareIndexes;
+        }
+    },
     castling_left: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, { check, isUserKingInCheck, boardArray, ourColor, }) {
             const legalSecondarySquareIndexes = [];
@@ -412,40 +446,6 @@ const directionConverterObj = {
             return legalSecondarySquareIndexes;
         }
     },
-    right: {//doesn't go above higher-closest multiple of 7 (starting on 8).
-        funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
-            const value = 1;
-            const legalSecondarySquareIndexes = [];
-            //calculate squares before it reaches right-edge of board
-            let counter = 0;
-            for (let potentialSquare = originalSquareIndex + value; !((originalSquareIndex - 7) % 8 === 0); counter++, potentialSquare++) {
-                if ((potentialSquare - 7) % 8 === 0) {
-                    counter++;
-                    break;
-                }
-            }
-            parent: for (let potentialSquare = originalSquareIndex + value, currentCounter = 1, currentTotal = 1; (currentCounter <= counter) && (currentTotal <= total); potentialSquare--, currentCounter++, currentTotal++) {
-                const potentialSquare = originalSquareIndex + (value * currentTotal);
-
-                //check if potentialSquare occupied by user piece
-                for (const squareWithUserPiece of boardArraySquaresWithUserPiece) {
-                    if (squareWithUserPiece.index === potentialSquare) {
-                        break parent;
-                    }
-                }
-                //check if potentialSquare occupied by opponent piece
-                for (const squareWithOpponentPiece of boardArraySquaresWithOpponentPiece) {
-                    if (squareWithOpponentPiece.index === potentialSquare) {
-                        legalSecondarySquareIndexes.push(potentialSquare);
-                        break parent;
-                    }
-                }
-
-                legalSecondarySquareIndexes.push(potentialSquare);
-            }
-            return legalSecondarySquareIndexes;
-        }
-    },
     diagonal_forward_left: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
             const [valueUp, valueLeft] = [8, -1];
@@ -485,7 +485,7 @@ const directionConverterObj = {
     },
     diagonal_backward_left: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
-            const [valueDown, valueLeft] = [-1, -8];
+            const [valueDown, valueLeft] = [-8, -1];
             const legalSecondarySquareIndexes = [];
 
             //calculate squares it can hop before it reaches left-edge of board
@@ -596,7 +596,7 @@ const directionConverterObj = {
     },
     knight_forward_left: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
-            const [valueUp, valueLeft] = [-1, 16];
+            const [valueUp, valueLeft] = [16, -1];
             const legalSecondarySquareIndexes = [];
 
             //calculate squares it can hop before it reaches left-edge of board
@@ -633,7 +633,7 @@ const directionConverterObj = {
     },
     knight_backward_left: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
-            const [valueDown, valueLeft] = [-1, -16];
+            const [valueDown, valueLeft] = [-16, -1];
             const legalSecondarySquareIndexes = [];
 
             //calculate squares it can hop before it reaches left-edge of board
