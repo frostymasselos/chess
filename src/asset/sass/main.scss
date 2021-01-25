@@ -90,7 +90,7 @@ html {
   justify-self: center; //align-self: start;
   @include grid-container-horizontally-and-vertically-center-GIs();
   &:hover {
-    background-color: desaturate($white-piece-color, 25%);
+    // background-color: desaturate($white-piece-color, 25%);
   }
 }
 @mixin board-info-button {
@@ -230,7 +230,7 @@ img {
   // border-color: #4F0080;
   &:hover {
     // background-color: darken($colors-red-saturation-decrease, 8%);
-    background-color: desaturate($colors-red-saturation-decrease, 18%);
+    // background-color: desaturate($colors-red-saturation-decrease, 18%);
   }
 }
 // #root .significant-button {

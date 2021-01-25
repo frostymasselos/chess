@@ -19,7 +19,7 @@ function Footer(params) {
                     <a href="https://stackoverflow.com/users/14037283/tonitone120?tab=summary" target="_blank">
                         <img src={soPNG} className="so-image" />
                     </a>
-                    <a href="https://rhcp.com" target="_blank">
+                    <a href="https://www.linkedin.com/in/ryan-frost-raf/" target="_blank">
                         <img src={LinkedInPNG} className="linked-image" />
                     </a>
                 </div>
