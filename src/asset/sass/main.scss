@@ -15,6 +15,7 @@ $wide: 1440px;
 //beige: #F7DBA7
 //vine-green: ...
 //nice-yellow: #ffc630
+//nice-pink:#cb78aebd
 
 $lh: 1rem;//1.4rem; //(1.4x20=28px)
 $button-min-height: $lh * 3;
@@ -36,14 +37,14 @@ $light-square: #78b0cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #80
 $button-hover: brown;
 $exit-button-color: #cb78aebd;
 $resume-button-color: #ffc630;
-$potential-user-square: $vine-green; //blue: #363cff;//$colors-blue;
+$potential-user-square: #363cff; //$vine-green blue: #363cff;//$colors-blue;
 $potential-opponent-square: #ff4136;
 $potential-clicked-on-piece-square: #85144b;
 $white-piece-color: $beige;//white;
 $black-piece-color: black;
 $white-piece-filter: invert(90%) sepia(15%) saturate(799%) hue-rotate(341deg) brightness(99%) contrast(95%);//white: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
 $black-piece-filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
-$clicked-on-piece-color: #85144b;
+$clicked-on-piece-color: #85144b; //nice-pink#cb78aebd dark-red#851414 light-purple#85147d 
 $clicked-on-piece-filter: invert(14%) sepia(55%) saturate(3565%) hue-rotate(311deg) brightness(93%) contrast(99%);
 $significant-button: #ff851b;//#ffdc00;
 $yellow: #ffdc00; //tetradic pink for yellow: #FF00A2
@@ -61,8 +62,8 @@ html {
   --light-brown: #bc875f; --light-beige: #f3d8b2; --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
   --light-grey: #808080;
   --yousef-Dark: #0D0221;
-  --opponent-moved-from-square: $clicked-on-piece-color; //in-order-of-winner-to-loser: $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); $another-violet:#76a9ffhsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a gold:#cbc478 #cb9a78 $colors-aqua; 
-  --opponent-moved-to-square: $clicked-on-piece-color;
+  --opponent-moved-from-square: #85144b; //in-order-of-winner-to-loser: $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); $another-violet:#76a9ffhsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a gold:#cbc478 #cb9a78 $colors-aqua; 
+  --opponent-moved-to-square: #85144b;
 }
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
 /////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////
@@ -171,7 +172,7 @@ img {
   }
 }
 .footer {
-  font-size: 21px;//15px;
+  font-size: 20px;//21px 15px;
   $lh: 1.2em;
   $distance-from-footer-top: $lh * 0.25;
   line-height: $lh;
