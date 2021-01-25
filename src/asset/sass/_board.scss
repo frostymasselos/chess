@@ -255,11 +255,14 @@
         > * {
           width: 285px;//flex-basis: 285px//45%; calc(var(--board-height) * 0.333);
         }
+        $horizontal-margin-value: 2%;//$lh * 0.5;
         > *:first-child {
-          margin-right: $lh * 0.5;
+          margin-left: $horizontal-margin-value * 2;
+          margin-right: $horizontal-margin-value;
         }
         > *:last-child {
-          margin-left: $lh * 0.5;
+          margin-left: $horizontal-margin-value;
+          margin-right: $horizontal-margin-value * 2;
         }
       }
     }

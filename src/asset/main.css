@@ -183,6 +183,23 @@ img {
   }
 }
 
+.header + * > *:first-child {
+  max-width: var(--width-of-text-containers);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header + * > *:first-child > * {
+  max-width: 55ch;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.header + * > *:first-child > * > * {
+  text-align: center;
+}
+
 .home-grid-container {
   display: -ms-grid;
   display: grid;
@@ -197,8 +214,6 @@ img {
 }
 
 .home-grid-container > * {
-  width: var(--width-of-text-containers);
-  max-width: 500px;
   margin-bottom: 0.5rem;
 }
 
@@ -220,13 +235,14 @@ img {
 
 .home-grid-container .new-game {
   background-color: #F7DBA7;
-  border: solid 3px grey;
   width: 90%;
+  padding: 10px;
+  border: solid 3px grey;
+  min-height: 3rem;
   max-width: 360px;
-  height: 3rem;
+  margin-bottom: 0.5rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -239,13 +255,14 @@ img {
 
 .home-grid-container .resume-game {
   background-color: #F7DBA7;
-  border: solid 3px grey;
   width: 90%;
+  padding: 10px;
+  border: solid 3px grey;
+  min-height: 3rem;
   max-width: 360px;
-  height: 3rem;
+  margin-bottom: 0.5rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -258,13 +275,14 @@ img {
 
 .home-grid-container .home-terminate-game {
   background-color: #F7DBA7;
-  border: solid 3px grey;
   width: 90%;
+  padding: 10px;
+  border: solid 3px grey;
+  min-height: 3rem;
   max-width: 360px;
-  height: 3rem;
+  margin-bottom: 0.5rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -295,13 +313,14 @@ img {
 
 .floating-home-button {
   background-color: #F7DBA7;
-  border: solid 3px grey;
   width: 90%;
+  padding: 10px;
+  border: solid 3px grey;
+  min-height: 3rem;
   max-width: 360px;
-  height: 3rem;
+  margin-bottom: 0.5rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -315,13 +334,14 @@ img {
 
 .exit-game-button {
   background-color: #F7DBA7;
-  border: solid 3px grey;
   width: 90%;
+  padding: 10px;
+  border: solid 3px grey;
+  min-height: 3rem;
   max-width: 360px;
-  height: 3rem;
+  margin-bottom: 0.5rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -345,13 +365,14 @@ img {
 
 .game-terminate-game-button {
   background-color: #F7DBA7;
-  border: solid 3px grey;
   width: 90%;
+  padding: 10px;
+  border: solid 3px grey;
+  min-height: 3rem;
   max-width: 360px;
-  height: 3rem;
+  margin-bottom: 0.5rem;
   -ms-grid-column-align: center;
       justify-self: center;
-  margin-bottom: 0.5rem;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr;
@@ -705,10 +726,12 @@ img {
     width: 285px;
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > *:first-child {
-    margin-right: 0.5rem;
+    margin-left: 4%;
+    margin-right: 2%;
   }
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > *:last-child {
-    margin-left: 0.5rem;
+    margin-left: 2%;
+    margin-right: 4%;
   }
 }
 

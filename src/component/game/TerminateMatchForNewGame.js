@@ -34,7 +34,9 @@ function TerminateMatchForNewGame({ intruderInfo, setArbitrary, db, auth, fireba
     return (
         <>
             <div className="quit-match-for-new-game-container">
-                <p>You have navigated to a new game. A user can only play in one game. Would you like to:</p>
+                <div>
+                    <p>You have navigated to a new game. A user can only play in one game. Would you like to:</p>
+                </div>
                 <div className="floating-home-button button" onClick={backToIntrudersGame}>
                     Go back to your game
                 </div>
