@@ -167,7 +167,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
         }); console.log(squaresToHighlight);
         simpleHighlightSquares(squaresToHighlight);
     }
-    function highlightSquares(player) {
+    function highlightSquares(player, forceOn) {
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
         const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
         const arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, authInfo.color);//console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces);
@@ -175,28 +175,30 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
         const userPiecesSwitch = window.document.querySelector(`.potential-square-switch`);
         const opponentPiecesSwitch = window.document.querySelector(`.opponent-potential-square-switch`);
 
-        if (showingUserPiecesPotentialMoves && player === "user") {
-            for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces) {
-                const square = window.document.querySelector(`#i${squareIndex}`);
-                square.classList.remove(`potentialUserSquare`);
-                square.classList.remove(`potentialUserAndOpponentSquare`);
+        if (!forceOn) {
+            if (showingUserPiecesPotentialMoves && player === "user") {
+                for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces) {
+                    const square = window.document.querySelector(`#i${squareIndex}`);
+                    square.classList.remove(`potentialUserSquare`);
+                    square.classList.remove(`potentialUserAndOpponentSquare`);
+                }
+                setShowingUserPiecesPotentialMoves(false);
+                //switch off switch
+                userPiecesSwitch.classList.remove(`potential-square-switch-color`);
+                return;
             }
-            setShowingUserPiecesPotentialMoves(false);
-            //switch off switch
-            userPiecesSwitch.classList.remove(`potential-square-switch-color`);
-            return;
-        }
 
-        if (showingOpponentPiecesPotentialMoves && player === "opponent") {
-            for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces) {
-                const square = window.document.querySelector(`#i${squareIndex}`);
-                square.classList.remove(`potentialOpponentSquare`);
-                square.classList.remove(`potentialUserAndOpponentSquare`);
+            if (showingOpponentPiecesPotentialMoves && player === "opponent") {
+                for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces) {
+                    const square = window.document.querySelector(`#i${squareIndex}`);
+                    square.classList.remove(`potentialOpponentSquare`);
+                    square.classList.remove(`potentialUserAndOpponentSquare`);
+                }
+                setShowingOpponentPiecesPotentialMoves(false);
+                //switch off switch
+                opponentPiecesSwitch.classList.remove(`opponent-potential-square-switch-color`);
+                return;
             }
-            setShowingOpponentPiecesPotentialMoves(false);
-            //switch off switch
-            opponentPiecesSwitch.classList.remove(`opponent-potential-square-switch-color`);
-            return;
         }
 
         let squareIndices = '';
@@ -676,10 +678,10 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 highlightYourMovement(match[authInfo.user]);
             }
             if (showingUserPiecesPotentialMoves) {
-                highlightSquares("user");
+                highlightSquares("user", true);//provide override arg🐉
             }
             if (showingOpponentPiecesPotentialMoves) {
-                highlightSquares("opponent");
+                highlightSquares("opponent", true);//provide override arg
             }
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
@@ -735,13 +737,13 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 </div>
                 <div className="metric-buttons-and-nav-buttons">
                     <div className="game-metric-buttons">
-                        <div className="opponent-potential-square button" onClick={highlightSquares.bind(null, "opponent")}>
+                        <div className="opponent-potential-square button" onClick={highlightSquares.bind(null, "opponent", false)}>
                             <div>
                                 Opponent's potential squares
                                     <div className="opponent-potential-square-switch switch"></div>
                             </div>
                         </div>
-                        <div className="potential-square button" onClick={highlightSquares.bind(null, "user")}>
+                        <div className="potential-square button" onClick={highlightSquares.bind(null, "user", false)}>
                             <div>
                                 Potential squares
                                     <div className="potential-square-switch switch"></div>
