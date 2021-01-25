@@ -1,0 +1,119 @@
+//Import a new font available from google
+@import url('https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap'); 
+
+//Importing old vars, incase needed
+html {
+    font-size: 20px;
+    --vh100: calc(100 * var(--vh));
+    --margin-from-containing-block: 20px;
+    --button-min-width: 100px;
+    --header-height: calc(12.5 * var(--vh));//12.5vh//10
+    --footer-height: calc(17.5 * var(--vh));//17.5vh;//16 ( = golden ratio w/title?)
+    --newDark: #0D0221;
+}
+
+//Setting font to all text, you can change specific classes to other fonts if needed
+body{
+    font-family: 'Yusei Magic', sans-serif;
+}
+
+//Mixins for repeated CSS styles with buttons
+@mixin newDarkButton {
+    background-color: var(--newDark);
+    border: none;
+    color: white;
+}
+
+@mixin newButtonTransition {
+    transition: all .2s ease-in-out; 
+}
+@mixin newButtonTransitionHover {
+    transform: scale(1.05);
+    background-image: linear-gradient(var(--newDark),#302249);
+}
+
+// Start Button redone as new dark button
+.home-grid-container .new-game {
+    @include newDarkButton();
+}
+.home-grid-container .new-game { @include newButtonTransition()}
+.home-grid-container .new-game:hover {
+    @include newButtonTransitionHover();
+}
+
+
+// Resume Button redone as new dark button
+.home-grid-container .resume-game {
+    @include newDarkButton();
+}
+.home-grid-container .resume-game {
+    @include newButtonTransition()
+}
+.home-grid-container .resume-game:hover {
+    @include newButtonTransitionHover()
+}
+
+// Terminate Button redone as new dark button
+.home-grid-container .home-terminate-game  {
+    @include newDarkButton();
+    background-color:#A90F33 ;
+    
+}
+.home-grid-container .home-terminate-game  {
+    @include newButtonTransition()
+}
+.home-grid-container .home-terminate-game:hover {
+    @include newButtonTransitionHover();
+    background-image: linear-gradient(#A90F33,var(#E11444));
+
+}
+
+
+.header{
+    height: var(--header-height);
+    padding: 1.6% 0;
+    background-color: white;
+}
+
+.footer .footer-info > p{
+    color: white;
+}
+.footer .footer-info{
+    align-items: center;
+}
+
+.metric-buttons-and-nav-buttons{
+    margin:0 10px;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
+    background-color:var(--newDark);
+    color:white;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: #302249;
+}
+
+.board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons .switch{
+    // border: solid 1px white;
+    height: 20px;
+    width: 20px;
+    margin: 0 auto;
+    border-radius: 50%;
+    // background-color: white;
+}
+
+
+
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > .black-square {
+    background-image: url('https://www.psdgraphics.com/file/light-wooden-background.jpg');
+}
+.board-metric-buttons-nav-buttons-flex-container .board-grid-container > div {
+    // background-color:  transparent;
+    background-image: url('https://images.unsplash.com/photo-1525034687081-c702010cb70d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8d29vZCUyMHRleHR1cmV8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80') ;
+}
+
+a img {
+    max-height: 50px;
+}
+

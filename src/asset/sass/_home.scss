@@ -1,0 +1,78 @@
+// $width: 90%;
+// $button-max-width: 380px;//so that width matches width of last line-box width of Instructions
+
+.header + * > *:first-child {
+    max-width: var(--width-of-text-containers);//90%;
+    margin-left: auto;
+    margin-right: auto;
+    > * {
+        max-width: 50ch;//50
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        > * {
+            text-align: center;
+        }
+    }
+}
+
+.home-grid-container {
+    @include grid-container-template(100vw, auto);
+    align-content: start;
+    justify-items: center;
+    // row-gap: calc(var(--lh) * 1);
+    min-height: calc(var(--vh100) - var(--header-height) - var(--footer-height));//82.5vh
+
+    > * {
+        // width: var(--width-of-text-containers);//90%;
+        // max-width: 500px;
+        margin-bottom: $lh * 0.5;
+    }
+
+    // > .button ~ .button {
+    //     margin-top: $lh * 0.5;
+    // }
+
+    > *:first-child {
+        margin-top: $lh * 2;//0.5
+    }
+
+    .instructions {
+        // align-self: start;
+        // width: $width;
+        text-align: center;
+        p {
+            margin-bottom: $lh * 0.5;//calc(var(--lh) * 1)
+        }
+        p:last-child {
+            margin-bottom: 0;
+        }
+        > :first-child {
+            // margin-top: $lh * 1;//0.5
+        }
+        // p:last-child {
+        //     margin-bottom: 0;
+        // }
+    }
+    .new-game {
+        @include button;
+        // width: $width;
+        // max-width: $button-max-width;
+        border-radius: calc(var(--new-game-button-height) * 0.25);
+    }
+    .resume-game {
+        @include button;
+        // width: $width;
+        // max-width: $button-max-width;
+        border-radius: calc(var(--resume-game-button-height) * 0.25);
+        // box-sizing: inherit;
+    }
+    .home-terminate-game {
+        @include button;
+        // width: $width;
+        // max-width: $button-max-width;
+        border-radius: calc(var(--home-terminate-game-button-height) * 0.25);
+    }
+}
+
+

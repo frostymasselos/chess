@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from './component/home/Header.js';
+import Footer from './component/home/Footer.js';
+import Home from './container/Home.js';
+import Game from './container/Game.js'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
+
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.js</code> and save to reload. Test to see if master branch is hosted.
-        </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-        </a>
-            </header>
-        </div>
-    );
+        <Router>
+            <>
+                <Header />
+                <Switch>
+                    <Route exact path="/" render={(arg) => <Home />} />
+                    <Route path="/:code" render={(url) => <Game params={url.match.url} />} />
+                </Switch>
+                <Footer />
+            </>
+        </Router>
+    )
+
 }
 
-export default App;
+export default App
+// would vanilla JS've captured params?
+

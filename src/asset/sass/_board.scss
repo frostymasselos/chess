@@ -1,0 +1,324 @@
+@function square-dimension($applying-line-height) {
+  @if $applying-line-height {
+    @return calc(var(--board-height) * 0.125);
+  } @else {
+    @return calc((var(--board-height) * 0.125) * 1.5);
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+.z-index-1 {
+  z-index: 1;
+}
+.fizzle {
+  transition: opacity 2s;
+  opacity: 0;
+}
+.dead {
+  display: none;
+}
+
+.unclickable {
+  pointer-events: none;
+}
+.clickable {
+  pointer-events: auto;
+}
+.rotate180 {
+  transform: rotate(180deg);
+}
+
+.white-piece {
+  filter: $white-piece-filter;
+  // color: $white-piece-color;
+}
+.black-piece {
+  filter: $black-piece-filter;//$footer-filter;
+  // color: $black-piece-color;
+}
+.piece-image {
+  width: 80%;//90%;
+  height: 80%;//90%;
+}
+.pawn-image {
+  width: 80%;//80%;
+  height: 80%;//80%;
+}
+///////////////////////////////////////////BOARD//////////////////////////////////////////////////////////////////
+.board-metric-buttons-nav-buttons-flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  --distance-between-board-and-buttons: //calc(var(--board-height) * 0.02); 
+
+  .board-grid-container {
+    --board-dimension-limit: calc(var(--vh100) - var(--header-height) - var(--game-text-height)); //540px 520px //we're stopping it when board's bottom reaches 'fold'.
+    
+    width: 100vw; max-width: var(--board-dimension-limit);
+    height: 100vw; max-height: var(--board-dimension-limit);
+    // border: inset darken($dark-square, 30%) calc(var(--board-height) * 0.02);//$dark-square //30% //1%
+
+    @include grid-container-template(repeat(8, 12.5%), repeat(8, 12.5%));
+    //all squares
+    > div {
+      // @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);//for unknown reasons, grid-centering doesn't work uniformly on all pieces.
+      display: flex; justify-content: center; align-items: center;
+      line-height: square-dimension(true);//calc(var(--board-height) * 0.125); //12.5vw;
+      font-size: square-dimension(false);//calc((var(--board-height) * 0.125) * 1.5); //18.75;
+      background-color: $light-square;
+    }
+    > .black-square {
+      background-color: $dark-square;
+    }
+    .opponent-moved-from-square {
+      background-color: var(--opponent-moved-from-square);
+    }
+    .opponent-moved-to-square {
+      background-color: var(--opponent-moved-to-square);
+    }
+    > .potentialUserSquare {
+      background-image: linear-gradient(
+        to bottom right,
+        $potential-user-square 25%,
+        transparent 25% 100%
+      );
+    }
+    > .potentialClickedOnPieceSquare {
+      background-color: $potential-clicked-on-piece-square;
+    }
+    > .potentialOpponentSquare {
+      background-image: linear-gradient(
+        to bottom right,
+        transparent 75%,
+        $potential-opponent-square 75% 100%
+      );
+    }
+    > .potentialUserAndOpponentSquare {
+      background-image: linear-gradient(
+          to bottom right,
+          $potential-user-square 25%,
+          transparent 25% 100%
+        ),
+        linear-gradient(
+          to bottom right,
+          transparent 75%,
+          $potential-opponent-square 75% 100%
+        ); //linear-gradient(to bottom right, white,yellow);
+    }
+    ///////////////////////////////////////////PIECES//////////////////////////////////////////////////////////////////
+    // > div > div {
+    //   height: 100%;
+    //   overflow: hidden;
+    //   @include grid-container-horizontally-and-vertically-center-GIs();
+    // }
+    .highlighted {
+      filter: $clicked-on-piece-filter;
+    }
+    .pawn {
+      font-size: calc((var(--board-height) * 0.125) * 1.2); //15vw (80% of regular)
+    }
+  }
+
+  .metric-buttons-and-nav-buttons {
+    height: var(--board-height);
+    --button-container-width: 105px; width: var(--button-container-width);
+    margin-left: $lh * 0.5; //var(--distance-between-board-and-buttons)
+    @include grid-container-template(1fr, 3fr 4fr 3fr);
+    grid-template-areas: 
+      "."
+      "metric"
+      "nav"
+    ;
+    // color: $beige;
+    $distance-between-board-and-buttons: $lh * 0.5;
+
+    > div > div:first-child {
+      margin-bottom: $lh * 0.25;
+    }
+
+    > div > div:last-child {
+      // background-color: red;
+      margin-top: $lh * 0.25;
+    }
+
+    --button-font-size: 21px;
+    // --nav-button-font-size: //24px;
+  
+    .game-metric-buttons {
+      margin: ($lh * 0.5) 0;
+      grid-area: metric;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      line-height: $lh * 0.8;
+      //flex-wrap: wrap;🧙‍♂️📱absolutely messes it up on Safari
+
+      > div {
+        font-size: var(--button-font-size);//18px;
+        // width: var(--button-min-width);
+        flex: 1 1 0px;//flex-basis: 0; flex-grow: 1; //height: $button-min-height;//var(--button-container-width);
+        padding: 5% 2%;
+        
+        @include grid-container-template(1fr, 1fr);//grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+        text-align: center;
+
+        background-color: $footer-color;//black;
+        color: $white-piece-color;//white;//$beige;//$dark-square;
+        border: solid grey 2px;//inset
+      }
+
+      
+  
+    .switch {
+      height: 20px;
+      width: 20px;
+      margin: 0 auto;//($lh * 0.125)
+      border-radius: 50%;
+      border: solid 1px black;
+    }
+  
+    .potential-square {
+      border-radius: calc(var(--potential-square-button-height) * 0.1);
+      &-switch-color {
+        background-color: $potential-user-square;
+        border-color: $potential-user-square;
+      }
+    }
+    .opponent-potential-square {
+      border-radius: calc(var(--opponent-potential-square-button-height) * 0.1);
+      &-switch-color {
+        background-color: $potential-opponent-square;
+        border-color: $potential-opponent-square;
+      }
+    }
+    .selected-potential-square {
+      border-radius: calc(var(--selected-potential-square-button-height) * 0.1);
+      &-switch-color {
+        background-color: $potential-clicked-on-piece-square;
+        border-color: $potential-clicked-on-piece-square;
+      }
+    }
+    }
+    .nav-buttons {
+      grid-area: nav;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      > * {
+        // font-size: var(--nav-button-font-size);
+        width: var(--button-container-width); 
+        // height: var(--button-min-width);
+        padding: 2%;
+        margin: 0;
+        text-align: center;
+      }
+    }
+
+    @media screen and (max-width: 695px) {//$tablet🧙‍♂📱this accomodates Safari - Safari wraps buttons onto new lines before other browsers
+      display: flex;
+      flex-direction: column;
+      height: auto; 
+      width: var(--board-height);
+      margin-left: 0;
+      justify-content: initial;
+
+      > div > div:first-child {
+        // background-color: red;
+        margin-bottom: 0;
+      }
+  
+      > div > div:last-child {
+        // background-color: red;
+        margin-top: 0;
+      }
+
+      .game-metric-buttons {
+        margin: ($lh * 0.25) 0;
+        flex: 0 1 auto;
+        flex-direction: row;
+        > div {
+          // margin: 0;
+          padding: 2%;
+          margin-right: $lh * 0.25;
+
+        }
+        > *:last-child {
+          margin-right: 0;
+        }
+      }
+      .nav-buttons {
+        flex: 0 1 auto;
+        flex-direction: row;
+        justify-content: space-evenly;//space-between;
+        // column-gap: $lh * 0.5;
+        > * {
+          width: 285px;//flex-basis: 285px//45%; calc(var(--board-height) * 0.333);
+        }
+        $horizontal-margin-value: 2%;//$lh * 0.5;
+        > *:first-child {
+          margin-left: $horizontal-margin-value * 2;
+          margin-right: $horizontal-margin-value;
+        }
+        > *:last-child {
+          margin-left: $horizontal-margin-value;
+          margin-right: $horizontal-margin-value * 2;
+        }
+      }
+    }
+  }
+}
+
+.pawn-promotion-container {
+  height: calc(var(--board-height) * 0.125);
+  @include grid-container-horizontally-and-vertically-center-GIs(100%, 100%);
+  .pawn-promotion-grid-container {
+    height: 100%;
+    background-color: $dark-square;
+
+    // @include grid-container-horizontally-and-vertically-center-GIs(repeat(auto-fit, minmax(50px, 1fr)), auto); //repeat(4, 25%)
+    display: flex;
+    flex: 1 1 0px;
+    align-items: center;
+  
+    &-color-white {
+      // filter: $white-piece-filter;
+      // color: $white-piece-color;
+      // background-color: $dark-square;//grey//black;//
+    }
+    // &-color-black {
+    //   // filter: $black-piece-filter;
+    //   // color: $black-piece-color;
+    // }
+    > * {
+      width: calc(var(--board-height) * 0.125);
+    }
+  }
+  .pawn-promotion-title {
+    height: 80px;
+    @include grid-container-horizontally-and-vertically-center-GIs();
+  }
+  .pawn-promotion-exit-button {
+    height: 80px;
+    // border-top: dotted $light-square 1px;
+    // border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
+    @include grid-container-horizontally-and-vertically-center-GIs();
+    > * {
+      @include grid-container-horizontally-and-vertically-center-GIs();
+      height: 100%;
+      width: 10%;
+    }
+  }
+}
+///////////////////////////////////////////TRASH|MISC//////////////////////////////////////////////////////////////////
+//make white squares
+// .board-grid-container > div:nth-child(n+2):nth-child(-n+8):nth-child(even),
+// .board-grid-container > div:nth-child(n+9):nth-child(-n+15):nth-child(odd),
+// .board-grid-container > div:nth-child(n+18):nth-child(-n+24):nth-child(even),
+// .board-grid-container > div:nth-child(n+25):nth-child(-n+31):nth-child(odd),
+// .board-grid-container > div:nth-child(n+34):nth-child(-n+40):nth-child(even),
+// .board-grid-container > div:nth-child(n+41):nth-child(-n+47):nth-child(odd),
+// .board-grid-container > div:nth-child(n+50):nth-child(-n+56):nth-child(even),
+// .board-grid-container > div:nth-child(n+57):nth-child(-n+63):nth-child(odd) {
+//     background-color: white;
+// }

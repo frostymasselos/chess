@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Redressed&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Cinzel:wght@600&family=Open+Sans&display=swap');
+/////////////////////////////////////////////////CONSISTENT VARIABLES///////////////////////////////////////////////////////////
+$tablet: 768px;
+$laptop: 1024px;
+$wide: 1440px;
+
+//violet: hsl(-122 44% 63% / 0.74)
+//mint: #A4F9C8
+//green:#81C14B
+//crimson:A4031F #B80C09 //red:D63230
+//beige: #F7DBA7
+//vine-green: ...
+//nice-yellow: #ffc630
+//nice-pink:#cb78aebd
+
+$lh: 1rem;//1.4rem; //(1.4x20=28px)
+$button-min-height: $lh * 3;
+$orange: #FF851B; //FB8B24
+$colors-red-saturation-decrease: #e65151; //colors-red blue contrast #363cff
+$colors-blue: #0074D9;
+$colors-aqua: #7FDBFF;
+$colors-fuscia: #F012BE;
+$colors-green: #2ECC40;
+$vine-green: #38A32A; //#14591D
+$beige: #F7DBA7;
+$header-color: transparent;//#dddddd; 
+$footer-color: #090B19;////#001f3f; //dark-sienna(brown):#3C1518 bluegrey:#090B19 brown#1F0812 indigo:#133C55 green:#012622 
+$footer-filter: invert(6%) sepia(13%) saturate(2281%) hue-rotate(194deg) brightness(93%) contrast(103%);
+$footer-info-color: white;//darkorchid;
+$dark-square: grey;//#ff851b; #925E78 violet-webFF84E8 light-greenBAB700 golden-rodE6AF2E lavaC81D25 purplemunselB118C8 greyishbrown#835c3b
+$light-square: #78b0cb;//#dddddd;//grey;  lighter-to-darker: #BFBFBF #9F9F9F #808080(= 'grey' keyword) #606060 Magnus'-blue:#7897cb #78a9cb #78b0cb(chosen) #6490a7(dark-taken) #308298(light-taken) Magnus-comp(orange):#cba278 TINTS:(Magnus' one)#3e97b0; SHADES:#5A8498 #4B6E7F #3C5866 #2D424C TINTS: light-teal(#71cfc69c)
+                          //GOOD COMBINATION: $orange & brown (#9B2915) $orange & #925E78
+$button-hover: brown;
+$exit-button-color: #cb78aebd;
+$resume-button-color: #ffc630;
+$potential-user-square: #363cff; //$vine-green blue: #363cff;//$colors-blue;
+$potential-opponent-square: #ff4136;
+$potential-clicked-on-piece-square: #85144b;
+$white-piece-color: $beige;//white;
+$black-piece-color: black;
+$white-piece-filter: invert(90%) sepia(15%) saturate(799%) hue-rotate(341deg) brightness(99%) contrast(95%);//white: invert(100%) sepia(18%) saturate(1324%) hue-rotate(231deg) brightness(108%) contrast(109%);
+$black-piece-filter: invert(0%) sepia(4%) saturate(0%) hue-rotate(274deg) brightness(95%) contrast(104%);
+$clicked-on-piece-color: #85144b; //nice-pink#cb78aebd dark-red#851414 light-purple#85147d 
+$clicked-on-piece-filter: invert(14%) sepia(55%) saturate(3565%) hue-rotate(311deg) brightness(93%) contrast(99%);
+$significant-button: #ff851b;//#ffdc00;
+$yellow: #ffdc00; //tetradic pink for yellow: #FF00A2
+$light-grey: #dddddd;
+html {
+  font-family: 'Cormorant Garamond';//'Viaoda Libre', cursive;
+  font-size: 28px;//20px;
+  // background-image: url('https://images.unsplash.com/photo-1525034687081-c702010cb70d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8d29vZCUyMHRleHR1cmV8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80') ;//url('https://www.psdgraphics.com/file/light-wooden-background.jpg');
+  --vh100: calc(100 * var(--vh));
+  --margin-from-containing-block: 20px;//?
+  --width-of-text-containers: 90%;
+  --button-min-width: 100px;
+  --header-height: calc(12.5 * var(--vh));//12.5vh//10
+  --footer-height: calc(17.5 * var(--vh));//17.5vh;//16 ( = golden ratio w/title?)
+  --light-brown: #bc875f; --light-beige: #f3d8b2; --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
+  --light-grey: #808080;
+  --yousef-Dark: #0D0221;
+  --opponent-moved-from-square: #00bcd4; //dark-teal:#147085 teal-green:#148560 light-blue#00bcd4 $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); hsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a $colors-aqua; 
+  --opponent-moved-to-square: #00bcd4;
+}
+///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
+/////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////
+@mixin grid-container-template($column-value: 1fr, $row-value: 1fr) {
+  display: grid;
+  grid-template-columns: $column-value;
+  grid-template-rows: $row-value;
+}
+@mixin grid-container-horizontally-and-vertically-center-GIs(
+  $column-value: 1fr,
+  $row-value: 1fr
+) {
+  @include grid-container-template($column-value, $row-value);
+  place-items: center;
+}
+@mixin button {
+  background-color: $white-piece-color;//$dark-square; pink:#f5a3d8bd #cb78aebd //RESUME BUTTON: gold: rgb(264 198 48 / 1)#F8C630 #E7BB41 teal(hsl(211 44% 63% / 0.74)hsl(175 44% 63% / 0.74)) blue(color-of-board)
+  width: 90%;
+  padding: 10px;
+  border: solid 3px grey;//$dark-square; //#9F8900(htmlcolorcodes 3rd shade)  #FF00A2;//#900C3F;//brown;
+  min-height: $button-min-height; //100%
+  max-width: 360px; //320 380 400
+  margin-bottom: $lh * 0.5;
+  justify-self: center; //align-self: start;
+  @include grid-container-horizontally-and-vertically-center-GIs();
+  &:hover {
+    // background-color: desaturate($white-piece-color, 25%);
+  }
+}
+@mixin board-info-button {
+  @include grid-container-horizontally-and-vertically-center-GIs();
+}
+@mixin fresh-page-container {
+  height: calc(var(--vh100) - var(--header-height) - var(--footer-height));
+  text-align: center;
+  display: flow-root; //padding-top: 55px;stops it from doing parental MC.
+  p {
+    margin-bottom: ($lh * 0.5);
+  }
+  p:nth-child(1) {
+    margin-top: ($lh * 0.5);
+  }
+}
+/////////////////////////////////////////////////RESET///////////////////////////////////////////////////////////
+@mixin copy-for-anchor {
+  box-sizing: inherit;
+  color: unset; //don't know why we need this for color to not be purple(🧨)
+}
+*,
+::before,
+::after {
+  margin-top: 0;
+  margin-right: 0;
+  // padding: 0;
+  margin: 0;
+  @include copy-for-anchor();
+}
+#root {
+  box-sizing: border-box;
+  @media screen and (max-width: 500px) {
+    line-height: $lh;
+  }
+}
+body {
+  margin: 0;
+}
+h1 {
+  // font-size: $lh * 2;
+  margin-top: $lh * 0.5;
+  margin-bottom: $lh * 1;
+}
+a {
+  //all: unset;🐉 see if commenting-out this solves ''start new game' button appears hovered on on mobile when returning home'
+  @include copy-for-anchor();
+  cursor: default;
+  text-decoration: initial;
+}
+img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+/////////////////////////////////////////////////GENERAL//////////////////////////////////////////////////////////
+.header {
+  height: var(--header-height);
+  font-size: calc(var(--header-height) * 0.75); //60px
+  background-color: $header-color;
+  @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+  align-items: stretch;
+  > a {
+    height: 100%;
+    border-bottom: 1px solid black;
+    @include grid-container-horizontally-and-vertically-center-GIs(var(--header-height) var(--header-height), 100%);
+    > * {
+      height: 80%;//90%;
+      width: 80%;//90%;
+      filter: $black-piece-filter;
+    }
+    > *:first-child {
+      justify-self: end;
+    }
+    > *:last-child {
+      justify-self: start;
+      display: inline-block;
+      -moz-transform: scale(-1, 1);
+      -webkit-transform: scale(-1, 1);
+      transform: scale(-1, 1);
+    }
+  }
+}
+.footer {
+  font-size: 20px;//21px 15px;
+  $lh: 1.2em;
+  $distance-from-footer-top: $lh * 0.25;
+  line-height: $lh;
+  width: 100vw;
+  height: var(--footer-height);
+  background-color: $footer-color;
+  color: $beige;//$footer-info-color;
+  @include grid-container-template(1fr, 30% 70%); //40% 60% when email was included//38% 62%
+  .footer-info {
+    @include grid-container-horizontally-and-vertically-center-GIs();
+    text-align: center;
+    align-items: start;//start; when email was included
+    @media screen and (min-width: $tablet) {
+      // padding-left: 0%;
+    }
+    > p {
+      margin-top: $distance-from-footer-top;
+    }
+  }
+  .icons {
+    @include grid-container-template(repeat(3, 1fr), 100%); //🐉min-max here.
+    max-width: 350px;
+    margin: 0 auto;
+    a {
+      margin-bottom: $distance-from-footer-top;
+    }
+  }
+  @media screen and (min-width: $tablet) {
+    $cell-column-2: 30%;
+    $cell-column-1: 100% - ($cell-column-2 * 2);
+    justify-content: end;
+    grid-template-columns: $cell-column-1 $cell-column-2;
+    grid-template-rows: 100%;
+    > .icons {
+      margin: 0;
+      // margin-right: 2%;
+      justify-self: end;
+      a {
+        margin: calc(0.25 * var(--footer-height)) 0;
+      }
+    }
+  }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@import "./home.scss";
+@import "./game.scss";
+@import "./board.scss";
+// @import "./ystyling.scss";
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#root .warning-button {
+  background-color: $colors-red-saturation-decrease;
+  // border-color: #4F0080;
+  &:hover {
+    // background-color: darken($colors-red-saturation-decrease, 8%);
+    // background-color: desaturate($colors-red-saturation-decrease, 18%);
+  }
+}
+// #root .significant-button {
+//   background-color: $significant-button;
+//   &:hover {
+//     background-image: linear-gradient($significant-button, brown);
+//   }
+// }
