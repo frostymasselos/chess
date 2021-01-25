@@ -62,8 +62,8 @@ html {
   --light-brown: #bc875f; --light-beige: #f3d8b2; --light-beige-filter: invert(89%) sepia(57%) saturate(387%) hue-rotate(307deg) brightness(101%) contrast(91%);
   --light-grey: #808080;
   --yousef-Dark: #0D0221;
-  --opponent-moved-from-square: #147085; //dark-teal:#147085 teal-green:#148560 $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); $another-violet:#76a9ffhsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a gold:#cbc478 #cb9a78 $colors-aqua; 
-  --opponent-moved-to-square: #147085;
+  --opponent-moved-from-square: #00bcd4; //dark-teal:#147085 teal-green:#148560 light-blue#00bcd4 $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); hsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a $colors-aqua; 
+  --opponent-moved-to-square: #00bcd4;
 }
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
 /////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////
