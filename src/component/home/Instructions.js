@@ -2,7 +2,6 @@ export default function Instructions({ url }) {
     return (
         <div className="instructions">
             <p>
-                Test change in remote repo url has been recognised by local repo.
                 Clicking Start New Game will direct you to a random url.
                 Share this url with another player for them to join.
                 {url ? <span><br></br>Url: {window.location.origin}/{url}</span> : null}
