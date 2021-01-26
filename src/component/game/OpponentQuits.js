@@ -2,16 +2,12 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
-function OpponentQuits({ cssFunctions, unmountCSSFunctions }) { //refactor so that its a pop-up with everything unclickable behind it
+function OpponentQuits({ cssFunctions, unmountCSSFunctions }) {
 
     let time = useRef(5);
     let [arbitrarilyRefresh, setArbitrarilyRefresh] = useState(false);
 
     useEffect(() => {
-        //ui
-        // const root = document.querySelector(`#root`);
-        // root.classList.add(`unclickable`);
-        //timer
         let timer = setInterval(() => {
             if (time.current > 1) {
                 time.current = time.current - 1;

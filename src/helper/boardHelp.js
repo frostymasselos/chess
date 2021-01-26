@@ -11,7 +11,7 @@ import sparseKnight from '../asset/images/chess_pieces/sparse/knight.svg';
 import sparseBishop from '../asset/images/chess_pieces/sparse/bishop.svg';
 import sparsePawn from '../asset/images/chess_pieces/sparse/pawn.svg';
 
-const pieceMoveObj = { //add onto these as #2 strategy to catering for black
+const pieceMoveObj = {
     white: {
         pawn: {
             direction: ["pawn_forward", "pawn_diagonal_forward_left", "pawn_diagonal_forward_right",],
@@ -171,12 +171,7 @@ const directionConverterObj = {
                 }
             }
             parent: for (let currentTotal = 1, potentialSquare = originalSquareIndex + (valueUp + valueLeft) * currentTotal, currentCounter = 1; (currentCounter <= counter) && (currentTotal <= total) && potentialSquare <= 63; currentTotal++, potentialSquare = potentialSquare + (valueUp + valueLeft) * currentTotal, currentCounter++) {
-                //check if potentialSquare occupied by opponent piece
-                // function enpassant() {
-                //     //return true;
-                //     return boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.piece.name.includes("pawn") && squareWithOpponentPiece.piece.onDoubleSquareMove && squareWithOpponentPiece.index === originalSquareIndex - 1);
-                // }
-                if (!(boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare) || enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, valueLeft))) {//🐉and there's no enemy 
+                if (!(boardArraySquaresWithOpponentPiece.some((squareWithOpponentPiece) => squareWithOpponentPiece.index === potentialSquare) || enpassant(boardArraySquaresWithOpponentPiece, originalSquareIndex, valueLeft))) {
                     break parent;
                 }
                 legalSecondarySquareIndexes.push(potentialSquare);
@@ -258,7 +253,7 @@ const directionConverterObj = {
             return legalSecondarySquareIndexes;
         }
     },
-    forward: { //check to see not above 63
+    forward: {
         value: 8,
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
             const value = 8;
@@ -283,14 +278,11 @@ const directionConverterObj = {
                 if (potentialSquare <= 63) {
                     legalSecondarySquareIndexes.push(potentialSquare);
                 }
-                // else { //in case of a knight hopping.
-                //     break;
-                // } 
             } //console.log(legalSecondarySquareIndexes);
             return legalSecondarySquareIndexes;
         },
     },
-    backward: {//-8, //check to see not below 0.
+    backward: {
         value: -8,
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece) {
             const value = -8;
@@ -314,9 +306,6 @@ const directionConverterObj = {
                 if (potentialSquare >= 0) {
                     legalSecondarySquareIndexes.push(potentialSquare);
                 }
-                // else { //in case of a knight hopping.
-                //     break;
-                // } 
             }
             return legalSecondarySquareIndexes;
         }

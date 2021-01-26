@@ -29,5 +29,3 @@ function Footer(params) {
 }
 
 export default Footer;
-
-{/* <br></br>e: ryanfrost2015@gmail.com. */ }

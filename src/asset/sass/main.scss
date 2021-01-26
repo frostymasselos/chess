@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Redressed&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Cinzel:wght@600&family=Open+Sans&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Redressed&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Open+Sans&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Cinzel:wght@600&family=Open+Sans&display=swap');
 /////////////////////////////////////////////////CONSISTENT VARIABLES///////////////////////////////////////////////////////////
 $tablet: 768px;
 $laptop: 1024px;
@@ -117,7 +117,6 @@ html {
 ::after {
   margin-top: 0;
   margin-right: 0;
-  // padding: 0;
   margin: 0;
   @include copy-for-anchor();
 }
@@ -131,12 +130,10 @@ body {
   margin: 0;
 }
 h1 {
-  // font-size: $lh * 2;
   margin-top: $lh * 0.5;
   margin-bottom: $lh * 1;
 }
 a {
-  //all: unset;🐉 see if commenting-out this solves ''start new game' button appears hovered on on mobile when returning home'
   @include copy-for-anchor();
   cursor: default;
   text-decoration: initial;
@@ -183,20 +180,19 @@ img {
   height: var(--footer-height);
   background-color: $footer-color;
   color: $beige;//$footer-info-color;
-  @include grid-container-template(1fr, 30% 70%); //40% 60% when email was included//38% 62%
+  @include grid-container-template(1fr, 30% 70%);//40% 60% when email was included//38% 62%
   .footer-info {
     @include grid-container-horizontally-and-vertically-center-GIs();
     text-align: center;
-    align-items: start;//start; when email was included
+    align-items: start;//`start` when email was included
     @media screen and (min-width: $tablet) {
-      // padding-left: 0%;
     }
     > p {
       margin-top: $distance-from-footer-top;
     }
   }
   .icons {
-    @include grid-container-template(repeat(3, 1fr), 100%); //🐉min-max here.
+    @include grid-container-template(repeat(3, 1fr), 100%);
     max-width: 350px;
     margin: 0 auto;
     a {
@@ -211,7 +207,6 @@ img {
     grid-template-rows: 100%;
     > .icons {
       margin: 0;
-      // margin-right: 2%;
       justify-self: end;
       a {
         margin: calc(0.25 * var(--footer-height)) 0;

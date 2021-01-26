@@ -1,4 +1,4 @@
-let bigObj = { //have a demo like this ready in db (that can't be deleted) that we build from
+let bigObj = {
     user1: {
         signedIn: false,
         moved: 0,

@@ -1,6 +1,5 @@
 import bigObj from '../helper/db';
 import { useState, useEffect, useRef } from 'react';
-import Test from '../component/Test.js';
 import ErrorPage from '../component/game/ErrorPage.js';
 import Exit from '../component/game/Exit.js';
 import Waiting from '../component/game/Waiting.js';
@@ -58,7 +57,6 @@ function Game({ params }) {
     function cssFunctions() {
         roundCornersOfButtons(); window.addEventListener('resize', roundCornersOfButtons);
         makeCSSVariableOfGameTextHeight(); window.addEventListener('resize', makeCSSVariableOfGameTextHeight);
-        // makeCSSVariableOfBoardHeight(); window.addEventListener('resize', makeCSSVariableOfBoardHeight);
         makeVHVariable(); window.addEventListener('resize', makeVHVariable);
     }
     function makeVHVariable() {
@@ -83,7 +81,6 @@ function Game({ params }) {
     function unmountCSSFunctions() {
         window.removeEventListener('resize', roundCornersOfButtons);
         window.removeEventListener('resize', makeCSSVariableOfGameTextHeight);
-        // window.removeEventListener('resize', makeCSSVariableOfBoardHeight);
         window.removeEventListener('resize', makeVHVariable);
     }
     //NON-CSS
@@ -116,7 +113,7 @@ function Game({ params }) {
         async function opponentHasMoved(e) {
             console.log(`callback fired for ${opponent} moving`, e.val());
             await game.child(`${you}`).update({ canMove: true });
-            setCanMove(true); //setTriggerBoardUseEffect(Math.random()); //only need use canMove?
+            setCanMove(true);
         }
         game.child(`${opponent}`).orderByKey().equalTo(`moved`).on('child_changed', opponentHasMoved);
     }
@@ -129,7 +126,7 @@ function Game({ params }) {
             setCanMove(false);
             setUser2SignedIn(false); setWaiting(false);//stops TurnNotifier showing
             await game.child(`${you}`).update({ canMove: false });
-            setAskForRematch(true); roundCornersOfButtons();//🐉make a useEffect that listens for setAskForRematch turning true?
+            setAskForRematch(true); roundCornersOfButtons();
         }
         db.ref(`matches/${authInfo.current.url}`).orderByKey().equalTo(`winner`).on('child_changed', endGame);
     }
@@ -157,7 +154,7 @@ function Game({ params }) {
         async function seeWhoHasRequestedRematch(e) {
             console.log("someone has requested rematch");
             await game.orderByKey().on(`value`, (e) => {
-                game.off();//remove listener//🐉probably not the right way to remove.
+                game.off();//remove listener//
                 if (e.val().user1.rematch && e.val().user2.rematch) {
                     console.log("both players want rematch");
                     game.child(`${you}`).off(); game.child(`${opponent}`).off();//remove listeners (also removes listener for opp moving).
@@ -175,7 +172,6 @@ function Game({ params }) {
             console.log("executing restart game");
             game.child(`user1`).off('value', next);//remove listener
             // reset db & decide who's white 
-            // let changeOfColor = '';
             await game.set(bigObj);
             if (Math.random() > 0.5) {
                 console.log('user1 is black');
@@ -183,18 +179,16 @@ function Game({ params }) {
                 await game.child('user2/pieces').set(bigObj.user1.pieces);
                 await game.child(`user1`).update({ white: false });
                 await game.child(`user2`).update({ white: true, canMove: true });
-                // changeOfColor = authInfo.current.color === "white" ? true : '';
             } else {
                 console.log('user1 is white');
                 await game.child('user1/pieces').set(bigObj.user1.pieces);
                 await game.child('user2/pieces').set(bigObj.user2.pieces);
                 await game.child(`user1`).update({ white: true, canMove: true });
                 await game.child(`user2`).update({ white: false });
-                // changeOfColor = authInfo.current.color === "black" ? true : '';
             }
             await game.child(`user1`).update({ signedIn: true });
             setWinner(''); setWaitingForOpponentToConfirmRematch(false);
-            setReset(Math.random())//below setReset won't work alone🐉
+            setReset(Math.random())
             setRematching(true);
             setArbitrary(Math.random());
             await game.child(`user2`).update({ signedIn: true, recentlyReset: true });
@@ -229,7 +223,7 @@ function Game({ params }) {
                 //THE GAME EXISTS
                 const match = e.val()[authInfo.current.url]; const user1 = match.user1; const user2 = match.user2; //console.log("match:", match, "user1:", user1, "user2:", user2);
                 let authListener = auth.onAuthStateChanged(() => {
-                    authListener(); //remove listener
+                    authListener();//remove listener
                     if (auth.currentUser) { //console.log("authSignedIn");
                         //USER1 1ST TIME OR USER1|2 RETURNING OR INTRUDING
                         authInfo.current = { ...authInfo.current, user: auth.currentUser.email.includes("user1") ? "user1" : "user2", email: auth.currentUser.email };
@@ -253,7 +247,7 @@ function Game({ params }) {
                                         setUser2SignedIn(true); console.log("user2 is signed in");
                                         setWaiting(false);
                                     } else {
-                                        //USER2 NOT SIGNED IN YET✅
+                                        //USER2 NOT SIGNED IN YET
                                         setWaiting(true); console.log("user2 not signed in");
                                         setUser2SignedIn(false);
                                     }
@@ -280,8 +274,8 @@ function Game({ params }) {
                             } else {
                                 //USER2 RETURNING
                                 console.log("user2 returning");
-                                listenerForOpponentQuitting(game, "user2", "user1");//✅
-                                listenerForOpponentMoving(game, "user2", "user1");//✅
+                                listenerForOpponentQuitting(game, "user2", "user1");
+                                listenerForOpponentMoving(game, "user2", "user1");
                                 listenerForWinner(game, "user2");
                                 listenerForUser1RestartingGame(game, "user2", "user1");
                                 authInfo.current = { ...authInfo.current, color: user2.white ? "white" : "black", pawnPromotionNumber: user2.pawnPromotionNumber };
@@ -292,7 +286,7 @@ function Game({ params }) {
                                 isAWinnerDeclared(match, user2);
                                 cssFunctions();
                                 if (rematching) {
-                                    restartGame2();//🐉 add for user2
+                                    restartGame2();
                                 }
                             }
                         } else {
@@ -300,9 +294,9 @@ function Game({ params }) {
                             console.log("signed in user1|2 intruding");
                             //IS GAME FULL?
                             if (user2.signedIn) {
-                                turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");//setInvalidRoute(true); console.log("game full");//✅
+                                turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");
                             } else {
-                                turnAllPresentationalStateOnOrOffApartFrom(false, "setOnForeignMatch");//setOnForeignMatch(true); console.log('on foreign match'); 
+                                turnAllPresentationalStateOnOrOffApartFrom(false, "setOnForeignMatch");
                             }
                         }
                     } else {
@@ -310,13 +304,13 @@ function Game({ params }) {
                         console.log("user2 first time");
                         if (user2.signedIn) {
                             //INTRUDING ON ANOTHER GAME (USER2 ALREADY dB SIGNED IN)
-                            turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");//setInvalidRoute(true); console.log("invalidRoute - user2 db already signed in");
+                            turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");
                         } else {
                             console.log("signing in user2");
                             (async function name(params) {
                                 //WE CAN SIGN-IN USER2
                                 //auth sign in
-                                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); //might not need it.
+                                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);//might not need it.
                                 await auth.createUserWithEmailAndPassword(`${authInfo.current.url}@user2.com`, `${authInfo.current.url}`);
                                 //db sign in
                                 if (!user2.white) {
@@ -324,24 +318,14 @@ function Game({ params }) {
                                     await game.child(`user1`).update({ canMove: true });
                                 }
                                 await game.child('user2').update({ signedIn: true });
-                                setArbitrary(Math.random()); //rerun useEffect.
+                                setArbitrary(Math.random());//rerun useEffect.
                             })();
                         }
                     };
-                }); //no code should execute after this authListener.
+                });//no code should execute after this authListener.
             } else {
                 //THE GAME DOES NOT EXIST
-                //is user auth signedIn?
                 turnAllPresentationalStateOnOrOffApartFrom(false, "setInvalidRoute");
-                // setPlaying(false);
-                // setUser2SignedIn(false);
-                // setWaiting(false);
-                // setOnForeignMatch(false); 
-                // setInvalidRoute(true); console.log("invalidRoute");
-                // if (opponentQuits) {
-                // //BECAUSE OPPONENT QUIT
-                // } else {
-                // //NOT BECAUSE OPPONENT QUIT
             }
         });
         return () => {

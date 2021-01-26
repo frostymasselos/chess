@@ -8,7 +8,6 @@ function ErrorPage({ cssFunctions, unmountCSSFunctions, roundCornersOfButtons })
         return () => {
             console.log("unmounting");
             unmountCSSFunctions();
-            // window.removeEventListener('resize', roundCornersOfButtons);✅
         };
     }, []);
 

@@ -57,7 +57,7 @@ function Home() {
             function resetState(params) {
                 setNotSignedIn(true); setUrl(''); setUser('')
             }
-            //🐉if auth is signed in...
+            //if auth is signed in...
             if (e) {
                 const credential = firebase.auth.EmailAuthProvider.credential(`${url}@${user}.com`, `${url}`);
                 await auth.currentUser.reauthenticateWithCredential(credential);
@@ -117,12 +117,12 @@ function Home() {
         });
         earlyCSS();
         return () => {
-            unmountEarlyCSSFunctions();//is this best placed in this useEffect?🐉
+            unmountEarlyCSSFunctions();
         }
     }, []);
     //CSS
     useEffect(() => {
-        if (cssUseEffectFirstTime.current) { //🐉un-comment back.
+        if (cssUseEffectFirstTime.current) {
             cssUseEffectFirstTime.current = false; return;
         }
         //consistently round corners of buttons
@@ -146,19 +146,3 @@ function Home() {
 }
 
 export default Home;
-
-// useEffect(() => {
-//     //creating CSS variables
-//     const root = window.document.querySelector(`#root`);
-//     //#1 
-//     // root.style.setProperty(`--line-height`, `${window.getComputedStyle(root).getPropertyValue(`line-height`)}`);
-//     //#2
-//     var style = document.createElement('style');
-//     style.innerHTML = `
-//         #root {
-//             --line-height: ${window.getComputedStyle(root).getPropertyValue(`line-height`)};
-//         }
-//     `;
-//     var ref = document.querySelector('script');
-//     ref.parentNode.insertBefore(style, ref);
-// }, []);

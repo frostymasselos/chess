@@ -5,10 +5,10 @@ function TerminateMatchForNewGame({ intruderInfo, setArbitrary, db, auth, fireba
 
     const intruderUrl = useRef(intruderInfo.email.slice(0, 6));
 
-    async function backToIntrudersGame() {//console.log(intruderInfo.url);
+    async function backToIntrudersGame() {
         window.location.replace(`/${intruderUrl.current}`);//even though you nav to a different url, using `Link` to nav doesn't 'update' Game. Try arbitrarily refresh?🐉
     }
-    function terminateMatchForNewGame() { //same as TerminateMatch except don't nav home: update page.
+    function terminateMatchForNewGame() {
         async function next() {
             authListener();
             const credential = firebase.auth.EmailAuthProvider.credential(`${intruderInfo.email}`, `${intruderUrl.current}`);
@@ -27,7 +27,6 @@ function TerminateMatchForNewGame({ intruderInfo, setArbitrary, db, auth, fireba
         return () => {
             console.log("unmounting");
             unmountCSSFunctions();
-            // window.removeEventListener('resize', roundCornersOfButtons);✅
         };
     }, []);
 

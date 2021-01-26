@@ -1,8 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Redressed&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Open+Sans&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Cinzel:wght@600&family=Open+Sans&display=swap");
 html {
   font-family: 'Cormorant Garamond';
   font-size: 28px;
@@ -482,7 +478,6 @@ img {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  --distance-between-board-and-buttons: //calc(var(--board-height) * 0.02);
 }
 
 .board-metric-buttons-nav-buttons-flex-container .board-grid-container {

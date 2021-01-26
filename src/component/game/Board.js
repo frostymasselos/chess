@@ -36,7 +36,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
 
     function fillBoardArrayWithSquares() {
         boardArray.current = [];
-        for (let num = 0; num < 64; num++) { //works
+        for (let num = 0; num < 64; num++) {
             boardArray.current.push({
                 index: num,
                 piece: null,
@@ -115,7 +115,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
         //if black, 180 rotate squares 
         if (authInfo.color === "black") {
             let board = document.querySelector('.board-grid-container');
-            let squares = board.children;//Array.from()
+            let squares = board.children;
             for (const square of squares) {
                 console.log("rotating black squares");
                 square.classList.add(`rotate180`);
@@ -493,9 +493,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 //potentially kill opponent piece
                 if (opponentToKill) {
                     await opponentDb.child(`pieces/${opponentToKill}`).update({ alive: false });
-                    //switch off opponent movement highlighted squares
-                    // const [opponentMovedFromSquare, opponentMovedToSquare] = [window.document.querySelector('.opponent-moved-from-square'), window.document.querySelector('.opponent-moved-to-square')];//console.log(opponentMovedFromSquare, opponentMovedToSquare);
-                    // opponentMovedFromSquare.classList.remove('.opponent-moved-from-square'); opponentMovedToSquare.classList.remove('opponent-moved-to-square');
                 }
                 //potentially update pawns (🐉refactor to use boardArray) Alternative was to search for data again in db.
                 const pawns = [];
@@ -511,7 +508,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                     }
                 });
                 //potentially update pawn
-                if (boardArrayOriginalPiece.name.includes(`pawn`) && (boardArrayOriginalPiece.moved < 2)) {//🐉changing..
+                if (boardArrayOriginalPiece.name.includes(`pawn`) && (boardArrayOriginalPiece.moved < 2)) {
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: boardArrayOriginalPiece.moved + 1 });
                     if (secondarySquareIndex - originalSquareIndex === 16 || secondarySquareIndex - originalSquareIndex === -16) {
                         await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ justMoved2Squares: true });
@@ -541,7 +538,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                     if (originalSquareIndex - secondarySquareIndex === 2) {
                         //king-moved-absolutely-left
                         const newColumnPositionForRook = "4/5";
-                        if (authInfo.color === "white") { //🐉abstract this into a function?
+                        if (authInfo.color === "white") {
                             //white
                             respositionRookFromCastling(authInfo.color, 1, 3, newColumnPositionForRook);
                         } else {
@@ -562,35 +559,8 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 }
 
                 clickedOnPiece.current = false;//⚠️used to be under 'EXECUTING USER'S CLICK'
-                // setShowingUserPiecesPotentialMoves(false);
-                // setShowingOpponentPiecesPotentialMoves(false);
-                setCanMove(false);//boardTag.classList.add(`unclickable`);
+                setCanMove(false);
                 await userDb.update({ canMove: false, moved: Math.random() });
-            }
-            function checkIfOpponentIsInCheckOrCheckmate() {
-                //check if opponent's king's in check/checkmate
-                const board2 = JSON.parse(JSON.stringify(boardArray.current));
-                board2[secondarySquareIndex].piece = board2[originalSquareIndex].piece;
-                board2[originalSquareIndex].piece = null;
-                // if (isUserKingInCheck(board2, opponentColor.current, authInfo.color.current)) {
-                //     console.log("opponent king in check");
-                // } else {
-                //     console.log("opponent king not in check");
-                // }
-                // if (isUserKingInCheck(boardArray.current, opponentColor.current, authInfo.color.current)) {
-                //     const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current, opponentColor.current);
-                //     const squaresWithUserPieces = squaresWithUserAndOpponentPieces[0];
-                //     const squaresWithOpponentPieces = squaresWithUserAndOpponentPieces[1];
-                //     if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, opponentColor.current, authInfo.color.current)) {
-                //         // setCheckMate(true); console.log("opponent is in checkmate");
-                // db.ref(`matches/${authInfo.url}/winner`).update({
-                // winner: authInfo.user
-                // return;
-                // });
-                //     } else {
-                //         // setCheck(true); console.log("opponent is in check");
-                //     }
-                // }
             }
         } else {
             //haven't previously clicked on piece
@@ -627,7 +597,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
         let board = document.querySelector('.board-grid-container');
         if (authInfo.color === "black") {
             console.log("board is rotated");
-            board.classList.add(`rotate180`);//board.style.setProperty("transform", "rotate(180deg)");
+            board.classList.add(`rotate180`);
         } else {
             board.classList.remove(`rotate180`); console.log("board is straight");
         }
@@ -654,8 +624,8 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                         }
                         continue;
                     }
-                    let rowPosition = objOfPieces[key].rowPosition.slice(0, 1); //"1/2"
-                    let columnPosition = objOfPieces[key].columnPosition.slice(0, 1); //"6/7"
+                    let rowPosition = objOfPieces[key].rowPosition.slice(0, 1);
+                    let columnPosition = objOfPieces[key].columnPosition.slice(0, 1);
                     let index = (8 - rowPosition) * 8 + (columnPosition - 1);
                     for (let square of boardArray.current) {
                         if (index === square.index) {
@@ -669,17 +639,17 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             fillBoardArrayWithPieces(match.user1.pieces);
             fillBoardArrayWithPieces(match.user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            if (canMove) { //!(match.user1.movedTo === match.user2.movedTo && !canMove)
+            if (canMove) {
                 highlightOpponentMovement(match[opponent.current]);
             }
             if (!canMove) {
                 highlightYourMovement(match[authInfo.user]);
             }
             if (showingUserPiecesPotentialMoves) {
-                highlightSquares("user", true);//provide override arg🐉
+                highlightSquares("user", true);
             }
             if (showingOpponentPiecesPotentialMoves) {
-                highlightSquares("opponent", true);//provide override arg
+                highlightSquares("opponent", true);
             }
             runCSSFunctions();
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
@@ -701,7 +671,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 const winner = opponentColor.current;
                 let firstLetterCapitlaised = winner.slice(0, 1).toUpperCase();
                 let winnerCapitalised = winner.replace(/\w/, `${firstLetterCapitlaised}`); console.log(firstLetterCapitlaised, winnerCapitalised);
-                db.ref(`matches/${authInfo.url}`).update({ winner: `${winnerCapitalised}` }); //(${opponent.current})
+                db.ref(`matches/${authInfo.url}`).update({ winner: `${winnerCapitalised}` });
             }
             setCheck(false);
         });
@@ -718,13 +688,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             squareTag.onclick = onClickHandler;
         }
     });
-    //reset metric buttons
-    useEffect(() => {
-        // console.log("HERE");
-        // highlightSquares.bind(null, "opponent");
-        // highlightSquares.bind(null, "user"); 
-        // decideToTurnOnOrOffClickedOnPiecePotentialMovesButton();
-    }, [canMove]);
 
     return (
         <>
@@ -762,30 +725,3 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
 }
 
 export default Board;
-
-// if (authInfo.color.current === "black") {
-//     const duplicate = [...boardArray.current.reverse()];
-//     for (const square of duplicate) {
-//         square.index = 63 - square.index;
-//         if (square.piece) {
-//             const newRowPosition = 9 - Number.parseInt(square.piece.rowPosition[0])
-//             square.piece.rowPosition = `${newRowPosition}/${newRowPosition + 1}`;
-//             const newColumnPosition = 9 - Number.parseInt(square.piece.columnPosition[0])
-//             square.piece.columnPosition = `${newColumnPosition}/${newColumnPosition + 1}`;
-//         }
-//     }
-//     boardArray.current = duplicate;
-// }
-
-// function returnIndexOfSquare(square) {
-//     const rowPosition = window.getComputedStyle(square).getPropertyValue('grid-row').slice(0, 1); //console.log(rowPosition);
-//     const columnPosition = window.getComputedStyle(square).getPropertyValue('grid-column').slice(0, 1);
-//     return (8 - rowPosition) * 8 + (columnPosition - 1); 
-// }
-//const originalSquareIndex = returnIndexOfSquare(clickedOnPiece.current.square); //console.log("originalSquareIndex:", originalSquareIndex);
-//const secondarySquareIndex = returnIndexOfSquare(e.currentTarget); console.log("secondarySquareIndex:", secondarySquareIndex);
-
-// function thereAreDeadPiecesForPawnToPromoteTo() {
-//     const possiblePromotions = ["rook", "knight", "bishop", "queen"];
-//     return graveyard.current.some((deadPiece) => possiblePromotions.some((possiblePromotion) => deadPiece.name.includes(possiblePromotion)));
-// }

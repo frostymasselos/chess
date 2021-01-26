@@ -12,7 +12,7 @@ export default function PawnPromotion({ pawnPromotionGraveyard, updatePieceToPro
     function options() {
         const optionTags = [];
         const potentialPieces = [{ name: `rook${pawnPromotionNumber}` }, { name: `knight${pawnPromotionNumber}` }, { name: `bishop${pawnPromotionNumber}` }, { name: `queen${pawnPromotionNumber}` }];
-        for (const piece of potentialPieces) {//pawnPromotionGraveyardFilteredOutDuplicateNames
+        for (const piece of potentialPieces) {
             function classVal() {
                 let classVal = "piece-image ";
                 classVal += `${authInfo.color}-piece `;

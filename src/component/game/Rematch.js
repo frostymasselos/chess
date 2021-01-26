@@ -10,4 +10,3 @@ export default function Rematch({ indicateInterestInRematch }) {
         </>
     )
 }
-//request-rematch-button

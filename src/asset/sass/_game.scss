@@ -10,17 +10,13 @@
   }
   p {
     margin: $lh * 0.5 0;
-    // :nth-last-child() {
-
-    // }
   }
 }
 
 .floating-home-button {
-  @include button; //background-color: pink;
+  @include button;
   border-radius: calc(var(--floating-home-button-button-height) * 0.25);
   margin: $lh * 0.5 auto; //($lh * 0.5)
-  // margin-bottom: ($lh * 0.5);
 }
 .exit-game-button {
   @include button;
