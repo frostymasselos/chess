@@ -13,7 +13,7 @@ function Footer(params) {
                     </p>
                 </div>
                 <div className="icons">
-                    <a href="https://github.com/frostymasselos" target="_blank">
+                    <a href="https://github.com/rfrosty" target="_blank">
                         <img src={githubPNG} className="github-img" />
                     </a>
                     <a href="https://stackoverflow.com/users/14037283/tonitone120?tab=summary" target="_blank">
