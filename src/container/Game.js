@@ -50,7 +50,7 @@ function Game({ params }) {
 
     //info
     let authInfo = useRef({ url: params.slice(1) });
-    const [auth, setAuth] = useState(firebase.auth());//only recalculate when canMove changes?
+    const [auth, setAuth] = useState(firebase.auth());//only recalculate when canMove changes?🧙‍♂️
     const [db, setDb] = useState(firebase.database());
 
     //CSS

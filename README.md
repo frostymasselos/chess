@@ -12,4 +12,4 @@ Works on latest Chrome (87), Firefox (84) & Safari (13) specificially tested on 
     * Castling ommited.
     
 ::Styling::
-    * Not completely responsive. i) Making the window wide & short causes overflow. ii) Making the window incredibly short causes overflow.
+    * Was made on a 13-inch Macbook. Not completely responsive. i) Making the window wide & short causes the match buttons to overflow. ii) Making the window incredibly short causes overflow.
