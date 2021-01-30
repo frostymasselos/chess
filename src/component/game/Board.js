@@ -151,13 +151,13 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             }
         }
     }
-    function highlightSelectedPotentialSquares(params) {
-        const originalSquareIndex = Number.parseFloat(clickedOnPiece.current.square.id.slice(1)); //console.log(originalSquareIndex);
+    function highlightSelectedPotentialSquares() {
+        const originalSquareIndex = Number.parseFloat(clickedOnPiece.current.square.id.slice(1));//console.log(originalSquareIndex);
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(); console.log(squaresWithUserAndOpponentPieces);
-        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log("squaresWithUserPieces:", squaresWithUserPieces); console.log("squaresWithOpponentPieces:", squaresWithOpponentPieces)
         const geographicallyLegalSecondarySquareIndicesOfClickedOnPiece = arrayOfGeographicallyLegalSquares(clickedOnPiece.current.id, Number.parseFloat(clickedOnPiece.current.square.id.slice(1)), squaresWithUserPieces, squaresWithOpponentPieces); //console.log("geographicallyLegalSecondarySquareIndices:", geographicallyLegalSecondarySquareIndices);
         const squaresToHighlight = geographicallyLegalSecondarySquareIndicesOfClickedOnPiece.filter((index) => {
-            //🐉remove from pile squares that would get user in check.
+            //remove from pile squares that would get user in check.
             const board2 = JSON.parse(JSON.stringify(boardArray.current));
             board2[index].piece = board2[originalSquareIndex].piece;
             board2[originalSquareIndex].piece = null;
@@ -165,11 +165,14 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 return true;
             }
         }); console.log(squaresToHighlight);
-        simpleHighlightSquares(squaresToHighlight);
+        for (const index of squaresToHighlight) {
+            let squareToHighlight = window.document.querySelector(`#i${index}`);
+            squareToHighlight.classList.add(`potentialClickedOnPieceSquare`);
+        }
     }
     function highlightSquares(player, forceOn) {
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces();
-        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; //console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithUserPieces); //console.log(squaresWithOpponentPieces);
         const arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithUserPieces, squaresWithOpponentPieces, authInfo.color);//console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces);
         const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, opponentColor.current);//console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         const userPiecesSwitch = window.document.querySelector(`.potential-square-switch`);
@@ -187,7 +190,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 userPiecesSwitch.classList.remove(`potential-square-switch-color`);
                 return;
             }
-
             if (showingOpponentPiecesPotentialMoves && player === "opponent") {
                 for (const squareIndex of arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces) {
                     const square = window.document.querySelector(`#i${squareIndex}`);
@@ -231,12 +233,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                     }
                 }
             }
-        }
-    }
-    function simpleHighlightSquares(indices) {
-        for (const index of indices) {
-            let squareToHighlight = window.document.querySelector(`#i${index}`);
-            squareToHighlight.classList.add(`potentialClickedOnPieceSquare`);
         }
     }
     function updatePieceToPromotePawnTo(piece) {
