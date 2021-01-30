@@ -550,9 +550,9 @@ img {
 }
 
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
-  height: var(--board-height);
+  height: auto;
+  max-height: var(--board-height);
   --button-container-width: 105px;
-  width: var(--button-container-width);
   margin-left: 0.5rem;
   display: -ms-grid;
   display: grid;
@@ -583,10 +583,6 @@ img {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
   line-height: 0.8rem;
 }
 
@@ -664,70 +660,6 @@ img {
   padding: 2%;
   margin: 0;
   text-align: center;
-}
-
-@media screen and (max-width: 695px) {
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    height: auto;
-    width: var(--board-height);
-    margin-left: 0;
-    -webkit-box-pack: initial;
-        -ms-flex-pack: initial;
-            justify-content: initial;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons > div > div:first-child {
-    margin-bottom: 0;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons > div > div:last-child {
-    margin-top: 0;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons {
-    margin: 0.25rem 0;
-    -webkit-box-flex: 0;
-        -ms-flex: 0 1 auto;
-            flex: 0 1 auto;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > div {
-    padding: 2%;
-    margin-right: 0.25rem;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .game-metric-buttons > *:last-child {
-    margin-right: 0;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons {
-    -webkit-box-flex: 0;
-        -ms-flex: 0 1 auto;
-            flex: 0 1 auto;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-box-pack: space-evenly;
-        -ms-flex-pack: space-evenly;
-            justify-content: space-evenly;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > * {
-    width: 285px;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > *:first-child {
-    margin-left: 4%;
-    margin-right: 2%;
-  }
-  .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons .nav-buttons > *:last-child {
-    margin-left: 2%;
-    margin-right: 4%;
-  }
 }
 
 .pawn-promotion-container {
