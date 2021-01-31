@@ -666,7 +666,7 @@ img {
   text-align: center;
 }
 
-@media screen and (max-width: 695px) {
+@media screen and (max-width: 750px) {
   .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
     display: -webkit-box;
     display: -ms-flexbox;
