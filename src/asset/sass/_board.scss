@@ -114,7 +114,9 @@
 
   .metric-buttons-and-nav-buttons {
     height: auto; max-height: var(--board-height);
-    --button-container-width: 105px; 
+    width: clamp(100px, 50px, 0px);
+    // --button-container-width: 105px; 
+    // width: min(var(--button-container-width), var(--board-height));
     // width: auto; max-width: var(--button-container-width);
     // width: var(--button-container-width);
     margin-left: $lh * 0.5;

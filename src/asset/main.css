@@ -552,7 +552,7 @@ img {
 .board-metric-buttons-nav-buttons-flex-container .metric-buttons-and-nav-buttons {
   height: auto;
   max-height: var(--board-height);
-  --button-container-width: 105px;
+  width: clamp(100px, 50px, 0px);
   margin-left: 0.5rem;
   display: -ms-grid;
   display: grid;
