@@ -202,15 +202,35 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 return;
             }
         }
-
-        let squareIndices = '';
+        function returnSquareIndicesToLightUp(player) {
+            const squaresWithPlayerPieces = player === "user" ? squaresWithUserPieces : squaresWithOpponentPieces;
+            const arrayOfGeographicallyLegalSquaresFirstArg = player === "user" ? squaresWithUserPieces : squaresWithOpponentPieces;
+            const arrayOfGeographicallyLegalSquaresSecondArg = player === "user" ? squaresWithOpponentPieces : squaresWithUserPieces;
+            const isUserKingInCheckSecondArg = player === "user" ? authInfo.color : opponentColor.current;
+            const isUserKingInCheckThirdArg = player === "user" ? opponentColor.current : authInfo.color;//console.log(squaresWithPlayerPieces, arrayOfGeographicallyLegalSquaresFirstArg, arrayOfGeographicallyLegalSquaresSecondArg, isUserKingInCheckSecondArg, isUserKingInCheckThirdArg);
+            for (const squareWithPlayerPiece of squaresWithPlayerPieces) {
+                const piece = squareWithPlayerPiece.piece;
+                const pieceId = (piece.white ? "white" : "black") + piece.name;
+                const varArrayOfGeographicallyLegalSquaresIndices = arrayOfGeographicallyLegalSquares(pieceId, squareWithPlayerPiece.index, arrayOfGeographicallyLegalSquaresFirstArg, arrayOfGeographicallyLegalSquaresSecondArg, isUserKingInCheckSecondArg);//console.log(varArrayOfGeographicallyLegalSquaresIndices);
+                for (const geographicallyLegalSquareIndex of varArrayOfGeographicallyLegalSquaresIndices) {
+                    const board2 = JSON.parse(JSON.stringify(boardArray.current));
+                    board2[geographicallyLegalSquareIndex].piece = board2[squareWithPlayerPiece.index].piece;
+                    board2[squareWithPlayerPiece.index].piece = null;
+                    if (!isUserKingInCheck(board2, isUserKingInCheckSecondArg, isUserKingInCheckThirdArg)) {
+                        squareIndices.push(geographicallyLegalSquareIndex);
+                    }
+                }
+            }
+        }
+        let squareIndices = [];
         if (player === "user") {
-            squareIndices = arrayOfGeographicallyLegalSquareIndicesOfAllUserPieces;
+            returnSquareIndicesToLightUp("user");
             setShowingUserPiecesPotentialMoves(true);
             //switch on switch
             userPiecesSwitch.classList.add(`potential-square-switch-color`);
         } else {
-            squareIndices = arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces;
+            returnSquareIndicesToLightUp("opponent");
+            // squareIndices = arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces;
             setShowingOpponentPiecesPotentialMoves(true);
             //switch on switch
             opponentPiecesSwitch.classList.add(`opponent-potential-square-switch-color`);
@@ -298,9 +318,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
     function isUserKingInCheck(board = boardArray.current, ourColor = authInfo.color, enemyColor = opponentColor.current) {
         //square index of user king
         const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(board, ourColor);
-        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; console.log(squaresWithUserPieces); console.log(squaresWithOpponentPieces);
-        let squareIndexOfUserKing = ''; squaresWithUserPieces.forEach((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null); console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
-        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor); console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
+        const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]]; console.log(squaresWithUserPieces);//console.log(squaresWithOpponentPieces);
+        let squareIndexOfUserKing = ''; squaresWithUserPieces.forEach((userSquare) => userSquare.piece.name === "king" ? squareIndexOfUserKing = userSquare.index : null);//console.log("squareIndexOfUserKing:", squareIndexOfUserKing);
+        const arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces = arrayOfGeographicallyLegalSquaresOfAllUserPieces(squaresWithOpponentPieces, squaresWithUserPieces, enemyColor);//console.log("arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces:", arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces);
         return arrayOfGeographicallyLegalSquareIndicesOfAllOpponentPieces.some((legalSquareIndexOfOpponentPiece) => legalSquareIndexOfOpponentPiece === squareIndexOfUserKing);
     }
     function isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces, ourColor = authInfo.color, enemyColor = opponentColor.current) {
