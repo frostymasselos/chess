@@ -381,11 +381,10 @@ const directionConverterObj = {
     },
     castling_left: {
         funcPrimary(total, originalSquareIndex, boardArraySquaresWithUserPiece, boardArraySquaresWithOpponentPiece, { check, isUserKingInCheck, boardArray, ourColor, }) {
-            const legalSecondarySquareIndexes = [];
-            //console.log(check, isUserKingInCheck, boardArray, ourColor);
+            const legalSecondarySquareIndexes = [];//console.log(check, isUserKingInCheck, boardArray, ourColor);
             if (!check) {
                 if (ourColor === "white") { //should be asking if piece is white?
-                    //white
+                    //white if...
                     const userKingSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "king");//console.log(userKingSquare);
                     const relevantRookSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "rook1");//console.log(relevantRookSquare);
                     if (!userKingSquare.piece.moved && !relevantRookSquare.piece.moved && areSquaresEmpty([3, 2, 1], boardArray)) { // && kingMovingToTheseSquaresDoesntPutHimInCheck([3, 2], 4, boardArray, isUserKingInCheck) //🧙‍♂️it fails, for white, when added to a white & a black. There's a recursion that goes on (only then - which is strange)

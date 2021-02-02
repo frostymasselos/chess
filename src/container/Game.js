@@ -149,7 +149,7 @@ function Game({ params }) {
         await db.ref(`matches/${authInfo.current.url}/${authInfo.current.user}`).update({ rematch: true });
         setAskForRematch(false); setWinner(''); setWaitingForOpponentToConfirmRematch(true);
     }
-    function listenerForRematch(game, you, opponent) {
+    function listenerForRematch(game, you, opponent) {//just user1 has this
         console.log(`${you} listening for rematch`);
         async function seeWhoHasRequestedRematch(e) {
             console.log("someone has requested rematch");
@@ -177,14 +177,14 @@ function Game({ params }) {
                 console.log('user1 is black');
                 await game.child('user1/pieces').set(bigObj.user2.pieces);
                 await game.child('user2/pieces').set(bigObj.user1.pieces);
-                await game.child(`user1`).update({ white: false });
+                await game.child(`user1`).update({ white: false, canMove: false });
                 await game.child(`user2`).update({ white: true, canMove: true });
             } else {
                 console.log('user1 is white');
                 await game.child('user1/pieces').set(bigObj.user1.pieces);
                 await game.child('user2/pieces').set(bigObj.user2.pieces);
                 await game.child(`user1`).update({ white: true, canMove: true });
-                await game.child(`user2`).update({ white: false });
+                await game.child(`user2`).update({ white: false, canMove: false });
             }
             await game.child(`user1`).update({ signedIn: true });
             setWinner(''); setWaitingForOpponentToConfirmRematch(false);
@@ -195,7 +195,7 @@ function Game({ params }) {
         }
         game.child(`user1`).orderByKey().on(`value`, next);
     }
-    function restartGame2(params) {
+    function restartGame2() {
         console.log("restartGame2")
         setReset(Math.random())//need it to rotate board
         setRematching(false);
@@ -244,11 +244,11 @@ function Game({ params }) {
                                     setCanMove(user1.canMove ? true : false); setPlaying(true);//BOARD IS RENDERED HERE
                                     if (user2.signedIn) {
                                         //USER2 SIGNED IN
-                                        setUser2SignedIn(true); console.log("user2 is signed in");
+                                        setUser2SignedIn(true);//console.log("user2 is signed in");
                                         setWaiting(false);
                                     } else {
                                         //USER2 NOT SIGNED IN YET
-                                        setWaiting(true); console.log("user2 not signed in");
+                                        setWaiting(true);//console.log("user2 not signed in");
                                         setUser2SignedIn(false);
                                     }
                                     isAWinnerDeclared(match, user1);
