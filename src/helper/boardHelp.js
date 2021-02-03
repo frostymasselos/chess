@@ -102,7 +102,8 @@ function areSquaresEmpty(squaresToCheck, boardArray) {
 function kingMovingToTheseSquaresDoesntPutHimInCheck(squareIndicesArray, kingIndex, boardArray, cleverFunction) {
     return squareIndicesArray.every((squareIndex) => {
         const board2 = JSON.parse(JSON.stringify(boardArray));//console.log(board2, squareIndex);
-        board2[squareIndex].piece = board2[kingIndex].piece;
+        const king = JSON.parse(JSON.stringify(board2[kingIndex].piece));//have to do this because we're changing original location to `null`?
+        board2[squareIndex].piece = king;
         board2[kingIndex].piece = null;//console.log(board2);
         return !cleverFunction(board2);
     });
@@ -385,10 +386,10 @@ const directionConverterObj = {
             if (!check) {
                 if (ourColor === "white") {
                     //white. if ...`
-                    //i) make sure rook's alive ii) both on the right spot...copy this for black. iii)🐉brainstorm anything going wrong
+                    //i) make sure rook's alive ii) both on the right spot...copy this for black.
                     const userKingSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "king"); console.log(userKingSquare);
                     const relevantRookSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "rook1"); console.log(relevantRookSquare);
-                    if (relevantRookSquare && (userKingSquare.index === 4 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 0 && !relevantRookSquare.piece.moved) && areSquaresEmpty([3, 2, 1], boardArray)) { // && kingMovingToTheseSquaresDoesntPutHimInCheck([3, 2], 4, boardArray, isUserKingInCheck) //🧙‍♂️it fails, for white, when added to a white & a black. There's a recursion that goes on (only then - which is strange)
+                    if (relevantRookSquare && (userKingSquare.index === 4 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 0 && !relevantRookSquare.piece.moved) && areSquaresEmpty([3, 2, 1], boardArray) && kingMovingToTheseSquaresDoesntPutHimInCheck([3, 2], 4, boardArray, isUserKingInCheck)) { // && kingMovingToTheseSquaresDoesntPutHimInCheck([3, 2], 4, boardArray, isUserKingInCheck) //🧙‍♂️it fails, for white, when added to a white & a black. There's a recursion that goes on (only then - which is strange)
                         console.log("finalWhite");
                         legalSecondarySquareIndexes.push(2);
                     }
@@ -396,7 +397,7 @@ const directionConverterObj = {
                     //black
                     const userKingSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "king");//console.log(userKingSquare);
                     const relevantRookSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "rook2");//console.log(relevantRookSquare);
-                    if (relevantRookSquare && (userKingSquare.index === 60 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 56 && !relevantRookSquare.piece.moved) && areSquaresEmpty([57, 58, 59], boardArray)) {// && kingMovingToTheseSquaresDoesntPutHimInCheck([58, 59], 60, boardArray, isUserKingInCheck)
+                    if (relevantRookSquare && (userKingSquare.index === 60 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 56 && !relevantRookSquare.piece.moved) && areSquaresEmpty([57, 58, 59], boardArray) && kingMovingToTheseSquaresDoesntPutHimInCheck([57, 58, 59], 60, boardArray, isUserKingInCheck)) {// && kingMovingToTheseSquaresDoesntPutHimInCheck([58, 59], 60, boardArray, isUserKingInCheck)
                         console.log("finalBlack");
                         legalSecondarySquareIndexes.push(58);
                     }
@@ -413,7 +414,7 @@ const directionConverterObj = {
                     //white
                     const userKingSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "king");//console.log(userKingSquare);
                     const relevantRookSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "rook2");//console.log(relevantRookSquare);
-                    if (relevantRookSquare && (userKingSquare.index === 4 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 7 && !relevantRookSquare.piece.moved) && areSquaresEmpty([5, 6], boardArray)) {//&& kingMovingToTheseSquaresDoesntPutHimInCheck([5, 6], 4, boardArray, isUserKingInCheck)
+                    if (relevantRookSquare && (userKingSquare.index === 4 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 7 && !relevantRookSquare.piece.moved) && areSquaresEmpty([5, 6], boardArray) && kingMovingToTheseSquaresDoesntPutHimInCheck([5, 6], 4, boardArray, isUserKingInCheck)) {//&& kingMovingToTheseSquaresDoesntPutHimInCheck([5, 6], 4, boardArray, isUserKingInCheck)
                         console.log("white-final-right");
                         legalSecondarySquareIndexes.push(6);
                         //maybe only update this for real when..castlingInfo = "left";
@@ -422,7 +423,7 @@ const directionConverterObj = {
                     //black
                     const userKingSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "king");//console.log(userKingSquare);
                     const relevantRookSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "rook1");//console.log(relevantRookSquare);
-                    if (relevantRookSquare && (userKingSquare.index === 60 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 63 && !relevantRookSquare.piece.moved) && areSquaresEmpty([61, 62], boardArray)) { // && kingMovingToTheseSquaresDoesntPutHimInCheck([5, 6], 4, boardArray, isUserKingInCheck)
+                    if (relevantRookSquare && (userKingSquare.index === 60 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 63 && !relevantRookSquare.piece.moved) && areSquaresEmpty([61, 62], boardArray) && kingMovingToTheseSquaresDoesntPutHimInCheck([61, 62], 60, boardArray, isUserKingInCheck)) { // && kingMovingToTheseSquaresDoesntPutHimInCheck([5, 6], 4, boardArray, isUserKingInCheck)
                         console.log("black-final-right");
                         legalSecondarySquareIndexes.push(62);
                         //maybe only update this for real when..castlingInfo = "left";
