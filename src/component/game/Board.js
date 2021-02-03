@@ -539,12 +539,13 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 if (boardArrayOriginalPiece.name.includes(`rook`) && !boardArrayOriginalPiece.moved || boardArrayOriginalPiece.name.includes(`king`) && !boardArrayOriginalPiece.moved) {
                     await userDb.child(`pieces/${boardArrayOriginalPiece.name}`).update({ moved: true });
                 }
-                //potentially update rook for castling
+                //potentially update rook from castling
                 if (boardArrayOriginalPiece.name.includes(`king`) && ((originalSquareIndex - secondarySquareIndex === 2) || originalSquareIndex - secondarySquareIndex === -2)) {
                     function respositionRookFromCastling(color, rookNumber, newSquareIndexForCastle, newColumnPositionForRook) {
-                        const relevantCastle = window.document.querySelector(`#${color}rook${rookNumber}`);//console.log(relevantCastle);
-                        const newSquareForCastle = window.document.querySelector(`#i${newSquareIndexForCastle}`);//console.log(newSquareForCastle);
-                        newSquareForCastle.append(relevantCastle);
+                        //optional ui
+                        // const relevantCastle = window.document.querySelector(`#${color}rook${rookNumber}`);//console.log(relevantCastle);
+                        // const newSquareForCastle = window.document.querySelector(`#i${newSquareIndexForCastle}`);//console.log(newSquareForCastle);
+                        // newSquareForCastle.append(relevantCastle);
                         //change db of castle (position & moved status)
                         userDb.child(`pieces/rook${rookNumber}`).update({
                             columnPosition: `${newColumnPositionForRook}`,
@@ -555,20 +556,16 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                         //king-moved-absolutely-left
                         const newColumnPositionForRook = "4/5";
                         if (authInfo.color === "white") {
-                            //white
                             respositionRookFromCastling(authInfo.color, 1, 3, newColumnPositionForRook);
                         } else {
-                            //black
                             respositionRookFromCastling("black", 2, 59, newColumnPositionForRook);
                         }
                     } else {
                         //king-moved-absolutely-right
                         const newColumnPositionForRook = "6/7";
                         if (authInfo.color === "white") {
-                            //white
                             respositionRookFromCastling(authInfo.color, 2, 5, newColumnPositionForRook);
                         } else {
-                            //black
                             respositionRookFromCastling("black", 1, 61, newColumnPositionForRook);
                         }
                     }
