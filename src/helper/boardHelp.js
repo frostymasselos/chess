@@ -397,7 +397,7 @@ const directionConverterObj = {
                     //black
                     const userKingSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "king");//console.log(userKingSquare);
                     const relevantRookSquare = boardArraySquaresWithUserPiece.find((squareWithUserPiece) => squareWithUserPiece.piece.name === "rook2");//console.log(relevantRookSquare);
-                    if (relevantRookSquare && (userKingSquare.index === 60 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 56 && !relevantRookSquare.piece.moved) && areSquaresEmpty([57, 58, 59], boardArray) && kingMovingToTheseSquaresDoesntPutHimInCheck([57, 58, 59], 60, boardArray, isUserKingInCheck)) {// && kingMovingToTheseSquaresDoesntPutHimInCheck([58, 59], 60, boardArray, isUserKingInCheck)
+                    if (relevantRookSquare && (userKingSquare.index === 60 && !userKingSquare.piece.moved) && (relevantRookSquare.index === 56 && !relevantRookSquare.piece.moved) && areSquaresEmpty([57, 58, 59], boardArray) && kingMovingToTheseSquaresDoesntPutHimInCheck([58, 59], 60, boardArray, isUserKingInCheck)) {// && kingMovingToTheseSquaresDoesntPutHimInCheck([58, 59], 60, boardArray, isUserKingInCheck)
                         console.log("finalBlack");
                         legalSecondarySquareIndexes.push(58);
                     }
