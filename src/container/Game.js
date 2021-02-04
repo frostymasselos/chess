@@ -374,16 +374,18 @@ function Game({ params }) {
             </div>}
             <img src={soundState ? soundSVG : muteSVG} className={`audio-icon ${soundState ? '' : 'sound-off'}`} onClick={turnSoundOnOrOff} />
             <audio controls muted className="user-move-audio-tag">
-                <source src={userMoveSound} type="audio/mp3"></source>
+                <source src={userMoveSound}></source>
             </audio>
             <audio controls muted className="opp-move-audio-tag">
-                <source src={oppMoveSound} type="audio/mp3"></source>
+                <source src={userMoveSound}></source>
             </audio>
         </>
     )
 }
 
 export default Game
+// oppMoveSound
+// type="audio/mp3"
 
 
 
