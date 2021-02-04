@@ -1,4 +1,8 @@
 import bigObj from '../helper/db';
+import userMoveSound from '../asset/sound/nas.mp3';
+import oppMoveSound from '../asset/sound/skeleton.mp3';
+import soundSVG from '../asset/images/sound.svg';
+import muteSVG from '../asset/images/mute.svg';
 import { useState, useEffect, useRef } from 'react';
 import ErrorPage from '../component/game/ErrorPage.js';
 import Exit from '../component/game/Exit.js';
@@ -52,6 +56,8 @@ function Game({ params }) {
     let authInfo = useRef({ url: params.slice(1) });
     const [auth, setAuth] = useState(firebase.auth());//only recalculate when canMove changes?🧙‍♂️
     const [db, setDb] = useState(firebase.database());
+    let soundUseRef = useRef(true);//solves listenerForOppMoving's FB callback's stale-closure 
+    let [soundState, setSoundState] = useState(true);
 
     //CSS
     function cssFunctions() {
@@ -84,6 +90,15 @@ function Game({ params }) {
         window.removeEventListener('resize', makeVHVariable);
     }
     //NON-CSS
+    function turnSoundOnOrOff() {
+        if (soundState) {
+            setSoundState(false);
+            soundUseRef.current = false;
+        } else {
+            setSoundState(true);
+            soundUseRef.current = true;
+        }
+    }
     function listenerForUser2SigningIn(game) {
         console.log(`listening for user2 signing in`);
         async function user2SignInHasChanged(e) {
@@ -114,6 +129,10 @@ function Game({ params }) {
             console.log(`callback fired for ${opponent} moving`, e.val());
             await game.child(`${you}`).update({ canMove: true });
             setCanMove(true);
+            if (soundUseRef.current) {
+                const audioTag = window.document.querySelector(`.opp-move-audio-tag`);
+                audioTag.muted = false; audioTag.play();//unmute & play
+            }
         }
         game.child(`${opponent}`).orderByKey().equalTo(`moved`).on('child_changed', opponentHasMoved);
     }
@@ -346,18 +365,27 @@ function Game({ params }) {
                     {waiting && <Waiting />}
                     {user2SignedIn && <TurnNotifier canMove={canMove} check={check} />}
                 </div>
-                <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} check={check} setCheck={setCheck} reset={reset}>
+                <Board db={db} authInfo={authInfo.current} canMove={canMove} setCanMove={setCanMove} check={check} setCheck={setCheck} soundState={soundState} reset={reset}>
                     <div className="nav-buttons">
                         {playing && <Exit />}
                         {playing && <TerminateMatch authInfo={authInfo.current} db={db} auth={auth} />}
                     </div>
                 </Board>
             </div>}
+            <img src={soundState ? soundSVG : muteSVG} className={`audio-icon ${soundState ? '' : 'sound-off'}`} onClick={turnSoundOnOrOff} />
+            <audio controls muted className="user-move-audio-tag">
+                <source src={userMoveSound}></source>
+            </audio>
+            <audio controls muted className="opp-move-audio-tag">
+                <source src={oppMoveSound}></source>
+            </audio>
         </>
     )
 }
 
 export default Game
+
+//audioIconClassNameValue()
 
 
 

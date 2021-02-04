@@ -3,7 +3,7 @@ export default function Instructions({ url }) {
         <div className="instructions">
             <p>
                 Clicking Start New Game will direct you to a random url.
-                Share this url with another player for them to join.
+                Share this url with another player for them to join. Adding sound.
                 {url ? <span><br></br>Url: {window.location.origin}/{url}</span> : null}
             </p>
         </div>

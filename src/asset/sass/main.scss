@@ -148,8 +148,11 @@ img {
   height: var(--header-height);
   font-size: calc(var(--header-height) * 0.75); //60px
   background-color: $header-color;
-  @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+  @include grid-container-horizontally-and-vertically-center-GIs(repeat(3, 1fr), 1fr);
   align-items: stretch;
+  &::before {
+    content: "";
+  }
   > a {
     height: 100%;
     border-bottom: 1px solid black;
