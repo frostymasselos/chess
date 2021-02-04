@@ -409,6 +409,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, s
                 //second square is an empty square
                 let emptySquare = e.target;
                 emptySquare.append(originalPiece);//console.log(emptySquare, originalPiece, secondarySquareTag);console.log("secondaryEl is an empty square:", e.target);
+                //🐉make sound
+                if (soundState) {
+                    //make a different sound when killing opp's piece?
+                    const audioTag = window.document.querySelector(`.user-move-audio-tag`); console.log(audioTag);
+                    audioTag.muted = false; audioTag.play();
+                }
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`)) {
                     boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
@@ -463,6 +469,11 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, s
                 //     enemyPiece.classList.add(`fizzle`);
                 // }, 2000);
                 enemyPieceSquare.append(originalPiece);
+                if (soundState) {
+                    //make a different sound when killing opp's piece?
+                    const audioTag = window.document.querySelector(`.user-move-audio-tag`); console.log(audioTag);
+                    audioTag.muted = false; audioTag.play();
+                }
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`)) { //&& pawnPromotionGraveyard.current.length//console.log("here");
                     boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
@@ -573,12 +584,6 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, s
 
                 clickedOnPiece.current = false;//⚠️used to be under 'EXECUTING USER'S CLICK'
                 setCanMove(false);
-                if (soundState) {
-                    //i)make the sound prematurely for pawn-promotion?ii)make a different sound when killing opp's piece?
-                    const audioTag = window.document.querySelector(`.user-move-audio-tag`); console.log(audioTag);
-                    //unmute & play
-                    audioTag.muted = false; audioTag.play();
-                }
                 await userDb.update({ canMove: false, moved: Math.random() });
             }
         } else {

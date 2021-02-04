@@ -1,6 +1,6 @@
 import bigObj from '../helper/db';
-import userMoveSound from '../asset/sound/nas.mp3';
-import oppMoveSound from '../asset/sound/skeleton.mp3';
+import userMoveSound from '../asset/sound/piece-move-sound-low.wav';
+import oppMoveSound from '../asset/sound/piece-move-sound-high-19secs.wav';
 import soundSVG from '../asset/images/sound.svg';
 import muteSVG from '../asset/images/mute.svg';
 import { useState, useEffect, useRef } from 'react';
@@ -374,18 +374,16 @@ function Game({ params }) {
             </div>}
             <img src={soundState ? soundSVG : muteSVG} className={`audio-icon ${soundState ? '' : 'sound-off'}`} onClick={turnSoundOnOrOff} />
             <audio controls muted className="user-move-audio-tag">
-                <source src={userMoveSound}></source>
+                <source src={userMoveSound} type="audio/wav"></source>
             </audio>
             <audio controls muted className="opp-move-audio-tag">
-                <source src={oppMoveSound}></source>
+                <source src={oppMoveSound} type="audio/wav"></source>
             </audio>
         </>
     )
 }
 
 export default Game
-
-//audioIconClassNameValue()
 
 
 
