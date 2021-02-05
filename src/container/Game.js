@@ -1,6 +1,6 @@
 import bigObj from '../helper/db';
 import userMoveSound from '../asset/sound/piece-move-sound-low.mp3';
-import oppMoveSound from '../asset/sound/piece-move-sound-high-19secs-shorter1.mp3';
+import oppMoveSound from '../asset/sound/piece-move-sound-high-19secs-long2.mp3';
 import soundSVG from '../asset/images/sound.svg';
 import muteSVG from '../asset/images/mute.svg';
 import { useState, useEffect, useRef } from 'react';
