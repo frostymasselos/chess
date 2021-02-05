@@ -433,11 +433,8 @@ img {
   --dimension: calc(var(--header-height) / 2);
   height: var(--dimension);
   width: var(--dimension);
-  background-color: green;
-}
-
-.sound-off {
-  background-color: red;
+  -webkit-filter: invert(34%) sepia(57%) saturate(0%) hue-rotate(219deg) brightness(96%) contrast(92%);
+          filter: invert(34%) sepia(57%) saturate(0%) hue-rotate(219deg) brightness(96%) contrast(92%);
 }
 
 audio {
