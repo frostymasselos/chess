@@ -4,7 +4,7 @@ import PawnPromotionOptions from './board/PawnPromotionOptions.js';
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 
-function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, reset, }) {
+function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, soundState, reset, }) {
 
     let [squareTags, setSquareTags] = useState([]);//could add it directly to DOM w/vanilla
     let [showingUserPiecesPotentialMoves, setShowingUserPiecesPotentialMoves] = useState(false);
@@ -409,6 +409,12 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 //second square is an empty square
                 let emptySquare = e.target;
                 emptySquare.append(originalPiece);//console.log(emptySquare, originalPiece, secondarySquareTag);console.log("secondaryEl is an empty square:", e.target);
+                //🐉make sound
+                if (soundState) {
+                    //make a different sound when killing opp's piece?
+                    const audioTag = window.document.querySelector(`.user-move-audio-tag`); console.log(audioTag);
+                    audioTag.muted = false; audioTag.play();
+                }
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`)) {
                     boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
@@ -463,6 +469,11 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 //     enemyPiece.classList.add(`fizzle`);
                 // }, 2000);
                 enemyPieceSquare.append(originalPiece);
+                if (soundState) {
+                    //make a different sound when killing opp's piece?
+                    const audioTag = window.document.querySelector(`.user-move-audio-tag`); console.log(audioTag);
+                    audioTag.muted = false; audioTag.play();
+                }
                 if (secondarySquareIndexIsAtEndOfBoard(authInfo.color, secondarySquareIndex) && originalPiece.id.includes(`pawn`)) { //&& pawnPromotionGraveyard.current.length//console.log("here");
                     boardTag.classList.add(`unclickable`);//console.log("board:", board);
                     setOpportunityForPawnToPromote(true);
@@ -652,7 +663,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
             fillBoardArrayWithPieces(match.user1.pieces);
             fillBoardArrayWithPieces(match.user2.pieces);//console.log("boardArray.current:", boardArray.current);
             renderPieces();
-            if (canMove) {
+            if (canMove) { //i)opp's just moved; your turn ii)refreshed page and it's your turn.
                 highlightOpponentMovement(match[opponent.current]);
             }
             if (!canMove) {
@@ -665,9 +676,9 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, r
                 highlightSquares("opponent", true);
             }
             runCSSFunctions();
+            //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
             const squaresWithUserAndOpponentPieces = returnSquaresWithUserAndOpponentPieces(boardArray.current);//console.log(squaresWithUserAndOpponentPieces);
             const [squaresWithUserPieces, squaresWithOpponentPieces] = [squaresWithUserAndOpponentPieces[0], squaresWithUserAndOpponentPieces[1]];//console.log(squaresWithOpponentPieces);
-            //are we in check (could opponent kill our king on their next go if none of our pieces moved)?
             if (isUserKingInCheck()) {
                 if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
                     endGame();

@@ -44,3 +44,23 @@
 .error-page-container {
   @include fresh-page-container();
 }
+
+.audio-icon {
+    //justify-self: end;
+    position: absolute;
+    top: 0px; right: 0px;
+    --dimension: calc(var(--header-height) / 2);
+    height: var(--dimension);
+    width: var(--dimension);
+    // background-color: $vine-green;//green;
+    // border-radius: 10px;
+    filter: invert(34%) sepia(57%) saturate(0%) hue-rotate(219deg) brightness(96%) contrast(92%);//invert(31%) sepia(0%) saturate(97%) hue-rotate(167deg) brightness(96%) contrast(93%);
+    // filter: invert(56%) sepia(0%) saturate(1242%) hue-rotate(155deg) brightness(90%) contrast(87%);//$clicked-on-piece-filter;
+}
+.sound-off {
+  // background-color: $colors-red-saturation-decrease;//red;
+}
+audio {
+  display: none;
+}
+
