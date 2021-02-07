@@ -428,8 +428,8 @@ img {
 
 .audio-icon {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 2px;
+  right: 10px;
   --dimension: calc(var(--header-height) / 2);
   height: var(--dimension);
   width: var(--dimension);
