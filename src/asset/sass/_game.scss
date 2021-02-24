@@ -48,7 +48,7 @@
 .audio-icon {
     //justify-self: end;
     position: absolute;
-    top: 2px; right: 10px;
+    top: var(--header-item-top-offset); right: var(--header-item-edge-offset);
     --dimension: calc(var(--header-height) / 2);
     height: var(--dimension);
     width: var(--dimension);

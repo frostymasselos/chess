@@ -64,6 +64,9 @@ html {
   --yousef-Dark: #0D0221;
   --opponent-moved-from-square: #00bcd4; //dark-teal:#147085 teal-green:#148560 light-blue#00bcd4 $light-magnus:hsl(200 100% 75% / 1)hsl(200 90% 74% / 1); hsl(220 100% 75% / 1) $another-aqua:hsl(182 100% 75% / 1)hsl(190 100% 75% / 1) $colors-blue; $violet:hsl(232 55% 75% / 1)hsl(232 55% 63% / 1)hsl(232 44% 63% / 1)hsl(214 100% 75% / 1)hsl(228 100% 75% / 1) pink:hsl(305 20% 75% / 1) green:#78cb8a $colors-aqua; 
   --opponent-moved-to-square: #00bcd4;
+  ////MISC/////
+  --header-item-top-offset: 2px;
+  --header-item-edge-offset: 10px;
 }
 ///////////////////////////////////////////////GENERIC BREAK-POINTS////////////////////////////////////////////////////
 /////////////////////////////////////////////////MIXINS/////////////////////////////////////////////////////////////////////
@@ -152,6 +155,17 @@ img {
   // &::before {
     //   content: "";
     // }
+    > *:nth-child(1) {
+      justify-self: start;
+      // height: calc(var(--header-height) / 2);
+      // background-color: $footer-color;
+      // color: $beige;
+      // @include grid-container-horizontally-and-vertically-center-GIs(1fr, 1fr);
+      margin-top: var(--header-item-top-offset);//1%;
+      margin-left: var(--header-item-edge-offset);//1%;
+      text-decoration: underline;
+      color: #404040;//grey;
+    }
     > *:nth-child(2) {
     font-size: calc(var(--header-height) * 0.75); //60px
     height: 100%;

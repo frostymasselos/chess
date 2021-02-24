@@ -15,6 +15,8 @@ html {
   --yousef-Dark: #0D0221;
   --opponent-moved-from-square: #00bcd4;
   --opponent-moved-to-square: #00bcd4;
+  --header-item-top-offset: 2px;
+  --header-item-edge-offset: 10px;
 }
 
 *,
@@ -76,6 +78,15 @@ img {
   -webkit-box-align: stretch;
       -ms-flex-align: stretch;
           align-items: stretch;
+}
+
+.header > *:nth-child(1) {
+  -ms-grid-column-align: start;
+      justify-self: start;
+  margin-top: var(--header-item-top-offset);
+  margin-left: var(--header-item-edge-offset);
+  text-decoration: underline;
+  color: #404040;
 }
 
 .header > *:nth-child(2) {
@@ -424,8 +435,8 @@ img {
 
 .audio-icon {
   position: absolute;
-  top: 2px;
-  right: 10px;
+  top: var(--header-item-top-offset);
+  right: var(--header-item-edge-offset);
   --dimension: calc(var(--header-height) / 2);
   height: var(--dimension);
   width: var(--dimension);

@@ -7,7 +7,7 @@ function Header() {
         <>
             <div className="header">
                 <a href="https://www.youtube.com/watch?v=h7tQXFXTJ5k&feature=youtu.be" target="_blank">
-                    Demonstration
+                    Demo
                 </a>
                 <Link to="/">
                     <img className="piece-image" src={returnPieceEmoji("queen")} />
