@@ -687,6 +687,7 @@ function Board({ children, db, authInfo, canMove, setCanMove, check, setCheck, s
                 }
                 return;
             }
+            //get rid of this🐉:
             if (isUserInCheckmate(squaresWithUserPieces, squaresWithOpponentPieces)) {
                 endGame();
                 return;

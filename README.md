@@ -1,5 +1,6 @@
 # README 
-[Link to website](https://2playerchess.netlify.app/).  
+[Link to website](https://2playerchess.netlify.app/).
+[Link to demonstration](https://www.youtube.com/watch?v=h7tQXFXTJ5k&feature=youtu.be). 
 
 ## Cross-browser compatibility
 Works on latest Chrome (87), Firefox (84) & Safari (13) specificially tested on iPhoneX, 13-inch Macbook & the iPadPro.
