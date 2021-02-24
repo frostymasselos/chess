@@ -146,14 +146,14 @@ img {
 /////////////////////////////////////////////////GENERAL//////////////////////////////////////////////////////////
 .header {
   height: var(--header-height);
-  font-size: calc(var(--header-height) * 0.75); //60px
   background-color: $header-color;
   @include grid-container-horizontally-and-vertically-center-GIs(repeat(3, 1fr), 1fr);
   align-items: stretch;
-  &::before {
-    content: "";
-  }
-  > a {
+  // &::before {
+    //   content: "";
+    // }
+    > *:nth-child(2) {
+    font-size: calc(var(--header-height) * 0.75); //60px
     height: 100%;
     border-bottom: 1px solid black;
     @include grid-container-horizontally-and-vertically-center-GIs(var(--header-height) var(--header-height), 100%);
